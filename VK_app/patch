@@ -1,0 +1,1098 @@
+diff --git a/Podfile b/Podfile
+index 02f3823..1befe8e 100644
+--- a/Podfile
++++ b/Podfile
+@@ -8,5 +8,6 @@ target 'VK_app' do
+   # Pods for VK_app
+ pod 'Alamofire', '~> 5.2'
+ pod 'SwiftyJSON', '~> 4.0'
++pod 'RealmSwift' 
+ 
+ end
+diff --git a/Podfile.lock b/Podfile.lock
+new file mode 100644
+index 0000000..a696910
+--- /dev/null
++++ b/Podfile.lock
+@@ -0,0 +1,30 @@
++PODS:
++  - Alamofire (5.4.0)
++  - Realm (10.2.0):
++    - Realm/Headers (= 10.2.0)
++  - Realm/Headers (10.2.0)
++  - RealmSwift (10.2.0):
++    - Realm (= 10.2.0)
++  - SwiftyJSON (4.3.0)
++
++DEPENDENCIES:
++  - Alamofire (~> 5.2)
++  - RealmSwift
++  - SwiftyJSON (~> 4.0)
++
++SPEC REPOS:
++  trunk:
++    - Alamofire
++    - Realm
++    - RealmSwift
++    - SwiftyJSON
++
++SPEC CHECKSUMS:
++  Alamofire: 3b6a534a3df22db367e4dedeeca73d1ddfcf0e2f
++  Realm: d7914ebf66bb182469726f997c4c38eff286aab0
++  RealmSwift: aad08b7dc8c732b7b5794286e9df83739bf834f1
++  SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
++
++PODFILE CHECKSUM: 9a35609db99f0d1c652e8870288b3e281d681003
++
++COCOAPODS: 1.10.0
+diff --git a/VK_app.xcodeproj/project.pbxproj b/VK_app.xcodeproj/project.pbxproj
+index 9846640..b95b361 100644
+--- a/VK_app.xcodeproj/project.pbxproj
++++ b/VK_app.xcodeproj/project.pbxproj
+@@ -48,6 +48,7 @@
+ 		FACBD625254ED3AA00BAFCA8 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACBD624254ED3AA00BAFCA8 /* News.swift */; };
+ 		FACBD628254ED60800BAFCA8 /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACBD627254ED60800BAFCA8 /* Random.swift */; };
+ 		FACFEF0E253733630039AD6F /* 128px-VK.com-logo.svg.png in Resources */ = {isa = PBXBuildFile; fileRef = FA52106F2533350B00D84397 /* 128px-VK.com-logo.svg.png */; };
++		FAE62B2F2575372F00D9D80C /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE62B2E2575372F00D9D80C /* UIImageExtension.swift */; };
+ 		FAF80377255BB0F20053D6E1 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF80376255BB0F10053D6E1 /* Loader.swift */; };
+ 		FAF8037B255C3C3D0053D6E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAF8037A255C3C3C0053D6E1 /* Main.storyboard */; };
+ 		FAF80381255C5B270053D6E1 /* CustomPushAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF80380255C5B270053D6E1 /* CustomPushAnimator.swift */; };
+@@ -105,6 +106,7 @@
+ 		FACBD61F254EB0F100BAFCA8 /* NewsControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsControl.swift; sourceTree = "<group>"; };
+ 		FACBD624254ED3AA00BAFCA8 /* News.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
+ 		FACBD627254ED60800BAFCA8 /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
++		FAE62B2E2575372F00D9D80C /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
+ 		FAF80376255BB0F10053D6E1 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
+ 		FAF8037A255C3C3C0053D6E1 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+ 		FAF80380255C5B270053D6E1 /* CustomPushAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPushAnimator.swift; sourceTree = "<group>"; };
+@@ -257,6 +259,7 @@
+ 				FA606A982572C8B100DC60CA /* UIPanGestureRecognizerExtension.swift */,
+ 				FA606A9B2572C8EE00DC60CA /* GroupsSearchViewControllerExtension.swift */,
+ 				FA606A9E2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift */,
++				FAE62B2E2575372F00D9D80C /* UIImageExtension.swift */,
+ 				FA606AA12572CBB200DC60CA /* WebViewControllerExtension.swift */,
+ 			);
+ 			path = Extensions;
+@@ -453,6 +456,7 @@
+ 				FA606A9C2572C8EF00DC60CA /* GroupsSearchViewControllerExtension.swift in Sources */,
+ 				FAF80377255BB0F20053D6E1 /* Loader.swift in Sources */,
+ 				FA2D73DA253B0B29003FAAD4 /* GroupsViewController.swift in Sources */,
++				FAE62B2F2575372F00D9D80C /* UIImageExtension.swift in Sources */,
+ 				FAF80388255C5E160053D6E1 /* CustomNavigationController.swift in Sources */,
+ 				FACBD619254EA1F900BAFCA8 /* NewsViewCell.swift in Sources */,
+ 				FA606A83256EDDA200DC60CA /* GroupsService.swift in Sources */,
+diff --git a/VK_app.xcodeproj/xcuserdata/macbook.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist b/VK_app.xcodeproj/xcuserdata/macbook.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+index 84e94df..5164b57 100644
+--- a/VK_app.xcodeproj/xcuserdata/macbook.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
++++ b/VK_app.xcodeproj/xcuserdata/macbook.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+@@ -201,8 +201,8 @@
+             filePath = "VK_app/controller/FriendPhotosViewController.swift"
+             startingColumnNumber = "9223372036854775807"
+             endingColumnNumber = "9223372036854775807"
+-            startingLineNumber = "121"
+-            endingLineNumber = "121"
++            startingLineNumber = "129"
++            endingLineNumber = "129"
+             landmarkName = "imageTapped(_:_:)"
+             landmarkType = "7">
+          </BreakpointContent>
+@@ -217,8 +217,8 @@
+             filePath = "VK_app/controller/FriendPhotosViewController.swift"
+             startingColumnNumber = "9223372036854775807"
+             endingColumnNumber = "9223372036854775807"
+-            startingLineNumber = "143"
+-            endingLineNumber = "143"
++            startingLineNumber = "150"
++            endingLineNumber = "150"
+             landmarkName = "imageTapped(_:_:)"
+             landmarkType = "7">
+          </BreakpointContent>
+@@ -233,8 +233,8 @@
+             filePath = "VK_app/controller/FriendPhotosViewController.swift"
+             startingColumnNumber = "9223372036854775807"
+             endingColumnNumber = "9223372036854775807"
+-            startingLineNumber = "161"
+-            endingLineNumber = "161"
++            startingLineNumber = "168"
++            endingLineNumber = "168"
+             landmarkName = "imageTapped(_:_:)"
+             landmarkType = "7">
+          </BreakpointContent>
+@@ -249,8 +249,8 @@
+             filePath = "VK_app/controller/FriendPhotosViewController.swift"
+             startingColumnNumber = "9223372036854775807"
+             endingColumnNumber = "9223372036854775807"
+-            startingLineNumber = "338"
+-            endingLineNumber = "338"
++            startingLineNumber = "344"
++            endingLineNumber = "344"
+             landmarkName = "imageRectPos(_:_:)"
+             landmarkType = "7">
+          </BreakpointContent>
+diff --git a/VK_app.xcodeproj/xcuserdata/macbook.xcuserdatad/xcschemes/xcschememanagement.plist b/VK_app.xcodeproj/xcuserdata/macbook.xcuserdatad/xcschemes/xcschememanagement.plist
+index cdb9ae7..831011a 100644
+--- a/VK_app.xcodeproj/xcuserdata/macbook.xcuserdatad/xcschemes/xcschememanagement.plist
++++ b/VK_app.xcodeproj/xcuserdata/macbook.xcuserdatad/xcschemes/xcschememanagement.plist
+@@ -7,7 +7,7 @@
+ 		<key>VK_app.xcscheme_^#shared#^_</key>
+ 		<dict>
+ 			<key>orderHint</key>
+-			<integer>3</integer>
++			<integer>5</integer>
+ 		</dict>
+ 	</dict>
+ </dict>
+diff --git a/VK_app/Controller/FriendPhotosViewController.swift b/VK_app/Controller/FriendPhotosViewController.swift
+index 3f80c3e..f45be1b 100644
+--- a/VK_app/Controller/FriendPhotosViewController.swift
++++ b/VK_app/Controller/FriendPhotosViewController.swift
+@@ -102,7 +102,15 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingDelega
+     
+     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! FriendPhotosViewCell
+-        cell.friendPhoto.image = imageFromUrl(url: photos[indexPath.row].photo)
++        if let data = photos[indexPath.row].photo {
++                cell.friendPhoto.image = UIImage(data: data)
++        }
++        else {
++            cell.friendPhoto.image = UIImage(named: "camera_200")
++            cell.friendPhoto.load(url: photos[indexPath.row].photoUrl) {[self] (loadedImage) in
++                photos[indexPath.row].photo = loadedImage.pngData()
++            }
++        }
+         cell.photoLike.liked = photos[indexPath.row].liked
+         cell.photoLike.likeCount = photos[indexPath.row].likes
+         cell.photoLike.delegate = self
+@@ -126,7 +134,6 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingDelega
+         sliderCenterView.addSubview(sliderCenterImage)
+         sliderCenterView.layer.masksToBounds = true
+         
+-        
+         sliderCenterImage.frame = imageRectPos(rectOfCellInTableView, rectOfCellInSuperview)
+         sliderCenterView.alpha = cell.alpha
+         cell.alpha = 0
+@@ -170,9 +177,8 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingDelega
+         
+         let translation = gesture.translation(in: self.view)
+         let positions = nearElements(index: sliderCenterView.tag)
+-        sliderRightImage.image = imageFromUrl(url: photos[positions[2]].photo)
+-        sliderLeftImage.image = imageFromUrl(url: photos[positions[0]].photo)
+-        
++        sliderRightImage.load(url: photos[positions[2]].photoUrl) {_ in }
++        sliderLeftImage.load(url: photos[positions[0]].photoUrl) {_ in }
+         switch gesture.state {
+         case .began:
+             animator = UIViewPropertyAnimator(duration: 1, curve: .linear)
+diff --git a/VK_app/Controller/FriendsViewController.swift b/VK_app/Controller/FriendsViewController.swift
+index fa78420..340e64f 100644
+--- a/VK_app/Controller/FriendsViewController.swift
++++ b/VK_app/Controller/FriendsViewController.swift
+@@ -19,11 +19,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
+     @IBOutlet weak var tableView: UITableView!
+     @IBOutlet weak var letterPicker: LetterPicker!
+     @IBOutlet weak var searchBar: UISearchBar!
+-    var users: [User] = [] {
+-        didSet {
+-            tableView.reloadData()
+-        }
+-    }
++    var users: [User] = []
+     var unfilteredUsers: [User] = []
+     var friendsService = FriendService()
+     
+@@ -39,6 +35,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
+         searchBar.delegate = self
+         friendsService.getFriendsList() { [self] (friends) in
+             users = friends.sorted{ $0.name.lowercased() < $1.name.lowercased() }
++            tableView.reloadData()
+             unfilteredUsers = users
+         }
+     }
+@@ -92,8 +89,18 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
+         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FriendsViewCell
+         let rowCount = rowCounting(indexPath)
+         let user = users[rowCount]
++        if let data = user.photo {
++            if let loadedImage = UIImage(data: data) {
++                cell.friendPhoto.avatarPhoto.image = loadedImage
++            }
++        }
++        else {
++            cell.friendPhoto.avatarPhoto.image = UIImage(named: "camera_200")
++            cell.friendPhoto.avatarPhoto.load(url: user.photoUrl) {[self] (loadedImage) in
++                users[rowCount].photo = loadedImage.pngData()
++            }
++        }
+         cell.friendName.text = user.name
+-        cell.friendPhoto.avatarPhoto.image = imageFromUrl(url: user.photo)
+         return cell
+     }
+     
+@@ -120,10 +127,16 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
+     
+     func updateUser(photos: [Photo], id: Int) {
+         if let row = users.firstIndex(where: {$0.id == id}) {
+-            users[row].photos = photos
++            users[row].photos.removeAll()
++            photos.forEach{ photo in
++                users[row].photos.append(photo)
++            }
+         }
+         if let row = unfilteredUsers.firstIndex(where: {$0.id == id}) {
+-            unfilteredUsers[row].photos = photos
++            unfilteredUsers[row].photos.removeAll()
++            photos.forEach{ photo in
++                unfilteredUsers[row].photos.append(photo)
++            }
+         }
+     }
+ }
+diff --git a/VK_app/Controller/GroupsSearchViewController.swift b/VK_app/Controller/GroupsSearchViewController.swift
+index 57c7698..d19314a 100644
+--- a/VK_app/Controller/GroupsSearchViewController.swift
++++ b/VK_app/Controller/GroupsSearchViewController.swift
+@@ -9,11 +9,7 @@ import UIKit
+ 
+ class GroupsSearchViewController: UITableViewController {
+     @IBOutlet weak var searchBar: UISearchBar!
+-    var groups: [Group] = [] {
+-        didSet {
+-            tableView.reloadData()
+-        }
+-    }
++    var groups: [Group] = []
+     var unfilteredGroups: [Group] = []
+     let groupsService = GroupsService()
+     
+@@ -25,6 +21,7 @@ class GroupsSearchViewController: UITableViewController {
+         self.hideKeyboardWhenTappedAround()
+         groupsService.getGroupsList() { [self] vkGroups in
+             groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
++            self.tableView.reloadData()
+             unfilteredGroups = groups
+         }
+     }
+@@ -45,8 +42,15 @@ class GroupsSearchViewController: UITableViewController {
+         view.translatesAutoresizingMaskIntoConstraints = false
+         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
+         let group = groups[indexPath.row]
++        if let data = group.photo {
++            cell.groupPhoto.avatarPhoto.image = UIImage(data: data)
++        } else {
++            cell.groupPhoto.avatarPhoto.image = UIImage(named: "camera_200")
++            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl) {[self] (loadedImage) in
++                groups[indexPath.row].photo = loadedImage.pngData()
++            }
++        }
+         cell.groupName.text = group.title
+-        cell.groupPhoto.avatarPhoto.image = imageFromUrl(url: group.photo)
+         return cell
+     }
+ }
+diff --git a/VK_app/Controller/GroupsViewController.swift b/VK_app/Controller/GroupsViewController.swift
+index 81c55d9..3846fb2 100644
+--- a/VK_app/Controller/GroupsViewController.swift
++++ b/VK_app/Controller/GroupsViewController.swift
+@@ -29,7 +29,14 @@ class GroupsViewController: UITableViewController {
+         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
+         let group = groups[indexPath.row]
+         cell.groupName.text = group.title
+-        cell.groupPhoto.avatarPhoto.image = imageFromUrl(url: group.photo)
++        if let data = group.photo {
++            cell.groupPhoto.avatarPhoto.image = UIImage(data: data)
++        } else {
++            cell.groupPhoto.avatarPhoto.image = UIImage(named: "camera_200")
++            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl) {[self] (loadedImage) in
++                groups[indexPath.row].photo = loadedImage.pngData()
++            }
++        }
+         return cell
+     }
+     
+diff --git a/VK_app/Controller/NewsViewController.swift b/VK_app/Controller/NewsViewController.swift
+index 03d2e17..fe04420 100644
+--- a/VK_app/Controller/NewsViewController.swift
++++ b/VK_app/Controller/NewsViewController.swift
+@@ -35,7 +35,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
+         let newsCell = news[indexPath.row]
+         let formatter = DateFormatter()
+         formatter.dateStyle = .short
+-        cell.authorPhoto.avatarPhoto.image = UIImage(named: newsCell.author.photo)
++        cell.authorPhoto.avatarPhoto.image = UIImage(named: newsCell.author.photoUrl)
+         cell.authorName.text = newsCell.author.name
+         cell.newsDate.text = formatter.string(from: newsCell.newsDate)
+         cell.newsImage.image = UIImage(named: newsCell.newsImage)
+diff --git a/VK_app/Extensions/UIImageExtension.swift b/VK_app/Extensions/UIImageExtension.swift
+new file mode 100644
+index 0000000..20bd1ee
+--- /dev/null
++++ b/VK_app/Extensions/UIImageExtension.swift
+@@ -0,0 +1,22 @@
++//
++//  UIImageExtension.swift
++//  VK_app
++//
++//  Created by macbook on 30.11.2020.
++//
++
++import UIKit
++
++extension UIImageView {
++    func load(url: String, completion: @escaping (UIImage) -> Void) {
++        guard let imageUrl = URL(string: url) else { return }
++        DispatchQueue.main.async {
++            if let data = try? Data(contentsOf: imageUrl) {
++                if let image = UIImage(data: data) {
++                    self.image = image
++                    completion(image)
++                }
++            }
++        }
++    }
++}
+diff --git a/VK_app/Extensions/UIViewControllerExtension.swift b/VK_app/Extensions/UIViewControllerExtension.swift
+index 6676ba7..481b390 100644
+--- a/VK_app/Extensions/UIViewControllerExtension.swift
++++ b/VK_app/Extensions/UIViewControllerExtension.swift
+@@ -15,7 +15,7 @@ extension UIViewController {
+     }
+     
+     func imageFromUrl (url: String) -> UIImage {
+-        guard let defaultImage = UIImage(named: "deactivated_100") else { return UIImage()}
++        guard let defaultImage = UIImage(named: "camera_200") else { return UIImage()}
+         guard let imageUrl = URL(string: url) else { return defaultImage}
+         guard let data = try? Data(contentsOf: imageUrl) else { return defaultImage }
+         guard let image = UIImage(data: data) else { return defaultImage}
+diff --git a/VK_app/Model/Config.swift b/VK_app/Model/Config.swift
+index 86b0720..2bceb7a 100644
+--- a/VK_app/Model/Config.swift
++++ b/VK_app/Model/Config.swift
+@@ -8,10 +8,6 @@
+ import Foundation
+ 
+ class Config {
+-    
+-    static let storedConfig = Config()
+-    private init(){}
+-    
+-    let apiUrl: String = "https://api.vk.com"
+-    let apiVersion: String = "5.126"
++    static let apiUrl: String = "https://api.vk.com"
++    static let apiVersion: String = "5.126"
+ }
+diff --git a/VK_app/Model/Group.swift b/VK_app/Model/Group.swift
+index 253dd09..10b030f 100644
+--- a/VK_app/Model/Group.swift
++++ b/VK_app/Model/Group.swift
+@@ -7,22 +7,21 @@
+ 
+ import Foundation
+ import SwiftyJSON
++import RealmSwift
+ 
+-struct Group: Equatable {
++class Group: Object {
+     
+-    var title: String
+-    var photo: String
++    @objc dynamic var title: String = ""
++    @objc dynamic var photoUrl: String = ""
++    @objc dynamic var photo: Data? = nil
+     
+-    init?(json: JSON) {
++    convenience init(json: JSON) {
++        self.init()
+         self.title = json["name"].stringValue
+-        self.photo = json["photo_100"].stringValue
++        self.photoUrl = json["photo_100"].stringValue
+     }
+     
+     static var oneGroup: Group {
+-        return Group(json: "")!
+-    }
+-    
+-    static var manyGroup: [Group] {
+-        return (1...20).map{_ in Group.oneGroup}
++        return Group(json: "")
+     }
+ }
+diff --git a/VK_app/Model/Photo.swift b/VK_app/Model/Photo.swift
+index 4d72d62..eca3574 100644
+--- a/VK_app/Model/Photo.swift
++++ b/VK_app/Model/Photo.swift
+@@ -7,28 +7,27 @@
+ 
+ import Foundation
+ import SwiftyJSON
++import RealmSwift
+ 
+-struct Photo {
++class Photo: Object {
+     
+-    var liked: Bool
+-    var likes: Int
+-    var photo: String
++    @objc dynamic var liked: Bool = false
++    @objc dynamic var likes: Int = 0
++    @objc dynamic var photoUrl: String = ""
++    @objc dynamic var photo: Data? = nil
+     
+-    init?(json: JSON) {
++    convenience init(json: JSON) {
++        self.init()
+         self.liked = json["likes"]["user_likes"].intValue == 0 ? false : true
+         self.likes = json["likes"]["count"].intValue
+-        self.photo = ""
+-        for (index, object) in json["sizes"] {
++        self.photoUrl = ""
++        for (_, object) in json["sizes"] {
+             if object["type"] == "x"
+-            {self.photo = object["url"].stringValue}
++            {self.photoUrl = object["url"].stringValue}
+         }
+     }
+     
+     static var onePhoto: Photo{
+-        return Photo(json: "")!
+-    }
+-    
+-    static var manyPhotos: [Photo] {
+-        return (1...20).map{_ in Photo.onePhoto}
++        return Photo(json: "")
+     }
+ }
+diff --git a/VK_app/Model/User.swift b/VK_app/Model/User.swift
+index 4f5667d..dae2f0a 100644
+--- a/VK_app/Model/User.swift
++++ b/VK_app/Model/User.swift
+@@ -7,25 +7,23 @@
+ 
+ import Foundation
+ import SwiftyJSON
++import RealmSwift
+ 
+-struct User{
+-    var id: Int
+-    var name: String
+-    var photo: String
+-    var photos: [Photo]
++class User: Object{
++    @objc dynamic var id: Int = 0
++    @objc dynamic var name: String = ""
++    @objc dynamic var photoUrl: String = ""
++    @objc dynamic var photo: Data? = nil
++    let photos = List<Photo>()
+     
+-    init?(json: JSON) {
++    convenience init(json: JSON) {
++        self.init()
+         self.id = json["id"].intValue
+         self.name = json["first_name"].stringValue + " " + json["last_name"].stringValue
+-        self.photo = json["photo_200_orig"].stringValue
+-        self.photos = Photo.manyPhotos
++        self.photoUrl = json["photo_100"].stringValue
+     }
+     
+     static var oneUser: User{
+-        return User(json: "")!
+-    }
+-    
+-    static var manyUsers: [User] {
+-        return (1...20).map{_ in User.oneUser}
++        return User(json: "")
+     }
+ }
+diff --git a/VK_app/Services/FriendsPhotosService.swift b/VK_app/Services/FriendsPhotosService.swift
+index 81fb993..1be6beb 100644
+--- a/VK_app/Services/FriendsPhotosService.swift
++++ b/VK_app/Services/FriendsPhotosService.swift
+@@ -11,7 +11,7 @@ import SwiftyJSON
+ 
+ class FriendsPhotosService {
+     
+-    let baseUrl = Config.storedConfig.apiUrl
++    let baseUrl = Config.apiUrl
+ 
+     func getFriendsPhotosList(userId: Int, completion: @escaping ([Photo]) -> Void){
+         
+@@ -22,7 +22,7 @@ class FriendsPhotosService {
+             "owner_id": userId,
+             "photo_sizes": 1,
+             "access_token": Session.storedSession.token,
+-            "v": Config.storedConfig.apiVersion
++            "v": Config.apiVersion
+         ]
+         
+         let url = baseUrl+path
+diff --git a/VK_app/Services/FriendsService.swift b/VK_app/Services/FriendsService.swift
+index 352463e..257b55e 100644
+--- a/VK_app/Services/FriendsService.swift
++++ b/VK_app/Services/FriendsService.swift
+@@ -11,16 +11,16 @@ import SwiftyJSON
+ 
+ class FriendService {
+     
+-    let baseUrl = Config.storedConfig.apiUrl
++    let baseUrl = Config.apiUrl
+     
+     func getFriendsList(completion: @escaping ([User]) -> Void){
+         
+         let path = "/method/friends.get?"
+         // параметры
+         let parameters: Parameters = [
+-            "fields": "nickname, bdate, city, country, photo_200_orig",
++            "fields": "photo_100",
+             "access_token": Session.storedSession.token,
+-            "v": Config.storedConfig.apiVersion
++            "v": Config.apiVersion
+         ]
+         
+         let url = baseUrl+path
+diff --git a/VK_app/Services/GroupsService.swift b/VK_app/Services/GroupsService.swift
+index c499fdc..e1d9801 100644
+--- a/VK_app/Services/GroupsService.swift
++++ b/VK_app/Services/GroupsService.swift
+@@ -11,7 +11,7 @@ import SwiftyJSON
+ 
+ class GroupsService {
+     
+-    let baseUrl = Config.storedConfig.apiUrl
++    let baseUrl = Config.apiUrl
+ 
+     func getGroupsList (completion: @escaping ([Group]) -> Void){
+         
+@@ -20,9 +20,8 @@ class GroupsService {
+         let parameters: Parameters = [
+             "extended": 1,
+             "access_token": Session.storedSession.token,
+-            "v": Config.storedConfig.apiVersion
++            "v": Config.apiVersion
+         ]
+-        
+         let url = baseUrl+path
+         AF.request(url, method: .get, parameters: parameters).responseJSON { response in
+             guard let data = response.data else {return}
+@@ -44,9 +43,8 @@ class GroupsService {
+         let parameters: Parameters = [
+             "q": search,
+             "access_token": Session.storedSession.token,
+-            "v": Config.storedConfig.apiVersion
++            "v": Config.apiVersion
+         ]
+-        
+         let url = baseUrl+path
+         AF.request(url, method: .get, parameters: parameters).responseJSON { response in
+             print(response.value as Any)
+diff --git a/VK_app/View/Main.storyboard b/VK_app/View/Main.storyboard
+index ad2cb00..5cf2499 100644
+--- a/VK_app/View/Main.storyboard
++++ b/VK_app/View/Main.storyboard
+@@ -256,7 +256,7 @@
+                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="smm-3V-uCK" customClass="Avatar" customModule="VK_app" customModuleProvider="target">
+                                                     <rect key="frame" x="5" y="5" width="50" height="50"/>
+                                                     <constraints>
+-                                                        <constraint firstAttribute="height" constant="50" id="Dic-Y9-Nhe"/>
++                                                        <constraint firstAttribute="height" priority="999" constant="50" id="Dic-Y9-Nhe"/>
+                                                         <constraint firstAttribute="width" secondItem="smm-3V-uCK" secondAttribute="height" multiplier="1:1" id="LIN-rj-IhN"/>
+                                                     </constraints>
+                                                     <userDefinedRuntimeAttributes>
+@@ -264,9 +264,6 @@
+                                                         <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                             <real key="value" value="5"/>
+                                                         </userDefinedRuntimeAttribute>
+-                                                        <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+-                                                            <color key="value" systemColor="labelColor"/>
+-                                                        </userDefinedRuntimeAttribute>
+                                                         <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                             <real key="value" value="0.5"/>
+                                                         </userDefinedRuntimeAttribute>
+@@ -316,7 +313,7 @@
+                             <constraint firstItem="b7Z-Zu-SIt" firstAttribute="bottom" secondItem="2LZ-HP-Gya" secondAttribute="bottom" id="f8K-Po-FFS"/>
+                             <constraint firstItem="2LZ-HP-Gya" firstAttribute="trailing" secondItem="htL-Hc-R5D" secondAttribute="trailing" constant="8" id="qsS-dx-KII"/>
+                             <constraint firstItem="b7Z-Zu-SIt" firstAttribute="leading" secondItem="2LZ-HP-Gya" secondAttribute="leading" id="wkX-6R-Ejs"/>
+-                            <constraint firstItem="2LZ-HP-Gya" firstAttribute="trailing" secondItem="b7Z-Zu-SIt" secondAttribute="trailing" id="zBF-cp-8bi"/>
++                            <constraint firstAttribute="trailing" secondItem="b7Z-Zu-SIt" secondAttribute="trailing" id="zBF-cp-8bi"/>
+                         </constraints>
+                     </view>
+                     <navigationItem key="navigationItem" title="Friends" id="il9-jJ-3KH"/>
+@@ -350,7 +347,7 @@
+                                             <rect key="frame" x="5" y="5" width="81" height="81"/>
+                                             <constraints>
+                                                 <constraint firstAttribute="width" constant="81" id="GdR-4q-XZi"/>
+-                                                <constraint firstAttribute="height" priority="999" constant="81" id="OQU-Ao-BEv"/>
++                                                <constraint firstAttribute="height" constant="81" id="OQU-Ao-BEv"/>
+                                             </constraints>
+                                             <userDefinedRuntimeAttributes>
+                                                 <userDefinedRuntimeAttribute type="image" keyPath="image" value="1"/>
+@@ -455,7 +452,7 @@
+                                 <rect key="frame" x="0.0" y="72" width="414" height="92"/>
+                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NFM-st-zhG" id="mrr-GN-tRa">
+-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="92"/>
++                                    <rect key="frame" x="0.0" y="0.0" width="414" height="91.5"/>
+                                     <autoresizingMask key="autoresizingMask"/>
+                                     <subviews>
+                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7LY-5K-bcH" userLabel="Group photo" customClass="Avatar" customModule="VK_app" customModuleProvider="target">
+@@ -475,7 +472,7 @@
+                                             </userDefinedRuntimeAttributes>
+                                         </view>
+                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCr-Qf-Mta">
+-                                            <rect key="frame" x="106" y="34.5" width="41.5" height="22.5"/>
++                                            <rect key="frame" x="106" y="34.5" width="41.5" height="20.5"/>
+                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                             <nil key="textColor"/>
+                                             <nil key="highlightedColor"/>
+@@ -620,7 +617,7 @@
+         </designable>
+     </designables>
+     <inferredMetricsTieBreakers>
+-        <segue reference="czs-Ne-Wwh"/>
++        <segue reference="vVy-tX-eer"/>
+     </inferredMetricsTieBreakers>
+     <resources>
+         <image name="1" width="128" height="128"/>
+@@ -629,9 +626,6 @@
+         <image name="newspaper" catalog="system" width="128" height="108"/>
+         <image name="person.2" catalog="system" width="128" height="81"/>
+         <image name="person.3" catalog="system" width="128" height="62"/>
+-        <systemColor name="labelColor">
+-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+-        </systemColor>
+         <systemColor name="systemBackgroundColor">
+             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+         </systemColor>
+diff --git a/VK_app/View/custom/CustomHeaderView.swift b/VK_app/View/custom/CustomHeaderView.swift
+index b201dd3..c67c5a9 100644
+--- a/VK_app/View/custom/CustomHeaderView.swift
++++ b/VK_app/View/custom/CustomHeaderView.swift
+@@ -10,12 +10,9 @@ import UIKit
+ class CustomHeaderView: UITableViewHeaderFooterView {
+ 
+     @IBOutlet weak var sectionLabel: UILabel!
+-    /*
++    
+     // Only override draw() if you perform custom drawing.
+     // An empty implementation adversely affects performance during animation.
+-    override func draw(_ rect: CGRect) {
+-        // Drawing code
+-    }
+-    */
++    
+ 
+ }
+diff --git a/VK_app/controller/FriendPhotosViewController.swift b/VK_app/controller/FriendPhotosViewController.swift
+index 3f80c3e..f45be1b 100644
+--- a/VK_app/controller/FriendPhotosViewController.swift
++++ b/VK_app/controller/FriendPhotosViewController.swift
+@@ -102,7 +102,15 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingDelega
+     
+     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! FriendPhotosViewCell
+-        cell.friendPhoto.image = imageFromUrl(url: photos[indexPath.row].photo)
++        if let data = photos[indexPath.row].photo {
++                cell.friendPhoto.image = UIImage(data: data)
++        }
++        else {
++            cell.friendPhoto.image = UIImage(named: "camera_200")
++            cell.friendPhoto.load(url: photos[indexPath.row].photoUrl) {[self] (loadedImage) in
++                photos[indexPath.row].photo = loadedImage.pngData()
++            }
++        }
+         cell.photoLike.liked = photos[indexPath.row].liked
+         cell.photoLike.likeCount = photos[indexPath.row].likes
+         cell.photoLike.delegate = self
+@@ -126,7 +134,6 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingDelega
+         sliderCenterView.addSubview(sliderCenterImage)
+         sliderCenterView.layer.masksToBounds = true
+         
+-        
+         sliderCenterImage.frame = imageRectPos(rectOfCellInTableView, rectOfCellInSuperview)
+         sliderCenterView.alpha = cell.alpha
+         cell.alpha = 0
+@@ -170,9 +177,8 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingDelega
+         
+         let translation = gesture.translation(in: self.view)
+         let positions = nearElements(index: sliderCenterView.tag)
+-        sliderRightImage.image = imageFromUrl(url: photos[positions[2]].photo)
+-        sliderLeftImage.image = imageFromUrl(url: photos[positions[0]].photo)
+-        
++        sliderRightImage.load(url: photos[positions[2]].photoUrl) {_ in }
++        sliderLeftImage.load(url: photos[positions[0]].photoUrl) {_ in }
+         switch gesture.state {
+         case .began:
+             animator = UIViewPropertyAnimator(duration: 1, curve: .linear)
+diff --git a/VK_app/controller/FriendsViewController.swift b/VK_app/controller/FriendsViewController.swift
+index fa78420..340e64f 100644
+--- a/VK_app/controller/FriendsViewController.swift
++++ b/VK_app/controller/FriendsViewController.swift
+@@ -19,11 +19,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
+     @IBOutlet weak var tableView: UITableView!
+     @IBOutlet weak var letterPicker: LetterPicker!
+     @IBOutlet weak var searchBar: UISearchBar!
+-    var users: [User] = [] {
+-        didSet {
+-            tableView.reloadData()
+-        }
+-    }
++    var users: [User] = []
+     var unfilteredUsers: [User] = []
+     var friendsService = FriendService()
+     
+@@ -39,6 +35,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
+         searchBar.delegate = self
+         friendsService.getFriendsList() { [self] (friends) in
+             users = friends.sorted{ $0.name.lowercased() < $1.name.lowercased() }
++            tableView.reloadData()
+             unfilteredUsers = users
+         }
+     }
+@@ -92,8 +89,18 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
+         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FriendsViewCell
+         let rowCount = rowCounting(indexPath)
+         let user = users[rowCount]
++        if let data = user.photo {
++            if let loadedImage = UIImage(data: data) {
++                cell.friendPhoto.avatarPhoto.image = loadedImage
++            }
++        }
++        else {
++            cell.friendPhoto.avatarPhoto.image = UIImage(named: "camera_200")
++            cell.friendPhoto.avatarPhoto.load(url: user.photoUrl) {[self] (loadedImage) in
++                users[rowCount].photo = loadedImage.pngData()
++            }
++        }
+         cell.friendName.text = user.name
+-        cell.friendPhoto.avatarPhoto.image = imageFromUrl(url: user.photo)
+         return cell
+     }
+     
+@@ -120,10 +127,16 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
+     
+     func updateUser(photos: [Photo], id: Int) {
+         if let row = users.firstIndex(where: {$0.id == id}) {
+-            users[row].photos = photos
++            users[row].photos.removeAll()
++            photos.forEach{ photo in
++                users[row].photos.append(photo)
++            }
+         }
+         if let row = unfilteredUsers.firstIndex(where: {$0.id == id}) {
+-            unfilteredUsers[row].photos = photos
++            unfilteredUsers[row].photos.removeAll()
++            photos.forEach{ photo in
++                unfilteredUsers[row].photos.append(photo)
++            }
+         }
+     }
+ }
+diff --git a/VK_app/controller/GroupsSearchViewController.swift b/VK_app/controller/GroupsSearchViewController.swift
+index 57c7698..d19314a 100644
+--- a/VK_app/controller/GroupsSearchViewController.swift
++++ b/VK_app/controller/GroupsSearchViewController.swift
+@@ -9,11 +9,7 @@ import UIKit
+ 
+ class GroupsSearchViewController: UITableViewController {
+     @IBOutlet weak var searchBar: UISearchBar!
+-    var groups: [Group] = [] {
+-        didSet {
+-            tableView.reloadData()
+-        }
+-    }
++    var groups: [Group] = []
+     var unfilteredGroups: [Group] = []
+     let groupsService = GroupsService()
+     
+@@ -25,6 +21,7 @@ class GroupsSearchViewController: UITableViewController {
+         self.hideKeyboardWhenTappedAround()
+         groupsService.getGroupsList() { [self] vkGroups in
+             groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
++            self.tableView.reloadData()
+             unfilteredGroups = groups
+         }
+     }
+@@ -45,8 +42,15 @@ class GroupsSearchViewController: UITableViewController {
+         view.translatesAutoresizingMaskIntoConstraints = false
+         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
+         let group = groups[indexPath.row]
++        if let data = group.photo {
++            cell.groupPhoto.avatarPhoto.image = UIImage(data: data)
++        } else {
++            cell.groupPhoto.avatarPhoto.image = UIImage(named: "camera_200")
++            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl) {[self] (loadedImage) in
++                groups[indexPath.row].photo = loadedImage.pngData()
++            }
++        }
+         cell.groupName.text = group.title
+-        cell.groupPhoto.avatarPhoto.image = imageFromUrl(url: group.photo)
+         return cell
+     }
+ }
+diff --git a/VK_app/controller/GroupsViewController.swift b/VK_app/controller/GroupsViewController.swift
+index 81c55d9..3846fb2 100644
+--- a/VK_app/controller/GroupsViewController.swift
++++ b/VK_app/controller/GroupsViewController.swift
+@@ -29,7 +29,14 @@ class GroupsViewController: UITableViewController {
+         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
+         let group = groups[indexPath.row]
+         cell.groupName.text = group.title
+-        cell.groupPhoto.avatarPhoto.image = imageFromUrl(url: group.photo)
++        if let data = group.photo {
++            cell.groupPhoto.avatarPhoto.image = UIImage(data: data)
++        } else {
++            cell.groupPhoto.avatarPhoto.image = UIImage(named: "camera_200")
++            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl) {[self] (loadedImage) in
++                groups[indexPath.row].photo = loadedImage.pngData()
++            }
++        }
+         return cell
+     }
+     
+diff --git a/VK_app/controller/NewsViewController.swift b/VK_app/controller/NewsViewController.swift
+index 03d2e17..fe04420 100644
+--- a/VK_app/controller/NewsViewController.swift
++++ b/VK_app/controller/NewsViewController.swift
+@@ -35,7 +35,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
+         let newsCell = news[indexPath.row]
+         let formatter = DateFormatter()
+         formatter.dateStyle = .short
+-        cell.authorPhoto.avatarPhoto.image = UIImage(named: newsCell.author.photo)
++        cell.authorPhoto.avatarPhoto.image = UIImage(named: newsCell.author.photoUrl)
+         cell.authorName.text = newsCell.author.name
+         cell.newsDate.text = formatter.string(from: newsCell.newsDate)
+         cell.newsImage.image = UIImage(named: newsCell.newsImage)
+diff --git a/VK_app/model/Config.swift b/VK_app/model/Config.swift
+index 86b0720..2bceb7a 100644
+--- a/VK_app/model/Config.swift
++++ b/VK_app/model/Config.swift
+@@ -8,10 +8,6 @@
+ import Foundation
+ 
+ class Config {
+-    
+-    static let storedConfig = Config()
+-    private init(){}
+-    
+-    let apiUrl: String = "https://api.vk.com"
+-    let apiVersion: String = "5.126"
++    static let apiUrl: String = "https://api.vk.com"
++    static let apiVersion: String = "5.126"
+ }
+diff --git a/VK_app/model/Group.swift b/VK_app/model/Group.swift
+index 253dd09..10b030f 100644
+--- a/VK_app/model/Group.swift
++++ b/VK_app/model/Group.swift
+@@ -7,22 +7,21 @@
+ 
+ import Foundation
+ import SwiftyJSON
++import RealmSwift
+ 
+-struct Group: Equatable {
++class Group: Object {
+     
+-    var title: String
+-    var photo: String
++    @objc dynamic var title: String = ""
++    @objc dynamic var photoUrl: String = ""
++    @objc dynamic var photo: Data? = nil
+     
+-    init?(json: JSON) {
++    convenience init(json: JSON) {
++        self.init()
+         self.title = json["name"].stringValue
+-        self.photo = json["photo_100"].stringValue
++        self.photoUrl = json["photo_100"].stringValue
+     }
+     
+     static var oneGroup: Group {
+-        return Group(json: "")!
+-    }
+-    
+-    static var manyGroup: [Group] {
+-        return (1...20).map{_ in Group.oneGroup}
++        return Group(json: "")
+     }
+ }
+diff --git a/VK_app/model/Photo.swift b/VK_app/model/Photo.swift
+index 4d72d62..eca3574 100644
+--- a/VK_app/model/Photo.swift
++++ b/VK_app/model/Photo.swift
+@@ -7,28 +7,27 @@
+ 
+ import Foundation
+ import SwiftyJSON
++import RealmSwift
+ 
+-struct Photo {
++class Photo: Object {
+     
+-    var liked: Bool
+-    var likes: Int
+-    var photo: String
++    @objc dynamic var liked: Bool = false
++    @objc dynamic var likes: Int = 0
++    @objc dynamic var photoUrl: String = ""
++    @objc dynamic var photo: Data? = nil
+     
+-    init?(json: JSON) {
++    convenience init(json: JSON) {
++        self.init()
+         self.liked = json["likes"]["user_likes"].intValue == 0 ? false : true
+         self.likes = json["likes"]["count"].intValue
+-        self.photo = ""
+-        for (index, object) in json["sizes"] {
++        self.photoUrl = ""
++        for (_, object) in json["sizes"] {
+             if object["type"] == "x"
+-            {self.photo = object["url"].stringValue}
++            {self.photoUrl = object["url"].stringValue}
+         }
+     }
+     
+     static var onePhoto: Photo{
+-        return Photo(json: "")!
+-    }
+-    
+-    static var manyPhotos: [Photo] {
+-        return (1...20).map{_ in Photo.onePhoto}
++        return Photo(json: "")
+     }
+ }
+diff --git a/VK_app/model/User.swift b/VK_app/model/User.swift
+index 4f5667d..dae2f0a 100644
+--- a/VK_app/model/User.swift
++++ b/VK_app/model/User.swift
+@@ -7,25 +7,23 @@
+ 
+ import Foundation
+ import SwiftyJSON
++import RealmSwift
+ 
+-struct User{
+-    var id: Int
+-    var name: String
+-    var photo: String
+-    var photos: [Photo]
++class User: Object{
++    @objc dynamic var id: Int = 0
++    @objc dynamic var name: String = ""
++    @objc dynamic var photoUrl: String = ""
++    @objc dynamic var photo: Data? = nil
++    let photos = List<Photo>()
+     
+-    init?(json: JSON) {
++    convenience init(json: JSON) {
++        self.init()
+         self.id = json["id"].intValue
+         self.name = json["first_name"].stringValue + " " + json["last_name"].stringValue
+-        self.photo = json["photo_200_orig"].stringValue
+-        self.photos = Photo.manyPhotos
++        self.photoUrl = json["photo_100"].stringValue
+     }
+     
+     static var oneUser: User{
+-        return User(json: "")!
+-    }
+-    
+-    static var manyUsers: [User] {
+-        return (1...20).map{_ in User.oneUser}
++        return User(json: "")
+     }
+ }
+diff --git a/VK_app/view/Main.storyboard b/VK_app/view/Main.storyboard
+index ad2cb00..5cf2499 100644
+--- a/VK_app/view/Main.storyboard
++++ b/VK_app/view/Main.storyboard
+@@ -256,7 +256,7 @@
+                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="smm-3V-uCK" customClass="Avatar" customModule="VK_app" customModuleProvider="target">
+                                                     <rect key="frame" x="5" y="5" width="50" height="50"/>
+                                                     <constraints>
+-                                                        <constraint firstAttribute="height" constant="50" id="Dic-Y9-Nhe"/>
++                                                        <constraint firstAttribute="height" priority="999" constant="50" id="Dic-Y9-Nhe"/>
+                                                         <constraint firstAttribute="width" secondItem="smm-3V-uCK" secondAttribute="height" multiplier="1:1" id="LIN-rj-IhN"/>
+                                                     </constraints>
+                                                     <userDefinedRuntimeAttributes>
+@@ -264,9 +264,6 @@
+                                                         <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                             <real key="value" value="5"/>
+                                                         </userDefinedRuntimeAttribute>
+-                                                        <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+-                                                            <color key="value" systemColor="labelColor"/>
+-                                                        </userDefinedRuntimeAttribute>
+                                                         <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                             <real key="value" value="0.5"/>
+                                                         </userDefinedRuntimeAttribute>
+@@ -316,7 +313,7 @@
+                             <constraint firstItem="b7Z-Zu-SIt" firstAttribute="bottom" secondItem="2LZ-HP-Gya" secondAttribute="bottom" id="f8K-Po-FFS"/>
+                             <constraint firstItem="2LZ-HP-Gya" firstAttribute="trailing" secondItem="htL-Hc-R5D" secondAttribute="trailing" constant="8" id="qsS-dx-KII"/>
+                             <constraint firstItem="b7Z-Zu-SIt" firstAttribute="leading" secondItem="2LZ-HP-Gya" secondAttribute="leading" id="wkX-6R-Ejs"/>
+-                            <constraint firstItem="2LZ-HP-Gya" firstAttribute="trailing" secondItem="b7Z-Zu-SIt" secondAttribute="trailing" id="zBF-cp-8bi"/>
++                            <constraint firstAttribute="trailing" secondItem="b7Z-Zu-SIt" secondAttribute="trailing" id="zBF-cp-8bi"/>
+                         </constraints>
+                     </view>
+                     <navigationItem key="navigationItem" title="Friends" id="il9-jJ-3KH"/>
+@@ -350,7 +347,7 @@
+                                             <rect key="frame" x="5" y="5" width="81" height="81"/>
+                                             <constraints>
+                                                 <constraint firstAttribute="width" constant="81" id="GdR-4q-XZi"/>
+-                                                <constraint firstAttribute="height" priority="999" constant="81" id="OQU-Ao-BEv"/>
++                                                <constraint firstAttribute="height" constant="81" id="OQU-Ao-BEv"/>
+                                             </constraints>
+                                             <userDefinedRuntimeAttributes>
+                                                 <userDefinedRuntimeAttribute type="image" keyPath="image" value="1"/>
+@@ -455,7 +452,7 @@
+                                 <rect key="frame" x="0.0" y="72" width="414" height="92"/>
+                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NFM-st-zhG" id="mrr-GN-tRa">
+-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="92"/>
++                                    <rect key="frame" x="0.0" y="0.0" width="414" height="91.5"/>
+                                     <autoresizingMask key="autoresizingMask"/>
+                                     <subviews>
+                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7LY-5K-bcH" userLabel="Group photo" customClass="Avatar" customModule="VK_app" customModuleProvider="target">
+@@ -475,7 +472,7 @@
+                                             </userDefinedRuntimeAttributes>
+                                         </view>
+                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCr-Qf-Mta">
+-                                            <rect key="frame" x="106" y="34.5" width="41.5" height="22.5"/>
++                                            <rect key="frame" x="106" y="34.5" width="41.5" height="20.5"/>
+                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                             <nil key="textColor"/>
+                                             <nil key="highlightedColor"/>
+@@ -620,7 +617,7 @@
+         </designable>
+     </designables>
+     <inferredMetricsTieBreakers>
+-        <segue reference="czs-Ne-Wwh"/>
++        <segue reference="vVy-tX-eer"/>
+     </inferredMetricsTieBreakers>
+     <resources>
+         <image name="1" width="128" height="128"/>
+@@ -629,9 +626,6 @@
+         <image name="newspaper" catalog="system" width="128" height="108"/>
+         <image name="person.2" catalog="system" width="128" height="81"/>
+         <image name="person.3" catalog="system" width="128" height="62"/>
+-        <systemColor name="labelColor">
+-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+-        </systemColor>
+         <systemColor name="systemBackgroundColor">
+             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+         </systemColor>
+diff --git a/VK_app/view/custom/CustomHeaderView.swift b/VK_app/view/custom/CustomHeaderView.swift
+index b201dd3..c67c5a9 100644
+--- a/VK_app/view/custom/CustomHeaderView.swift
++++ b/VK_app/view/custom/CustomHeaderView.swift
+@@ -10,12 +10,9 @@ import UIKit
+ class CustomHeaderView: UITableViewHeaderFooterView {
+ 
+     @IBOutlet weak var sectionLabel: UILabel!
+-    /*
++    
+     // Only override draw() if you perform custom drawing.
+     // An empty implementation adversely affects performance during animation.
+-    override func draw(_ rect: CGRect) {
+-        // Drawing code
+-    }
+-    */
++    
+ 
+ }
