@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 extension GroupsSearchViewController: UISearchBarDelegate {
     
@@ -15,7 +16,22 @@ extension GroupsSearchViewController: UISearchBarDelegate {
             return
         }
         groups = unfilteredGroups.filter{ $0.title.lowercased().contains(searchText.lowercased()) }
-        groupsService.groupsSearch(searchText)
+        print(groups.count)
+        //groupsService.groupsSearch(searchText)
+        
+        
+        //groupsService.getGroupsList() { [self] vkGroups in
+        /*    groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
+            do {
+                let realm = try Realm(configuration: Config.realmConfig)
+                realm.beginWrite()
+                realm.add(groups, update: .modified)
+                try realm.commitWrite()
+                showGroups()
+            } catch {
+                print(error)
+            }
+        }*/
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

@@ -16,6 +16,10 @@ class User: Object{
     @objc dynamic var photo: Data? = nil
     let photos = List<Photo>()
     
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+    
     convenience init(json: JSON) {
         self.init()
         self.id = json["id"].intValue

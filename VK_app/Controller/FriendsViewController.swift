@@ -21,7 +21,11 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var letterPicker: LetterPicker!
     @IBOutlet weak var searchBar: UISearchBar!
-    var users: [User] = []
+    var users: [User] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     var unfilteredUsers: [User] = []
     var friendsService = FriendService()
     
@@ -35,13 +39,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         self.hideKeyboardWhenTappedAround()
         searchBar.placeholder = "Find a friend"
         searchBar.delegate = self
-        friendsService.getFriendsList() { [self] (friends) in
-            users = friends.sorted{ $0.name.lowercased() < $1.name.lowercased() }
-            tableView.reloadData()
-            unfilteredUsers = users
-            //saveUserData(users)
-        }
         showUserData()
+        saveUserData()
     }
     
     // MARK: - Functions
@@ -99,7 +98,14 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         else {
             cell.friendPhoto.avatarPhoto.image = UIImage(named: "camera_200")
             cell.friendPhoto.avatarPhoto.load(url: user.photoUrl) {[self] (loadedImage) in
-                users[rowCount].photo = cell.friendPhoto.avatarPhoto.image?.pngData()
+                do {
+                    let realm = try Realm(configuration: Config.realmConfig)
+                    try! realm.write {
+                        users[rowCount].photo = cell.friendPhoto.avatarPhoto.image?.pngData()
+                    }
+                } catch {
+                    print(error)
+                }
             }
         }
         cell.friendName.text = user.name
@@ -142,22 +148,28 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    func saveUserData(_ users: [User]) {
-        do {
-            let realm = try Realm()
-            realm.beginWrite()
-            realm.add(users)
-            try realm.commitWrite()
-        } catch {
-            print(error)
+    func saveUserData() {
+        friendsService.getFriendsList() { [self] (friends) in
+            let loadedUsers = friends.sorted{ $0.name.lowercased() < $1.name.lowercased() }
+            unfilteredUsers = loadedUsers
+            do {
+                let realm = try Realm(configuration: Config.realmConfig)
+                realm.beginWrite()
+                realm.add(loadedUsers, update: .modified)
+                try realm.commitWrite()
+                showUserData()
+            } catch {
+                print(error)
+            }
         }
     }
     
     func showUserData() {
         do {
             let realm = try Realm()
-            let users = realm.objects(User.self)
-            print(users)
+            print(realm.configuration.fileURL ?? "")
+            let users = realm.objects(User.self).sorted(byKeyPath: "name", ascending: true)
+            self.users = Array(users)
         } catch {
             print(error)
         }

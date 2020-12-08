@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellProtocol {
 
@@ -72,10 +73,8 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         super.viewDidLoad()
         guard let userProperty = user else { return }
         self.title = userProperty.name
-        friendsPhotosService.getFriendsPhotosList(userId: userProperty.id) { [self] (photosList) in
-            photos = photosList
-            self.collectionView.reloadData()
-        }
+        showPhotos()
+        savePhotos(userProperty)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -103,7 +102,14 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         else {
             cell.friendPhoto.image = UIImage(named: "camera_200")
             cell.friendPhoto.load(url: photos[indexPath.row].photoUrl) {[self] (loadedImage) in
-                photos[indexPath.row].photo = loadedImage.pngData()
+                do {
+                    let realm = try Realm(configuration: Config.realmConfig)
+                    try! realm.write {
+                        photos[indexPath.row].photo = loadedImage.pngData()
+                    }
+                } catch {
+                    print(error)
+                }
             }
         }
         cell.photoLike.liked = photos[indexPath.row].liked
@@ -394,5 +400,30 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     func updateImageSlider(_ image: UIImage) {
         sliderCenterImage.image = image
         sliderCenterView.frame.origin.x = 0
+    }
+    
+    func savePhotos(_ userProperty: User) {
+        friendsPhotosService.getFriendsPhotosList(userId: userProperty.id) { [self] (photosList) in
+            do {
+                let realm = try Realm(configuration: Config.realmConfig)
+                realm.beginWrite()
+                realm.add(photosList, update: .modified)
+                try realm.commitWrite()
+                showPhotos()
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func showPhotos() {
+        do {
+            let realm = try Realm()
+            let photos = realm.objects(Photo.self)
+            self.photos = Array(photos)
+            collectionView.reloadData()
+        } catch {
+            print(error)
+        }
     }
 }

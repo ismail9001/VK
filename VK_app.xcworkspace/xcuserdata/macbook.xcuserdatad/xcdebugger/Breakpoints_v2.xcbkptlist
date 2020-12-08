@@ -55,16 +55,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5D1B6418-C2E6-49C3-9437-6CBA81083CFD"
+            uuid = "036BE509-D42B-4B6E-97B9-60F7E6D2FE8C"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VK_app/Controller/GroupsSearchViewController.swift"
+            filePath = "VK_app/Extensions/UIImageExtension.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "tableView(_:cellForRowAt:)"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "load(url:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

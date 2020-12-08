@@ -48,6 +48,7 @@ class GroupsService {
         let url = baseUrl+path
         AF.request(url, method: .get, parameters: parameters).responseJSON { response in
             print(response.value as Any)
+            
         }
     }
 }

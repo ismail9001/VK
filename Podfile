@@ -8,7 +8,6 @@ target 'VK_app' do
   # Pods for VK_app
 pod 'Alamofire', '~> 5.2'
 pod 'SwiftyJSON', '~> 4.0'
-pod 'RealmSwift'
 pod 'Kingfisher', '~> 5.0'
 
 end

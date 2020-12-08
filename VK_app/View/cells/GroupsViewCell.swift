@@ -21,6 +21,6 @@ class GroupsViewCell: UITableViewCell {
         super.prepareForReuse()
         groupPhoto.avatarPhoto.kf.cancelDownloadTask()
         groupPhoto.avatarPhoto.image = nil
-        }
-
+    }
+    
 }

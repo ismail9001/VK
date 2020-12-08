@@ -6,10 +6,15 @@
 //
 
 import UIKit
+import RealmSwift
 
 class GroupsSearchViewController: UITableViewController {
     @IBOutlet weak var searchBar: UISearchBar!
-    var groups: [Group] = []
+    var groups: [Group] = [] {
+        didSet{
+            tableView.reloadData()
+        }
+    }
     var unfilteredGroups: [Group] = []
     let groupsService = GroupsService()
     
@@ -17,13 +22,9 @@ class GroupsSearchViewController: UITableViewController {
         super.viewDidLoad()
         searchBar.placeholder = "Find a group"
         searchBar.delegate = self
-        unfilteredGroups = groups
         self.hideKeyboardWhenTappedAround()
-        groupsService.getGroupsList() { [self] vkGroups in
-            groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
-            self.tableView.reloadData()
-            unfilteredGroups = groups
-        }
+        showGroups()
+        saveGroups()
     }
     
     // MARK: - Table view data source
@@ -47,11 +48,55 @@ class GroupsSearchViewController: UITableViewController {
         } else {
             cell.groupPhoto.avatarPhoto.image = UIImage(named: "camera_200")
             cell.groupPhoto.avatarPhoto.load(url: group.photoUrl) {[self] (loadedImage) in
-                groups[indexPath.row].photo = loadedImage.pngData()
+                do {
+                    let realm = try Realm(configuration: Config.realmConfig)
+                    try! realm.write {
+                        groups[indexPath.row].photo = loadedImage.pngData()
+                    }
+                } catch {
+                    print(error)
+                }
             }
         }
         cell.groupName.text = group.title
         return cell
+    }
+    
+    func saveGroups() {
+        groupsService.getGroupsList() { [self] vkGroups in
+            groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
+            do {
+                let realm = try Realm(configuration: Config.realmConfig)
+                realm.beginWrite()
+                realm.add(groups, update: .modified)
+                try realm.commitWrite()
+                showGroups()
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func showGroups() {
+        do {
+            let realm = try Realm()
+            let groups = realm.objects(Group.self)
+            self.groups = Array(groups)
+            unfilteredGroups = self.groups
+        } catch {
+            print(error)
+        }
+    }
+    
+    func deleteObjects() {
+        do {
+            let realm = try! Realm(configuration: Config.realmConfig)
+            try! realm.write {
+                realm.deleteAll()
+            }
+        } catch {
+            print(error)
+        }
     }
 }
 

@@ -21,5 +21,5 @@ class FriendsViewCell: UITableViewCell {
         super.prepareForReuse()
         friendPhoto.avatarPhoto.kf.cancelDownloadTask()
         friendPhoto.avatarPhoto.image = nil
-        }
+    }
 }
