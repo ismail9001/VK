@@ -13,13 +13,13 @@ class FriendsPhotosService {
     
     let baseUrl = Config.apiUrl
 
-    func getFriendsPhotosList(userId: Int, completion: @escaping ([Photo]) -> Void){
+    func getFriendsPhotosList(user: User, completion: @escaping ([Photo]) -> Void){
         
         let path = "/method/photos.getAll?"
         // параметры
         let parameters: Parameters = [
             "extended": 1,
-            "owner_id": userId,
+            "owner_id": user.id,
             "photo_sizes": 1,
             "access_token": Session.storedSession.token,
             "v": Config.apiVersion
@@ -30,7 +30,7 @@ class FriendsPhotosService {
             guard let data = response.data else {return}
             do {
                 let json = try JSON(data: data)
-                let photos = json["response"]["items"].arrayValue.compactMap{ Photo(json: $0) }
+                let photos = json["response"]["items"].arrayValue.compactMap{ Photo(json: $0, user: user) }
                 completion(photos)
             } catch {
                 print (error)

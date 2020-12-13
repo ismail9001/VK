@@ -9,12 +9,20 @@ import UIKit
 import RealmSwift
 
 class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellProtocol {
-
+    
     let cellIndent: CGFloat = 20
     var photos : [Photo] = []
+    var photosList = List<Photo>() {
+        didSet {
+            photos = Array(photosList)
+        }
+    }
+    //var photoResults: <Photo>!
     var user : User?
     weak var delegate : UserUpdatingDelegate?
     let screenSize: CGRect = UIScreen.main.bounds
+    let realm = try! Realm(configuration: Config.realmConfig)
+    var token: NotificationToken?
     
     var sliderCenterImage: UIImageView = {
         let image = UIImageView()
@@ -97,15 +105,16 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! FriendPhotosViewCell
         if let data = photos[indexPath.row].photo {
-                cell.friendPhoto.image = UIImageView.imageFromData(data: data)
+            print("image from realm")
+            cell.friendPhoto.image = UIImageView.imageFromData(data: data)
         }
         else {
             cell.friendPhoto.image = UIImage(named: "camera_200")
             cell.friendPhoto.load(url: photos[indexPath.row].photoUrl) {[self] (loadedImage) in
                 do {
-                    let realm = try Realm(configuration: Config.realmConfig)
-                    try! realm.write {
+                    try realm.write {
                         photos[indexPath.row].photo = loadedImage.pngData()
+                        print("image from web")
                     }
                 } catch {
                     print(error)
@@ -403,13 +412,17 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     }
     
     func savePhotos(_ userProperty: User) {
-        friendsPhotosService.getFriendsPhotosList(userId: userProperty.id) { [self] (photosList) in
+        friendsPhotosService.getFriendsPhotosList(user: userProperty) { [self] (photosList) in
             do {
-                let realm = try Realm(configuration: Config.realmConfig)
+                guard let resultUser = realm.object(ofType: User.self, forPrimaryKey: user?.id) else { return }
+                let oldPhotos = resultUser.photos
+                print(oldPhotos, "old photos")
                 realm.beginWrite()
-                realm.add(photosList, update: .modified)
+                realm.delete(oldPhotos)
+                print(photosList, "new photos")
+                resultUser.photos.append(objectsIn: photosList)
                 try realm.commitWrite()
-                showPhotos()
+                //showPhotos()
             } catch {
                 print(error)
             }
@@ -417,13 +430,27 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     }
     
     func showPhotos() {
-        do {
-            let realm = try Realm()
-            let photos = realm.objects(Photo.self)
-            self.photos = Array(photos)
-            collectionView.reloadData()
-        } catch {
-            print(error)
+        guard let realm = try? Realm(),
+              let userResult = realm.object(ofType: User.self, forPrimaryKey: user?.id) else { return }
+        photosList = userResult.photos
+        token = photosList.observe{ (changes: RealmCollectionChange) in
+            guard let collectionView = self.collectionView else { return }
+            switch changes {
+            case .initial:
+                collectionView.reloadData()
+                print("collection reloaded")
+            case .update(_, deletions: let deletions, insertions: let insertions, modifications: let modifications):
+                print("perform to update cells")
+                collectionView.performBatchUpdates( {
+                                                        collectionView.insertItems(at: insertions.map({ IndexPath(row: $0, section: 0)}))
+                                                        collectionView.deleteItems(at: deletions.map({ IndexPath(row: $0, section: 0)}))
+                                                        collectionView.reloadItems(at: modifications.map({ IndexPath(row: $0, section: 0)}))}, completion: nil)
+                print(deletions, insertions, modifications)
+            case .error(let error):
+                print(error)
+            }
         }
+        //collectionView.reloadData()
+        // print("collection reloaded")
     }
 }

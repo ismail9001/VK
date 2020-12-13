@@ -13,7 +13,7 @@ class AuthorizationService {
     // базовый URL сервиса
     let baseUrl = "https://oauth.vk.com"
     // id client
-    let client_id = "7676047"
+    let client_id = "7697149"
     // метод для загрузки данных, в качестве аргументов получает город
     func getVKToken() {
         

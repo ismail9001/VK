@@ -90,8 +90,8 @@ class GroupsSearchViewController: UITableViewController {
     
     func deleteObjects() {
         do {
-            let realm = try! Realm(configuration: Config.realmConfig)
-            try! realm.write {
+            let realm = try Realm(configuration: Config.realmConfig)
+            try realm.write {
                 realm.deleteAll()
             }
         } catch {
