@@ -10,13 +10,11 @@ import RealmSwift
 
 class GroupsSearchViewController: UITableViewController {
     @IBOutlet weak var searchBar: UISearchBar!
-    var groups: [Group] = [] {
-        didSet{
-            tableView.reloadData()
-        }
-    }
+    var groups: [Group] = []
     var unfilteredGroups: [Group] = []
     let groupsService = GroupsService()
+    let realm = try! Realm(configuration: Config.realmConfig)
+    var token: NotificationToken?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +22,6 @@ class GroupsSearchViewController: UITableViewController {
         searchBar.delegate = self
         self.hideKeyboardWhenTappedAround()
         showGroups()
-        saveGroups()
     }
     
     // MARK: - Table view data source
@@ -43,65 +40,63 @@ class GroupsSearchViewController: UITableViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
         let group = groups[indexPath.row]
-        if let data = group.photo {
-            cell.groupPhoto.avatarPhoto.image = UIImageView.imageFromData(data: data)
+        
+        if let savedImage = UIImageView.getSavedImage(named: group.photoName) {
+            cell.groupPhoto.avatarPhoto.image = savedImage
         } else {
             cell.groupPhoto.avatarPhoto.image = UIImage(named: "camera_200")
-            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl) {[self] (loadedImage) in
-                do {
-                    let realm = try Realm(configuration: Config.realmConfig)
-                    try! realm.write {
-                        groups[indexPath.row].photo = loadedImage.pngData()
-                    }
-                } catch {
-                    print(error)
-                }
-            }
+            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl)
         }
+        
         cell.groupName.text = group.title
         return cell
     }
     
-    func saveGroups() {
+    func showGroups() {
+        
+        let groups = realm.objects(Group.self).sorted(byKeyPath: "title", ascending: true)
+        let groupsArray = Array(groups)
+        if groupsArray.count != 0 {
+            self.groups = groupsArray
+            unfilteredGroups = self.groups
+            self.token = groups.observe{ (changes: RealmCollectionChange) in
+                switch changes {
+                case .initial(_):
+                    self.tableView.reloadData()
+                case .update( _, deletions: _, insertions: _, modifications: _):
+                    self.tableView.reloadData()
+                case .error( let error):
+                    fatalError("\(error)")
+                }
+            }
+        }
+        self.saveGroups(groupsArray.count == 0 ? true : false)
+    }
+    
+    func saveGroups(_ emptyStorage: Bool) {
         groupsService.getGroupsList() { [self] vkGroups in
             groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
             do {
-                let realm = try Realm(configuration: Config.realmConfig)
                 realm.beginWrite()
+                
+                let items = groups
+                let ids = items.map { $0.id }
+                let objectsToDelete = realm.objects(Group.self).filter("NOT id IN %@", ids)
+                realm.delete(objectsToDelete)
                 realm.add(groups, update: .modified)
+                
                 try realm.commitWrite()
-                showGroups()
             } catch {
                 print(error)
             }
-        }
-    }
-    
-    func showGroups() {
-        do {
-            let realm = try Realm()
-            let groups = realm.objects(Group.self)
-            self.groups = Array(groups)
-            unfilteredGroups = self.groups
-        } catch {
-            print(error)
-        }
-    }
-    
-    func deleteObjects() {
-        do {
-            let realm = try Realm(configuration: Config.realmConfig)
-            try realm.write {
-                realm.deleteAll()
+            if emptyStorage {
+                showGroups()
             }
-        } catch {
-            print(error)
         }
     }
 }
 
 extension NSLayoutConstraint {
-
     override public var description: String {
         let id = identifier ?? ""
         return "id: \(id), constant: \(constant)" //you may print whatever you want here

@@ -21,18 +21,14 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var letterPicker: LetterPicker!
     @IBOutlet weak var searchBar: UISearchBar!
-    var users: [User] = [] {
-        didSet {
-            //letterPicker.letters = uniqueLettersCount(users: users)
-            //print("table reloaded")
-            //tableView.reloadData()
-        }
-    }
+    var users: [User] = []
     var unfilteredUsers: [User] = []
     var friendsService = FriendService()
     let realm = try! Realm(configuration: Config.realmConfig)
+    var tokensArray = [NotificationToken]()
     var token: NotificationToken?
     
+    //TODO: -- refactor viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         letterPicker.delegate = self
@@ -45,49 +41,40 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         searchBar.delegate = self
         showUserData()
         
-        DispatchQueue.global().async {
-            for _ in 1...5 {
-                sleep(10)
-                DispatchQueue.main.async {
-                    self.saveUserData(self.users.count == 0 ? true : false)
-                }
-            }
-        }
+        //Для теста обновления данных
+        
+        /*DispatchQueue.global().async {
+         for _ in 1...5 {
+         sleep(10)
+         DispatchQueue.main.async {
+         self.saveUserData(self.users.count == 0 ? true : false)
+         }
+         }
+         }*/
     }
     
     // MARK: - Functions
     
     func rowCounting(_ indexPath: IndexPath) -> Int{
-        //print("indexpath section", indexPath.section)
-        //TODI дебажить тут
         var i = 0
         var rowCount = 0
         while i < indexPath.section {
             rowCount += tableView.numberOfRows(inSection: i)
-            //print(i, "section")
-            //print(tableView.numberOfRows(inSection: i), "number of rows in section")
-            //print(rowCount, "rowCount")
             i += 1
         }
-        //print("row", indexPath.row)
         rowCount += indexPath.row
-        //print("rowcounting return", rowCount)
         return rowCount
     }
     
     func uniqueLettersCount (users:[User]) -> [String]{
         let allLetters = users.map { String($0.name.uppercased().prefix(1))}
         letterPicker.letters = Array(Set(allLetters)).sorted()
-        //print(users.count, "users count")
-        //print(letterPicker.letters.count, "letters count")
-        //print("uniqieLetterCount return", letterPicker.letters)
         return letterPicker.letters
     }
     
     // MARK: - Table view data source
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        //print("numberOfSection return ", uniqueLettersCount(users: self.users).count)
         // #warning Incomplete implementation, return the number of sections
         return uniqueLettersCount(users: self.users).count
     }
@@ -103,16 +90,11 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var countOfRows = 0
-        var cccco = 0
         for user in users {
             if let firstLetter = user.name.first {
                 if (String(firstLetter) == letterPicker.letters[section]) {
                     countOfRows += 1
                 }
-            }
-            if (letterPicker.letters[section] == "Ю" && String(user.name.first!) == "Ю") {
-                cccco += 1
-                print(cccco)
             }
         }
         return countOfRows
@@ -121,23 +103,13 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FriendsViewCell
         let rowCount = rowCounting(indexPath)
-        //print(rowCount, "rowcount")
-        //print(users.count, "users count")
         let user = users[rowCount]
-        if let data = user.photo {
-            cell.friendPhoto.avatarPhoto.image = UIImageView.imageFromData(data: data)
+        if let savedImage = UIImageView.getSavedImage(named: user.photoName) {
+            cell.friendPhoto.avatarPhoto.image = savedImage
         }
         else {
             cell.friendPhoto.avatarPhoto.image = UIImage(named: "camera_200")
-            cell.friendPhoto.avatarPhoto.load(url: user.photoUrl) {[self] (loadedImage) in
-                do {
-                    try realm.write {
-                        users[rowCount].photo = cell.friendPhoto.avatarPhoto.image?.pngData()
-                    }
-                } catch {
-                    print(error)
-                }
-            }
+            cell.friendPhoto.avatarPhoto.load(url: user.photoUrl)
         }
         cell.friendName.text = user.name
         return cell
@@ -178,17 +150,39 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
+    //TODO:-- сделать обновления построчно, а не всю таблицу
+    func showUserData() {
+        let users = realm.objects(User.self).sorted(byKeyPath: "name", ascending: true)
+        let usersArray = Array(users)
+        if usersArray.count != 0 {
+            self.users = usersArray
+            self.token = users.observe{ (changes: RealmCollectionChange) in
+                switch changes {
+                case .initial(_):
+                    self.tableView.reloadData()
+                case .update( _, deletions: _, insertions: _, modifications: _):
+                    self.tableView.reloadData()
+                case .error( let error):
+                    fatalError("\(error)")
+                }
+            }
+        }
+        self.saveUserData(usersArray.count == 0 ? true : false)
+    }
     
     func saveUserData(_ emptyStorage: Bool) {
-        //print(realm.configuration.fileURL ?? "")
         friendsService.getFriendsList() { [self] (friends) in
             users = friends.sorted{ $0.name.lowercased() < $1.name.lowercased() }
-            //print("user updated")
             unfilteredUsers = users
-            //print(users.count, "users count from web")
             do {
                 realm.beginWrite()
+                
+                let items = users
+                let ids = items.map { $0.id }
+                let objectsToDelete = realm.objects(User.self).filter("NOT id IN %@", ids)
+                realm.delete(objectsToDelete)
                 realm.add(users, update: .modified)
+                
                 try realm.commitWrite()
             } catch {
                 print(error)
@@ -197,60 +191,5 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
                 showUserData()
             }
         }
-    }
-    
-    func showUserData() {
-        let users = realm.objects(User.self).sorted(byKeyPath: "name", ascending: true)
-        let usersArray = Array(users)
-        if usersArray.count != 0 {
-            self.users = usersArray
-            let lettersArray = uniqueLettersCount(users: usersArray)
-            for i in lettersArray.indices {
-                let updatedUserByLetter: Results<User> = {
-                    return users
-                        .filter("name BEGINSWITH %@",lettersArray[i])
-                        .sorted(byKeyPath: "name", ascending: true)
-                }()
-                var updatedUserByLetterCount: Int = {
-                    return updatedUserByLetter.count
-                }()
-                self.token = updatedUserByLetter.observe{ (changes: RealmCollectionChange) in
-                    switch changes {
-                    case .initial(_):
-                        self.tableView.reloadData()
-                        //print("initial")
-                    case let .update( _, deletions: del, insertions: ins, modifications: mod):
-                        // MANUALLY UPDATE THE OBJECT COUNT FOR SECTIONS
-                        
-                        updatedUserByLetterCount -= del.count
-                        updatedUserByLetterCount += ins.count
-                        // REFRESH THE SECTION
-                        
-                        self.refreshUsersTable(section: i, del: del, ins: ins, mod: mod)
-                        //print(del, ins, mod)
-                        self.tableView.endUpdates()
-                    case .error( let error):
-                        fatalError("\(error)")
-                    }
-                }
-            }
-        }
-        self.saveUserData(usersArray.count == 0 ? true : false)
-    }
-    func refreshUsersTable(section: Int, del: [Int], ins: [Int], mod: [Int]) {
-        tableView.beginUpdates()
-        tableView.deleteRows(
-            at: del.map { .init(row: $0, section: section) },
-            with: .fade
-        )
-        tableView.insertRows(
-            at: ins.map { .init(row: $0, section: section) },
-            with: .fade
-        )
-        tableView.reloadRows(
-            at: mod.map { .init(row: $0, section: section) },
-            with: .fade
-        )
-        tableView.endUpdates()
     }
 }

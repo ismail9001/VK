@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -38,8 +38,6 @@
 		FA606A9F2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A9E2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift */; };
 		FA606AA22572CBB200DC60CA /* WebViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606AA12572CBB200DC60CA /* WebViewControllerExtension.swift */; };
 		FA9EDABF256AA32200AE5870 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9EDABE256AA32200AE5870 /* Session.swift */; };
-		FAA8F84E25855D800070449E /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = FAA8F84D25855D800070449E /* Realm */; };
-		FAA8F85025855D840070449E /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FAA8F84F25855D840070449E /* RealmSwift */; };
 		FACBD5F4254C3BE400BAFCA8 /* LetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACBD5F3254C3BE400BAFCA8 /* LetterPicker.swift */; };
 		FACBD5FD254D6A2A00BAFCA8 /* CustomHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACBD5FC254D6A2A00BAFCA8 /* CustomHeaderView.swift */; };
 		FACBD600254D6A4F00BAFCA8 /* CustomHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FACBD5FF254D6A4F00BAFCA8 /* CustomHeaderView.xib */; };
@@ -125,8 +123,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAA8F85025855D840070449E /* RealmSwift in Frameworks */,
-				FAA8F84E25855D800070449E /* Realm in Frameworks */,
 				FA606A66256D8FAF00DC60CA /* WebKit.framework in Frameworks */,
 				E451E0878AC98214386CE5B6 /* Pods_VK_app.framework in Frameworks */,
 			);
@@ -327,8 +323,6 @@
 			);
 			name = VK_app;
 			packageProductDependencies = (
-				FAA8F84D25855D800070449E /* Realm */,
-				FAA8F84F25855D840070449E /* RealmSwift */,
 			);
 			productName = VK_app;
 			productReference = FA52104D2532E9E700D84397 /* VK_app.app */;
@@ -358,7 +352,6 @@
 			);
 			mainGroup = FA5210442532E9E700D84397;
 			packageReferences = (
-				FA85F74D257F47F200E51077 /* XCRemoteSwiftPackageReference "realm-cocoa" */,
 			);
 			productRefGroup = FA52104E2532E9E700D84397 /* Products */;
 			projectDirPath = "";
@@ -668,30 +661,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		FA85F74D257F47F200E51077 /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/realm/realm-cocoa";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 10.2.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		FAA8F84D25855D800070449E /* Realm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FA85F74D257F47F200E51077 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
-			productName = Realm;
-		};
-		FAA8F84F25855D840070449E /* RealmSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FA85F74D257F47F200E51077 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
-			productName = RealmSwift;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FA5210452532E9E700D84397 /* Project object */;
 }

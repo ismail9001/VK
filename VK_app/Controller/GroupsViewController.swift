@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import RealmSwift
 
 class GroupsViewController: UITableViewController {
     
     var groups:[Group] = []
-    
+    let realm = try! Realm(configuration: Config.realmConfig)
+    var token: NotificationToken?
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -29,13 +31,11 @@ class GroupsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
         let group = groups[indexPath.row]
         cell.groupName.text = group.title
-        if let data = group.photo {
-            cell.groupPhoto.avatarPhoto.image = UIImageView.imageFromData(data: data)
+        if let savedImage = UIImageView.getSavedImage(named: group.photoName) {
+            cell.groupPhoto.avatarPhoto.image = savedImage
         } else {
             cell.groupPhoto.avatarPhoto.image = UIImage(named: "camera_200")
-            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl) {[self] (loadedImage) in
-                groups[indexPath.row].photo = loadedImage.pngData()
-            }
+            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl)
         }
         return cell
     }
@@ -45,7 +45,6 @@ class GroupsViewController: UITableViewController {
         if segue.identifier == "addGroup" {
             // Получаем ссылку на контроллер, с которого осуществлен переход
             let groupSearchController = segue.source as! GroupsSearchViewController
-            
             // Получаем индекс выделенной ячейки
             if let indexPath = groupSearchController.tableView.indexPathForSelectedRow {
                 // Получаем группу по индексу
@@ -53,8 +52,15 @@ class GroupsViewController: UITableViewController {
                 // Добавляем группу в список выбранных  сообществ
                 if !groups.contains(group) {
                     groups.append(group)
-                    // Обновляем таблицу
-                    tableView.reloadData()
+                    do {
+                        realm.beginWrite()
+                        
+                        group.liked = true
+                        
+                        try realm.commitWrite()
+                    } catch {
+                        print(error)
+                    }
                 }
             }
         }
@@ -64,14 +70,39 @@ class GroupsViewController: UITableViewController {
         // Если была нажата кнопка «Удалить»
         if editingStyle == .delete {
             // Удаляем группу из массива
+            let groupForDelete = groups[indexPath.row]
+            do {
+                try realm.write{
+                    groupForDelete.liked = false
+                }
+            } catch {
+                print(error)
+            }
             groups.remove(at: indexPath.row)
-            // И удаляем строку из таблицы
-            tableView.deleteRows(at: [indexPath], with: .fade)
         }
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        showGroups()
+    }
+    
+    func showGroups() {
+        
+        let groups = realm.objects(Group.self)//.sorted(byKeyPath: "title", ascending: true)
+        let groupsArray = Array(groups.filter("liked == true"))
+        if groupsArray.count != 0 {
+            self.groups = groupsArray
+            self.token = groups.observe{ (changes: RealmCollectionChange) in
+                switch changes {
+                case .initial(_):
+                    self.tableView.reloadData()
+                case .update( _, deletions: _, insertions: _, modifications: _):
+                    self.tableView.reloadData()
+                case .error( let error):
+                    fatalError("\(error)")
+                }
+            }
+        }
     }
 }

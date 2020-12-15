@@ -17,7 +17,6 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
             photos = Array(photosList)
         }
     }
-    //var photoResults: <Photo>!
     var user : User?
     weak var delegate : UserUpdatingDelegate?
     let screenSize: CGRect = UIScreen.main.bounds
@@ -82,7 +81,6 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         guard let userProperty = user else { return }
         self.title = userProperty.name
         showPhotos()
-        savePhotos(userProperty)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -104,22 +102,11 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! FriendPhotosViewCell
-        if let data = photos[indexPath.row].photo {
-            print("image from realm")
-            cell.friendPhoto.image = UIImageView.imageFromData(data: data)
-        }
-        else {
+        if let savedImage = UIImageView.getSavedImage(named: photos[indexPath.row].photoName) {
+            cell.friendPhoto.image = savedImage
+        } else {
             cell.friendPhoto.image = UIImage(named: "camera_200")
-            cell.friendPhoto.load(url: photos[indexPath.row].photoUrl) {[self] (loadedImage) in
-                do {
-                    try realm.write {
-                        photos[indexPath.row].photo = loadedImage.pngData()
-                        print("image from web")
-                    }
-                } catch {
-                    print(error)
-                }
-            }
+            cell.friendPhoto.load(url: photos[indexPath.row].photoUrl)
         }
         cell.photoLike.liked = photos[indexPath.row].liked
         cell.photoLike.likeCount = photos[indexPath.row].likes
@@ -187,8 +174,8 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         
         let translation = gesture.translation(in: self.view)
         let positions = nearElements(index: sliderCenterView.tag)
-        sliderRightImage.load(url: photos[positions[2]].photoUrl) {_ in }
-        sliderLeftImage.load(url: photos[positions[0]].photoUrl) {_ in }
+        sliderRightImage.image = UIImageView.getSavedImage(named: photos[positions[2]].photoName)
+        sliderLeftImage.image = UIImageView.getSavedImage(named: photos[positions[0]].photoName)
         switch gesture.state {
         case .began:
             animator = UIViewPropertyAnimator(duration: 1, curve: .linear)
@@ -411,46 +398,51 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         sliderCenterView.frame.origin.x = 0
     }
     
-    func savePhotos(_ userProperty: User) {
-        friendsPhotosService.getFriendsPhotosList(user: userProperty) { [self] (photosList) in
+    func showPhotos() {
+        guard let realm = try? Realm(),
+              let userResult = user else { return }
+        
+        let photosResult = realm.objects(Photo.self).filter("user.id == %@", userResult.id)
+        photos = Array(photosResult)
+        
+        if photos.count != 0 {
+            token = photosResult.observe{ (changes: RealmCollectionChange) in
+                guard let collectionView = self.collectionView else { return }
+                switch changes {
+                case .initial:
+                    collectionView.reloadData()
+                case .update(_, deletions: _, insertions: _, modifications: _):
+                    collectionView.reloadData()
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+        self.savePhotos(photos.count == 0 ? true : false, userResult)
+    }
+    
+    func savePhotos(_ emptyStorage: Bool,_ userProperty: User) {
+        friendsPhotosService.getFriendsPhotosList(user: userProperty) { [self] (photosForUpdate) in
             do {
-                guard let resultUser = realm.object(ofType: User.self, forPrimaryKey: user?.id) else { return }
-                let oldPhotos = resultUser.photos
-                print(oldPhotos, "old photos")
                 realm.beginWrite()
-                realm.delete(oldPhotos)
-                print(photosList, "new photos")
-                resultUser.photos.append(objectsIn: photosList)
+    
+                let ids = photosForUpdate.map { $0.id }
+                let objectsToDelete = realm.objects(Photo.self).filter("NOT id IN %@", ids)
+                realm.delete(objectsToDelete)
+                realm.add(photosForUpdate, update: .modified)
+                userProperty.photos.append(objectsIn: photosForUpdate)
+                
                 try realm.commitWrite()
-                //showPhotos()
             } catch {
                 print(error)
+            }
+            if emptyStorage {
+                showPhotos()
             }
         }
     }
     
-    func showPhotos() {
-        guard let realm = try? Realm(),
-              let userResult = realm.object(ofType: User.self, forPrimaryKey: user?.id) else { return }
-        photosList = userResult.photos
-        token = photosList.observe{ (changes: RealmCollectionChange) in
-            guard let collectionView = self.collectionView else { return }
-            switch changes {
-            case .initial:
-                collectionView.reloadData()
-                print("collection reloaded")
-            case .update(_, deletions: let deletions, insertions: let insertions, modifications: let modifications):
-                print("perform to update cells")
-                collectionView.performBatchUpdates( {
-                                                        collectionView.insertItems(at: insertions.map({ IndexPath(row: $0, section: 0)}))
-                                                        collectionView.deleteItems(at: deletions.map({ IndexPath(row: $0, section: 0)}))
-                                                        collectionView.reloadItems(at: modifications.map({ IndexPath(row: $0, section: 0)}))}, completion: nil)
-                print(deletions, insertions, modifications)
-            case .error(let error):
-                print(error)
-            }
-        }
-        //collectionView.reloadData()
-        // print("collection reloaded")
+    func checkImageExist(id: Int)-> Bool{
+        return realm.object(ofType: Photo.self, forPrimaryKey: id) != nil
     }
 }

@@ -8,6 +8,7 @@
 import UIKit
 import WebKit
 import Alamofire
+import RealmSwift
 
 class WebViewController: UIViewController {
     
@@ -18,10 +19,11 @@ class WebViewController: UIViewController {
         }
     let loginService = AuthorizationService()
     let friendsService = FriendService()
-
+    let realm = try! Realm(configuration: Config.realmConfig)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(realm.configuration.fileURL ?? "")
         loginService.getVKToken()
         
         var urlComponents = URLComponents()
@@ -29,7 +31,7 @@ class WebViewController: UIViewController {
                 urlComponents.host = "oauth.vk.com"
                 urlComponents.path = "/authorize"
                 urlComponents.queryItems = [
-                    URLQueryItem(name: "client_id", value: "7697149"),
+                    URLQueryItem(name: "client_id", value: "7676047"),
                     URLQueryItem(name: "display", value: "mobile"),
                     URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
                     URLQueryItem(name: "scope", value: "262150"),

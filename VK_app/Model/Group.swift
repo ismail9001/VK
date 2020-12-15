@@ -14,7 +14,8 @@ class Group: Object {
     @objc dynamic var id: Int = 0
     @objc dynamic var title: String = ""
     @objc dynamic var photoUrl: String = ""
-    @objc dynamic var photo: Data? = nil
+    @objc dynamic var photoName: String = ""
+    @objc dynamic var liked: Bool = false
     
     override static func primaryKey() -> String? {
         return "id"
@@ -25,9 +26,9 @@ class Group: Object {
         self.id = json["id"].intValue
         self.title = json["name"].stringValue
         self.photoUrl = json["photo_100"].stringValue
-    }
-    
-    static var oneGroup: Group {
-        return Group(json: "")
+        if let url = URL(string: self.photoUrl) {
+            let withoutExt = url.deletingPathExtension()
+            self.photoName = withoutExt.lastPathComponent + ".jpg"
+        }
     }
 }

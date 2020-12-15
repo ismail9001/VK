@@ -15,8 +15,8 @@ class Photo: Object {
     @objc dynamic var liked: Bool = false
     @objc dynamic var likes: Int = 0
     @objc dynamic var photoUrl: String = ""
-    @objc dynamic var photo: Data? = nil
-    @objc dynamic var user: User? = nil
+    @objc dynamic var photoName: String = ""
+    @objc dynamic var user: User?
     
     override static func primaryKey() -> String? {
         return "id"
@@ -24,7 +24,6 @@ class Photo: Object {
     
     convenience init(json: JSON, user: User) {
         self.init()
-        print("foto created")
         self.id = json["id"].intValue
         self.liked = json["likes"]["user_likes"].intValue == 0 ? false : true
         self.likes = json["likes"]["count"].intValue
@@ -33,10 +32,10 @@ class Photo: Object {
             if object["type"] == "x"
             {self.photoUrl = object["url"].stringValue}
         }
+        if let url = URL(string: self.photoUrl) {
+            let withoutExt = url.deletingPathExtension()
+            self.photoName = withoutExt.lastPathComponent + ".jpg"
+        }
         self.user = user
     }
-    
-    /*static var onePhoto: Photo{
-        return Photo(json: "", user: nil)
-    }*/
 }
