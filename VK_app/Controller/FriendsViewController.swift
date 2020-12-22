@@ -7,7 +7,6 @@
 
 import UIKit
 import Kingfisher
-import RealmSwift
 
 protocol UserUpdatingDelegate: class {
     func updateUser(photos: [Photo], id: Int)
@@ -24,33 +23,27 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     var users: [User] = []
     var unfilteredUsers: [User] = []
     var friendsService = FriendService()
-    let realm = try! Realm(configuration: Config.realmConfig)
-    var tokensArray = [NotificationToken]()
-    var token: NotificationToken?
+    let loginService = AuthorizationService()
+    let realmService = RealmService()
+    lazy var refreshControl = UIRefreshControl()
     
     //TODO: -- refactor viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         letterPicker.delegate = self
         letterPicker.letters = uniqueLettersCount(users: users)
+        
         let headerSection = UINib.init(nibName: "CustomHeaderView", bundle: Bundle.main)
         tableView.register(headerSection, forHeaderFooterViewReuseIdentifier: "CustomHeaderView")
+        
         //Looks for single or multiple taps.
         self.hideKeyboardWhenTappedAround()
         searchBar.placeholder = "Find a friend"
         searchBar.delegate = self
+        
         showUserData()
-        
-        //Для теста обновления данных
-        
-        /*DispatchQueue.global().async {
-         for _ in 1...5 {
-         sleep(10)
-         DispatchQueue.main.async {
-         self.saveUserData(self.users.count == 0 ? true : false)
-         }
-         }
-         }*/
+        saveUserToFirebase()
+        addRefreshControl()
     }
     
     // MARK: - Functions
@@ -65,7 +58,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         rowCount += indexPath.row
         return rowCount
     }
-    
+    //подсчет уникальных первых букв в именах
     func uniqueLettersCount (users:[User]) -> [String]{
         let allLetters = users.map { String($0.name.uppercased().prefix(1))}
         letterPicker.letters = Array(Set(allLetters)).sorted()
@@ -152,44 +145,45 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     //TODO:-- сделать обновления построчно, а не всю таблицу
     func showUserData() {
-        let users = realm.objects(User.self).sorted(byKeyPath: "name", ascending: true)
+        let users =  realmService.getRealmUsers(sortingKey: "name")// realm.objects(User.self).sorted(byKeyPath: "name", ascending: true)
         let usersArray = Array(users)
         if usersArray.count != 0 {
             self.users = usersArray
-            self.token = users.observe{ (changes: RealmCollectionChange) in
-                switch changes {
-                case .initial(_):
-                    self.tableView.reloadData()
-                case .update( _, deletions: _, insertions: _, modifications: _):
-                    self.tableView.reloadData()
-                case .error( let error):
-                    fatalError("\(error)")
-                }
-            }
+            realmService.setObserveToken(result: users, tableView: self.tableView)
         }
         self.saveUserData(usersArray.count == 0 ? true : false)
     }
+    
     
     func saveUserData(_ emptyStorage: Bool) {
         friendsService.getFriendsList() { [self] (friends) in
             users = friends.sorted{ $0.name.lowercased() < $1.name.lowercased() }
             unfilteredUsers = users
-            do {
-                realm.beginWrite()
-                
-                let items = users
-                let ids = items.map { $0.id }
-                let objectsToDelete = realm.objects(User.self).filter("NOT id IN %@", ids)
-                realm.delete(objectsToDelete)
-                realm.add(users, update: .modified)
-                
-                try realm.commitWrite()
-            } catch {
-                print(error)
-            }
+            realmService.saveRealmUsers(users: users)
             if emptyStorage {
                 showUserData()
             }
         }
+    }
+    
+    func saveUserToFirebase() {
+        loginService.getProfileInfo()
+    }
+    
+    func addRefreshControl() {
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        tableView.addSubview(refreshControl)
+        tableView.sendSubviewToBack(refreshControl)
+    }
+    
+    @objc func refresh(_ sender: AnyObject) {
+        //Для теста обновления данных
+        DispatchQueue.global().async {
+            DispatchQueue.main.async {
+                self.saveUserData(self.users.count == 0 ? true : false)
+            }
+        }
+        refreshControl.endRefreshing()
     }
 }

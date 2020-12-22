@@ -36,7 +36,7 @@ class GroupsService {
         }
     }
     
-    func groupsSearch(_ search: String) {
+    func groupsSearch(_ search: String, completion: @escaping ([Group]) -> Void) {
         
         let path = "/method/groups.search?"
         // параметры
@@ -47,8 +47,71 @@ class GroupsService {
         ]
         let url = baseUrl+path
         AF.request(url, method: .get, parameters: parameters).responseJSON { response in
-            print(response.value as Any)
-            
+            guard let data = response.data else {return}
+            do {
+                let json = try JSON(data: data)
+                let groups = json["response"]["items"].arrayValue.compactMap{ Group(json: $0) }
+                completion(groups)
+            } catch {
+                print (error)
+                completion([])
+            }
+        }
+    }
+    
+    func joinInGroup(_ groupId: Int, completion: @escaping (Bool) -> Void)   {
+        
+        let path = "/method/groups.join?"
+        // параметры
+        let parameters: Parameters = [
+            "group_id": groupId,
+            "access_token": Session.storedSession.token,
+            "v": Config.apiVersion
+        ]
+        let url = baseUrl+path
+        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
+            print(response)
+            guard let data = response.data else {return}
+            do {
+                let json = try JSON(data: data)
+                print("json", json)
+                let response = json["response"]
+                if response == 1 {
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            } catch {
+                print (error)
+                completion(false)
+            }
+        }
+    }
+    
+    func leaveFromGroup(_ groupId: Int, completion: @escaping (Bool) -> Void)   {
+        
+        let path = "/method/groups.leave?"
+        // параметры
+        let parameters: Parameters = [
+            "group_id": groupId,
+            "access_token": Session.storedSession.token,
+            "v": Config.apiVersion
+        ]
+        let url = baseUrl+path
+        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
+            guard let data = response.data else {return}
+            do {
+                let json = try JSON(data: data)
+                let response = json["response"]
+                if response == 1 {
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            } catch {
+                print (error)
+                completion(false)
+            }
         }
     }
 }

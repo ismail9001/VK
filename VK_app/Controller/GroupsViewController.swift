@@ -11,8 +11,10 @@ import RealmSwift
 class GroupsViewController: UITableViewController {
     
     var groups:[Group] = []
+    var user:User = User()
     let realm = try! Realm(configuration: Config.realmConfig)
     var token: NotificationToken?
+    let groupsService = GroupsService()
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -49,17 +51,36 @@ class GroupsViewController: UITableViewController {
             if let indexPath = groupSearchController.tableView.indexPathForSelectedRow {
                 // Получаем группу по индексу
                 let group = groupSearchController.groups[indexPath.row]
-                // Добавляем группу в список выбранных  сообществ
-                if !groups.contains(group) {
-                    groups.append(group)
-                    do {
-                        realm.beginWrite()
-                        
-                        group.liked = true
-                        
-                        try realm.commitWrite()
-                    } catch {
-                        print(error)
+                groupsService.joinInGroup(group.id) { [self]response in
+                    if response && !groups.contains(group) {
+                        //обновляем данные
+                        groups.append(group)
+                        print(group)
+                        groups = groups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
+                        do {
+                            realm.beginWrite()
+
+                            realm.add(group, update: .modified)
+                            
+                            try realm.commitWrite()
+                            
+                            let groupJSON: [String: Any] = {
+                                return [
+                                    "id": group.id,
+                                    "name": group.title
+                                ]
+                            }()
+                            let user_id = Config.user_id_firebase
+                            Config.db.collection("users").document("\(user_id)").collection("groups").document("\(group.id)") .setData(groupJSON) { error in
+                                if let error = error {
+                                    print("Error adding user: \(error)")
+                                } else {
+                                    print("User updated with ID:\(user_id)")
+                                }
+                            }
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
             }
@@ -69,16 +90,20 @@ class GroupsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         // Если была нажата кнопка «Удалить»
         if editingStyle == .delete {
-            // Удаляем группу из массива
             let groupForDelete = groups[indexPath.row]
-            do {
-                try realm.write{
-                    groupForDelete.liked = false
+            groupsService.leaveFromGroup (groupForDelete.id){ [self]response in
+                if response {
+                    // Удаляем группу из массива
+                    do {
+                        try realm.write{
+                            realm.delete(groupForDelete)
+                        }
+                    } catch {
+                        print(error)
+                    }
+                    groups.remove(at: indexPath.row)
                 }
-            } catch {
-                print(error)
             }
-            groups.remove(at: indexPath.row)
         }
     }
     
@@ -87,10 +112,11 @@ class GroupsViewController: UITableViewController {
         showGroups()
     }
     
+    
     func showGroups() {
         
-        let groups = realm.objects(Group.self)//.sorted(byKeyPath: "title", ascending: true)
-        let groupsArray = Array(groups.filter("liked == true"))
+        let groups = realm.objects(Group.self).sorted(byKeyPath: "title", ascending: true)
+        let groupsArray = Array(groups)
         if groupsArray.count != 0 {
             self.groups = groupsArray
             self.token = groups.observe{ (changes: RealmCollectionChange) in
@@ -98,11 +124,36 @@ class GroupsViewController: UITableViewController {
                 case .initial(_):
                     self.tableView.reloadData()
                 case .update( _, deletions: _, insertions: _, modifications: _):
+                    print("reloaded")
                     self.tableView.reloadData()
                 case .error( let error):
                     fatalError("\(error)")
                 }
             }
         }
+        self.saveGroups(groupsArray.count == 0 ? true : false)
     }
+    
+    func saveGroups(_ emptyStorage: Bool) {
+        groupsService.getGroupsList() { [self] vkGroups in
+            groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
+            do {
+                realm.beginWrite()
+                
+                let items = groups
+                let ids = items.map { $0.id }
+                let objectsToDelete = realm.objects(Group.self).filter("NOT id IN %@", ids)
+                realm.delete(objectsToDelete)
+                realm.add(groups, update: .modified)
+                
+                try realm.commitWrite()
+            } catch {
+                print(error)
+            }
+            if emptyStorage {
+                showGroups()
+            }
+        }
+    }
+
 }

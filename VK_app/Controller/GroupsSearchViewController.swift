@@ -10,7 +10,11 @@ import RealmSwift
 
 class GroupsSearchViewController: UITableViewController {
     @IBOutlet weak var searchBar: UISearchBar!
-    var groups: [Group] = []
+    var groups: [Group] = [] {
+        didSet {
+            self.tableView.reloadData()
+        }
+    }
     var unfilteredGroups: [Group] = []
     let groupsService = GroupsService()
     let realm = try! Realm(configuration: Config.realmConfig)
@@ -54,46 +58,10 @@ class GroupsSearchViewController: UITableViewController {
     
     func showGroups() {
         
-        let groups = realm.objects(Group.self).sorted(byKeyPath: "title", ascending: true)
-        let groupsArray = Array(groups)
-        if groupsArray.count != 0 {
-            self.groups = groupsArray
-            unfilteredGroups = self.groups
-            self.token = groups.observe{ (changes: RealmCollectionChange) in
-                switch changes {
-                case .initial(_):
-                    self.tableView.reloadData()
-                case .update( _, deletions: _, insertions: _, modifications: _):
-                    self.tableView.reloadData()
-                case .error( let error):
-                    fatalError("\(error)")
-                }
-            }
-        }
-        self.saveGroups(groupsArray.count == 0 ? true : false)
+        //let groups = realm.objects(Group.self).sorted(byKeyPath: "title", ascending: true)
+
     }
     
-    func saveGroups(_ emptyStorage: Bool) {
-        groupsService.getGroupsList() { [self] vkGroups in
-            groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
-            do {
-                realm.beginWrite()
-                
-                let items = groups
-                let ids = items.map { $0.id }
-                let objectsToDelete = realm.objects(Group.self).filter("NOT id IN %@", ids)
-                realm.delete(objectsToDelete)
-                realm.add(groups, update: .modified)
-                
-                try realm.commitWrite()
-            } catch {
-                print(error)
-            }
-            if emptyStorage {
-                showGroups()
-            }
-        }
-    }
 }
 
 extension NSLayoutConstraint {

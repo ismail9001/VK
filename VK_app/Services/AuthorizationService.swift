@@ -7,6 +7,8 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
+import Firebase
 
 class AuthorizationService {
 
@@ -14,6 +16,7 @@ class AuthorizationService {
     let baseUrl = "https://oauth.vk.com"
     // id client
     let client_id = "7697149"
+
     // метод для загрузки данных, в качестве аргументов получает город
     func getVKToken() {
         
@@ -34,5 +37,39 @@ class AuthorizationService {
         let url = baseUrl+path
     // делаем запрос
         AF.request(url, method: .get, parameters: parameters)
+    }
+    
+    func getProfileInfo(){
+        
+        let path = "/method/account.getProfileInfo?"
+        let parameters: Parameters = [
+            "access_token": Session.storedSession.token,
+            "v": Config.apiVersion
+        ]
+        let url = Config.apiUrl+path
+        AF.request(url, method: .get, parameters: parameters).responseJSON {response in
+            guard let data = response.data else {return}
+            do {
+                let json = try JSON(data: data)
+                let result = json["response"]
+                let userJSON: [String: Any] = {
+                    return [
+                        "id": result["id"].stringValue,
+                        "name": result["first_name"].stringValue + " " + result["last_name"].stringValue
+                    ]
+                }()
+                let user_id = result["id"].intValue
+                Config.user_id_firebase = user_id
+                Config.db.collection("users").document("\(user_id)").setData(userJSON) { error in
+                    if let error = error {
+                        print("Error adding user: \(error)")
+                    } else {
+                        print("User updated with ID:\(user_id)")
+                    }
+                }
+            } catch {
+                print (error)
+            }
+        }
     }
 }

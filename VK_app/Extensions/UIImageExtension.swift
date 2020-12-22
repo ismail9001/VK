@@ -22,7 +22,7 @@ extension UIImageView {
                 switch result {
                 case .success(let value):
                     self?.image = value.image
-                    let success = self?.saveImage(image: value.image, imageName: imageName)
+                    _ = self?.saveImage(image: value.image, imageName: imageName)
                 case .failure(let error):
                     print(error)
                 }

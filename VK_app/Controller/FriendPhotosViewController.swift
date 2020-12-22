@@ -6,22 +6,15 @@
 //
 
 import UIKit
-import RealmSwift
 
 class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellProtocol {
     
     let cellIndent: CGFloat = 20
     var photos : [Photo] = []
-    var photosList = List<Photo>() {
-        didSet {
-            photos = Array(photosList)
-        }
-    }
     var user : User?
     weak var delegate : UserUpdatingDelegate?
     let screenSize: CGRect = UIScreen.main.bounds
-    let realm = try! Realm(configuration: Config.realmConfig)
-    var token: NotificationToken?
+    let realmService = RealmService()
     
     var sliderCenterImage: UIImageView = {
         let image = UIImageView()
@@ -399,50 +392,25 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     }
     
     func showPhotos() {
-        guard let realm = try? Realm(),
-              let userResult = user else { return }
+        //let realm = try? Realm(),
+        guard let userResult = user else { return }
         
-        let photosResult = realm.objects(Photo.self).filter("user.id == %@", userResult.id)
+        let photosResult = realmService.getRealmPhotos(filterKey: userResult.id)
         photos = Array(photosResult)
         
         if photos.count != 0 {
-            token = photosResult.observe{ (changes: RealmCollectionChange) in
-                guard let collectionView = self.collectionView else { return }
-                switch changes {
-                case .initial:
-                    collectionView.reloadData()
-                case .update(_, deletions: _, insertions: _, modifications: _):
-                    collectionView.reloadData()
-                case .error(let error):
-                    print(error)
-                }
-            }
+            realmService.setObservePhotosToken(result: photosResult, collectionView: self.collectionView)
         }
         self.savePhotos(photos.count == 0 ? true : false, userResult)
     }
     
     func savePhotos(_ emptyStorage: Bool,_ userProperty: User) {
         friendsPhotosService.getFriendsPhotosList(user: userProperty) { [self] (photosForUpdate) in
-            do {
-                realm.beginWrite()
-    
-                let ids = photosForUpdate.map { $0.id }
-                let objectsToDelete = realm.objects(Photo.self).filter("NOT id IN %@", ids)
-                realm.delete(objectsToDelete)
-                realm.add(photosForUpdate, update: .modified)
-                userProperty.photos.append(objectsIn: photosForUpdate)
-                
-                try realm.commitWrite()
-            } catch {
-                print(error)
-            }
+            realmService.saveRealmPhotos(photos: photosForUpdate)
+            self.photos = photosForUpdate
             if emptyStorage {
                 showPhotos()
             }
         }
-    }
-    
-    func checkImageExist(id: Int)-> Bool{
-        return realm.object(ofType: Photo.self, forPrimaryKey: id) != nil
     }
 }
