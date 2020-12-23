@@ -15,6 +15,7 @@ class GroupsViewController: UITableViewController {
     let realm = try! Realm(configuration: Config.realmConfig)
     var token: NotificationToken?
     let groupsService = GroupsService()
+    let realmService = RealmService()
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -115,7 +116,7 @@ class GroupsViewController: UITableViewController {
     
     func showGroups() {
         
-        let groups = realm.objects(Group.self).sorted(byKeyPath: "title", ascending: true)
+        let groups = realmService.getRealmGroups(sortingKey: "title")//realm.objects(Group.self).sorted(byKeyPath: "title", ascending: true)
         let groupsArray = Array(groups)
         if groupsArray.count != 0 {
             self.groups = groupsArray

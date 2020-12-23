@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellProtocol {
     
@@ -15,6 +16,7 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     weak var delegate : UserUpdatingDelegate?
     let screenSize: CGRect = UIScreen.main.bounds
     let realmService = RealmService()
+    var token: NotificationToken?
     
     var sliderCenterImage: UIImageView = {
         let image = UIImageView()
@@ -396,10 +398,23 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         guard let userResult = user else { return }
         
         let photosResult = realmService.getRealmPhotos(filterKey: userResult.id)
-        photos = Array(photosResult)
-        
+        self.photos = Array(photosResult)
         if photos.count != 0 {
-            realmService.setObservePhotosToken(result: photosResult, collectionView: self.collectionView)
+            
+            //Заккоментировать
+            self.token = photosResult.observe{ (changes: RealmCollectionChange) in
+                switch changes {
+                case .initial(_):
+                    self.collectionView.reloadData()
+                case .update( _, deletions: _, insertions: _, modifications: _):
+                    self.collectionView.reloadData()
+                case .error( let error):
+                    fatalError("\(error)")
+                }
+            }
+            //Заккоментировать
+            
+            //realmService.setObservePhotosToken(result: photosResult, collectionView: self.collectionView)
         }
         self.savePhotos(photos.count == 0 ? true : false, userResult)
     }
@@ -408,6 +423,7 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         friendsPhotosService.getFriendsPhotosList(user: userProperty) { [self] (photosForUpdate) in
             realmService.saveRealmPhotos(photos: photosForUpdate)
             self.photos = photosForUpdate
+            print("storage is empty", emptyStorage)
             if emptyStorage {
                 showPhotos()
             }

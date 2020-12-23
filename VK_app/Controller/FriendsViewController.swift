@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+//import RealmSwift
 
 protocol UserUpdatingDelegate: class {
     func updateUser(photos: [Photo], id: Int)
@@ -20,12 +21,17 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var letterPicker: LetterPicker!
     @IBOutlet weak var searchBar: UISearchBar!
-    var users: [User] = []
+    var users: [User] = [] {
+        didSet{
+            unfilteredUsers = users
+        }
+    }
     var unfilteredUsers: [User] = []
     var friendsService = FriendService()
     let loginService = AuthorizationService()
     let realmService = RealmService()
     lazy var refreshControl = UIRefreshControl()
+    //var token: NotificationToken?
     
     //TODO: -- refactor viewDidLoad
     override func viewDidLoad() {
@@ -145,10 +151,11 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     //TODO:-- сделать обновления построчно, а не всю таблицу
     func showUserData() {
-        let users =  realmService.getRealmUsers(sortingKey: "name")// realm.objects(User.self).sorted(byKeyPath: "name", ascending: true)
+        let users =  realmService.getRealmUsers(sortingKey: "name")
         let usersArray = Array(users)
         if usersArray.count != 0 {
             self.users = usersArray
+            
             realmService.setObserveToken(result: users, tableView: self.tableView)
         }
         self.saveUserData(usersArray.count == 0 ? true : false)
@@ -158,7 +165,6 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func saveUserData(_ emptyStorage: Bool) {
         friendsService.getFriendsList() { [self] (friends) in
             users = friends.sorted{ $0.name.lowercased() < $1.name.lowercased() }
-            unfilteredUsers = users
             realmService.saveRealmUsers(users: users)
             if emptyStorage {
                 showUserData()

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9A20264C36AF3B71A63B9CDD /* Pods_VK_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97813AECF7FBAA574FEDFF79 /* Pods_VK_app.framework */; };
-		FA232F122592841A00721320 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA232F112592841A00721320 /* RealmService.swift */; };
+		FA22714C2593BF0B0085FFE5 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA22714B2593BF0B0085FFE5 /* RealmService.swift */; };
 		FA2D73D7253B0B03003FAAD4 /* FriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73D6253B0B03003FAAD4 /* FriendsViewController.swift */; };
 		FA2D73DA253B0B29003FAAD4 /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73D9253B0B29003FAAD4 /* GroupsViewController.swift */; };
 		FA2D73DD253B0B55003FAAD4 /* FriendPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73DC253B0B55003FAAD4 /* FriendPhotosViewController.swift */; };
@@ -66,7 +66,7 @@
 		93906A35A882B3D4F3EBA4D1 /* Pods-VK_app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK_app.release.xcconfig"; path = "Target Support Files/Pods-VK_app/Pods-VK_app.release.xcconfig"; sourceTree = "<group>"; };
 		967DB5121EA1AC5B2B5DFC8D /* Pods-VK_app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK_app.debug.xcconfig"; path = "Target Support Files/Pods-VK_app/Pods-VK_app.debug.xcconfig"; sourceTree = "<group>"; };
 		97813AECF7FBAA574FEDFF79 /* Pods_VK_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FA232F112592841A00721320 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RealmService.swift; path = ../../../../../Documents/RealmService.swift; sourceTree = "<group>"; };
+		FA22714B2593BF0B0085FFE5 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
 		FA2D73D6253B0B03003FAAD4 /* FriendsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewController.swift; sourceTree = "<group>"; };
 		FA2D73D9253B0B29003FAAD4 /* GroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; };
 		FA2D73DC253B0B55003FAAD4 /* FriendPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendPhotosViewController.swift; sourceTree = "<group>"; };
@@ -144,10 +144,10 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		FA232EF525927C7C00721320 /* Database */ = {
+		FA22714A2593BEFB0085FFE5 /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				FA232F112592841A00721320 /* RealmService.swift */,
+				FA22714B2593BF0B0085FFE5 /* RealmService.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -256,7 +256,7 @@
 		FA606A6F256DB45300DC60CA /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				FA232EF525927C7C00721320 /* Database */,
+				FA22714A2593BEFB0085FFE5 /* Database */,
 				FA606A70256DB47C00DC60CA /* AuthorizationService.swift */,
 				FA606A74256ECC3300DC60CA /* FriendsService.swift */,
 				FA606A7E256EDB2400DC60CA /* FriendsPhotosService.swift */,
@@ -455,11 +455,11 @@
 				FA2D741B253B35AA003FAAD4 /* FriendPhotosViewCell.swift in Sources */,
 				FA606A962572C86600DC60CA /* UIViewControllerExtension.swift in Sources */,
 				FACBD620254EB0F100BAFCA8 /* NewsControl.swift in Sources */,
-				FA232F122592841A00721320 /* RealmService.swift in Sources */,
 				FAF80384255C5C9E0053D6E1 /* CustomPopAnimator.swift in Sources */,
 				FA606AA22572CBB200DC60CA /* WebViewControllerExtension.swift in Sources */,
 				FAF80393255D588E0053D6E1 /* CustomInterActiveTransition.swift in Sources */,
 				FA606A9F2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift in Sources */,
+				FA22714C2593BF0B0085FFE5 /* RealmService.swift in Sources */,
 				FA606A71256DB47C00DC60CA /* AuthorizationService.swift in Sources */,
 				FACBD5FD254D6A2A00BAFCA8 /* CustomHeaderView.swift in Sources */,
 				FAFB2E252540D12300C68268 /* Photo.swift in Sources */,
