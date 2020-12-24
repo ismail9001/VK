@@ -31,7 +31,6 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     let loginService = AuthorizationService()
     let realmService = RealmService()
     lazy var refreshControl = UIRefreshControl()
-    //var token: NotificationToken?
     
     //TODO: -- refactor viewDidLoad
     override func viewDidLoad() {
@@ -160,7 +159,6 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         self.saveUserData(usersArray.count == 0 ? true : false)
     }
-    
     
     func saveUserData(_ emptyStorage: Bool) {
         friendsService.getFriendsList() { [self] (friends) in

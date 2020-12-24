@@ -12,6 +12,7 @@ class RealmService {
     let realm = try! Realm(configuration: Config.realmConfig)
     var userToken: NotificationToken?
     var photoToken: NotificationToken?
+    var groupToken: NotificationToken?
     
     func getRealmPhotos(filterKey: Int) -> Results<Photo>{
         let photos = realm.objects(Photo.self).filter("user.id == %@", filterKey)
@@ -59,12 +60,64 @@ class RealmService {
         }
     }
     
+    func saveRealmGroups(groups: [Group]) {
+        do {
+            realm.beginWrite()
+            
+            let items = groups
+            let ids = items.map { $0.id }
+            let objectsToDelete = realm.objects(Group.self).filter("NOT id IN %@", ids)
+            realm.delete(objectsToDelete)
+            realm.add(groups, update: .modified)
+            
+            try realm.commitWrite()
+        } catch {
+            print(error)
+        }
+    }
+    
+    func addRealmGroup(group: Group) {
+        do {
+            realm.beginWrite()
+
+            realm.add(group, update: .modified)
+            
+            try realm.commitWrite()
+        } catch {
+            print(error)
+        }
+    }
+    
+    func deleteRealmGroup(group: Group) {
+        do {
+            try realm.write{
+                realm.delete(group)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
     func setObserveToken(result: Results<User>, tableView: UITableView){
         userToken = result.observe{ (changes: RealmCollectionChange) in
             switch changes {
             case .initial(_):
                 tableView.reloadData()
             case .update( _, deletions: _, insertions: _, modifications: _):
+                tableView.reloadData()
+            case .error( let error):
+                fatalError("\(error)")
+            }
+        }
+    }
+    
+    func setObserveGroupToken(result: Results<Group>, tableView: UITableView){
+        groupToken = result.observe{ (changes: RealmCollectionChange) in
+            switch changes {
+            case .initial(_):
+                tableView.reloadData()
+            case .update( _, deletions: _, insertions: _, modifications: _):
+                print("reloaded")
                 tableView.reloadData()
             case .error( let error):
                 fatalError("\(error)")

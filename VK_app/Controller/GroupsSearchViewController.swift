@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import RealmSwift
 
 class GroupsSearchViewController: UITableViewController {
     @IBOutlet weak var searchBar: UISearchBar!
@@ -17,15 +16,12 @@ class GroupsSearchViewController: UITableViewController {
     }
     var unfilteredGroups: [Group] = []
     let groupsService = GroupsService()
-    let realm = try! Realm(configuration: Config.realmConfig)
-    var token: NotificationToken?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.placeholder = "Find a group"
         searchBar.delegate = self
         self.hideKeyboardWhenTappedAround()
-        showGroups()
     }
     
     // MARK: - Table view data source
@@ -55,13 +51,6 @@ class GroupsSearchViewController: UITableViewController {
         cell.groupName.text = group.title
         return cell
     }
-    
-    func showGroups() {
-        
-        //let groups = realm.objects(Group.self).sorted(byKeyPath: "title", ascending: true)
-
-    }
-    
 }
 
 extension NSLayoutConstraint {
