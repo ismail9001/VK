@@ -7,7 +7,6 @@
 
 import UIKit
 import Kingfisher
-//import RealmSwift
 
 protocol UserUpdatingDelegate: class {
     func updateUser(photos: [Photo], id: Int)
@@ -16,21 +15,32 @@ protocol LetterPickerDelegate: class {
     func letterPicked(_ letter: String)
 }
 
-class FriendsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UserUpdatingDelegate, LetterPickerDelegate {
+class FriendsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UserUpdatingDelegate, LetterPickerDelegate, RecalculateTableDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var letterPicker: LetterPicker!
     @IBOutlet weak var searchBar: UISearchBar!
     var users: [User] = [] {
+        willSet{
+            //сохраняем старую структуру данных таблицы
+            recalcOldSections()
+        }
         didSet{
             unfilteredUsers = users
         }
     }
+    
+    var newSections = [ViewSection]()
+    var oldSections = [ViewSection]()
+    
+    var oldUsers: [User] = []
     var unfilteredUsers: [User] = []
     var friendsService = FriendService()
     let loginService = AuthorizationService()
     let realmService = RealmService()
     lazy var refreshControl = UIRefreshControl()
+    var bufferSection:[ViewSection]?
+    var firstLoad = true
     
     //TODO: -- refactor viewDidLoad
     override func viewDidLoad() {
@@ -45,10 +55,13 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         self.hideKeyboardWhenTappedAround()
         searchBar.placeholder = "Find a friend"
         searchBar.delegate = self
+        //делегат сравнения структуры
+        realmService.recalculateDelegate = self
         
         showUserData()
-        saveUserToFirebase()
         addRefreshControl()
+        
+        //saveUserToFirebase()
     }
     
     // MARK: - Functions
@@ -154,7 +167,6 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         let usersArray = Array(users)
         if usersArray.count != 0 {
             self.users = usersArray
-            
             realmService.setObserveToken(result: users, tableView: self.tableView)
         }
         self.saveUserData(usersArray.count == 0 ? true : false)
@@ -170,15 +182,99 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    func saveUserToFirebase() {
-        loginService.getProfileInfo()
-    }
+    /*func saveUserToFirebase() {
+     loginService.getProfileInfo()
+     }*/
     
     func addRefreshControl() {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
         tableView.addSubview(refreshControl)
         tableView.sendSubviewToBack(refreshControl)
+    }
+    
+    func recalculateTable(collection: [User]) {
+        //новый массив данных для ячеек
+        newSections.removeAll()
+        let lettersArray = self.uniqueLettersCount(users: collection)
+        for letter in lettersArray {
+            var section = ViewSection(sectionTitle: letter, cells: [], index: lettersArray.firstIndex(of: letter)!)
+            var count = 0
+            for user in collection {
+                if user.name.first?.lowercased() == letter.lowercased() {
+                    section.cells.append(ViewCell(id: user.id, index: count) )
+                    count += 1
+                }
+            }
+            newSections.append(section)
+        }
+        //инициализация обектов изменений
+        let sectionChanges = SectionChanges()
+        let cellChanges = CellChanges()
+        
+        let uniqueSectionKeys = (newSections + oldSections)
+            .map { $0.sectionTitle }
+            .filterDuplicates().sorted()
+        //сравнительный перебор по структурам
+        for sectionKey in uniqueSectionKeys {
+            let oldSectionItem = ReloadableSectionData(items: oldSections)[sectionKey]
+            let newSectionItem = ReloadableSectionData(items: newSections)[sectionKey]
+            if let oldSectionItem = oldSectionItem, let newSectionItem = newSectionItem {
+                if oldSectionItem != newSectionItem {
+                    let oldCellIData = ReloadableCellData(items: oldSectionItem.cells)
+                    let newCellData = ReloadableCellData(items: newSectionItem.cells)
+                    let uniqueCellKeys = (oldCellIData.items + newCellData.items)
+                        .map { $0.id }
+                        .filterDuplicates()
+                    for cellKey in uniqueCellKeys {
+                        let oldCellItem = oldCellIData[cellKey]
+                        let newCellItem = newCellData[cellKey]
+                        if let oldCellItem = oldCellItem, let newCelItem = newCellItem {
+                            if oldCellItem != newCelItem {
+                                cellChanges.reloads.append(IndexPath(row: oldCellItem.index, section: oldSectionItem.index))
+                            }
+                        } else if let oldCellItem = oldCellItem {
+                            cellChanges.deletes.append(IndexPath(row: oldCellItem.index, section: oldSectionItem.index))
+                        } else if let newCellItem = newCellItem {
+                            cellChanges.inserts.append(IndexPath(row: newCellItem.index, section: newSectionItem.index))
+                        }
+                    }
+                }
+            } else if let oldSectionItem = oldSectionItem {
+                sectionChanges.deletesInts.append(oldSectionItem.index)
+            } else if let newSectionItem = newSectionItem {
+                sectionChanges.insertsInts.append(newSectionItem.index)
+            }
+        }
+        sectionChanges.updates = cellChanges
+        tableUpdate(changes: sectionChanges)
+    }
+    
+    func recalcOldSections() {
+        //массив структуры учтаревших ячеек
+        oldSections.removeAll()
+        let lettersArray = self.uniqueLettersCount(users: users)
+        for letter in lettersArray {
+            var section = ViewSection(sectionTitle: letter, cells: [], index: lettersArray.firstIndex(of: letter)!)
+            var count = 0
+            for user in users {
+                if user.name.first?.lowercased() == letter.lowercased() {
+                    section.cells.append(ViewCell(id: user.id, index: count) )
+                    count += 1
+                }
+            }
+            oldSections.append(section)
+        }
+    }
+    
+    func tableUpdate(changes: SectionChanges) {
+        self.tableView.beginUpdates()
+        self.tableView.deleteSections(changes.deletes, with: .fade)
+        self.tableView.insertSections(changes.inserts, with: .fade)
+        self.tableView.reloadRows(at: changes.updates.reloads, with: .fade)
+        self.tableView.insertRows(at: changes.updates.inserts, with: .fade)
+        self.tableView.deleteRows(at: changes.updates.deletes, with: .fade)
+        self.tableView.endUpdates()
     }
     
     @objc func refresh(_ sender: AnyObject) {

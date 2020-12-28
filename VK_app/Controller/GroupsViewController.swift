@@ -57,7 +57,7 @@ class GroupsViewController: UITableViewController {
                         groups = groups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
                         realmService.addRealmGroup(group: group)
                         //FireStorm
-                        let groupJSON: [String: Any] = {
+                        /*let groupJSON: [String: Any] = {
                             return [
                                 "id": group.id,
                                 "name": group.title
@@ -70,7 +70,7 @@ class GroupsViewController: UITableViewController {
                             } else {
                                 print("User updated with ID:\(user_id)")
                             }
-                        }
+                        }*/
                         
                     }
                 }

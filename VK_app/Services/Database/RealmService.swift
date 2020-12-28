@@ -8,11 +8,18 @@
 import Foundation
 import RealmSwift
 
+protocol RecalculateTableDelegate: class {
+    func recalculateTable(collection: [User])
+}
+
 class RealmService {
+    
     let realm = try! Realm(configuration: Config.realmConfig)
     var userToken: NotificationToken?
     var photoToken: NotificationToken?
     var groupToken: NotificationToken?
+    
+    weak var recalculateDelegate : RecalculateTableDelegate?
     
     func getRealmPhotos(filterKey: Int) -> Results<Photo>{
         let photos = realm.objects(Photo.self).filter("user.id == %@", filterKey)
@@ -38,7 +45,6 @@ class RealmService {
             let objectsToDelete = realm.objects(User.self).filter("NOT id IN %@", ids)
             realm.delete(objectsToDelete)
             realm.add(users, update: .modified)
-            
             try realm.commitWrite()
         } catch {
             print(error)
@@ -99,12 +105,17 @@ class RealmService {
     }
     
     func setObserveToken(result: Results<User>, tableView: UITableView){
-        userToken = result.observe{ (changes: RealmCollectionChange) in
+        userToken = result.observe{ [self] (changes: RealmCollectionChange) in
             switch changes {
             case .initial(_):
                 tableView.reloadData()
-            case .update( _, deletions: _, insertions: _, modifications: _):
-                tableView.reloadData()
+            print(1)
+            case .update( let results, deletions: let del, insertions: let ins, modifications: let mod):
+                print("deletions:", del, "insertions:", ins, "modifications:", mod)
+                recalculateDelegate?.recalculateTable(collection: Array(results))
+                //сделать делегат на контроллер по обновлению данных
+                //print(results)
+                //tableView.reloadData()
             case .error( let error):
                 fatalError("\(error)")
             }

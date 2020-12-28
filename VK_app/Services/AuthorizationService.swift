@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import Firebase
+//import Firebase
 
 class AuthorizationService {
 
@@ -39,7 +39,7 @@ class AuthorizationService {
         AF.request(url, method: .get, parameters: parameters)
     }
     
-    func getProfileInfo(){
+    /*func getProfileInfo(){
         
         let path = "/method/account.getProfileInfo?"
         let parameters: Parameters = [
@@ -71,5 +71,5 @@ class AuthorizationService {
                 print (error)
             }
         }
-    }
+    }*/
 }

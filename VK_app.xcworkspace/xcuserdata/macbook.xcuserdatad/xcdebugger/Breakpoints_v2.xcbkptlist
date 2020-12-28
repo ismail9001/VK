@@ -14,8 +14,8 @@
             filePath = "VK_app/Controller/FriendsViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "VK_app/Controller/FriendsViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
+            startingLineNumber = "283"
+            endingLineNumber = "283"
             landmarkName = "refresh(_:)"
             landmarkType = "7">
             <Locations>
@@ -94,8 +94,8 @@
             filePath = "VK_app/Controller/FriendsViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "saveUserData(_:)"
             landmarkType = "7">
             <Locations>
@@ -157,8 +157,8 @@
             filePath = "VK_app/Controller/FriendsViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
+            startingLineNumber = "178"
+            endingLineNumber = "178"
             landmarkName = "saveUserData(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -263,7 +263,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "758A0731-5DCE-4555-ABEA-7FBCF5676A15"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VK_app/Controller/FriendPhotosViewController.swift"
@@ -327,7 +327,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "59B2EC7D-8416-4442-873B-7954D259184C"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VK_app/Controller/FriendPhotosViewController.swift"
@@ -349,8 +349,8 @@
             filePath = "VK_app/Services/Database/RealmService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "setObservePhotosToken(result:collectionView:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -365,42 +365,10 @@
             filePath = "VK_app/Services/Database/RealmService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "setObservePhotosToken(result:collectionView:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "90C63E94-C9D7-4904-BCDC-7E95017C8C07 - e59555f76ab42152"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (RealmSwift.RealmCollectionChange&lt;RealmSwift.Results&lt;VK_app.Photo&gt;&gt;) -&gt; () in VK_app.RealmService.setObservePhotosToken(result: RealmSwift.Results&lt;VK_app.Photo&gt;, collectionView: __C.UICollectionView) -&gt; ()"
-                  moduleName = "VK_app"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macbook/Desktop/VK/VK_app/Services/Database/RealmService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82"
-                  offsetFromSymbolStart = "56">
-               </Location>
-               <Location
-                  uuid = "90C63E94-C9D7-4904-BCDC-7E95017C8C07 - e59555f76ab42152"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (RealmSwift.RealmCollectionChange&lt;RealmSwift.Results&lt;VK_app.Photo&gt;&gt;) -&gt; () in VK_app.RealmService.setObservePhotosToken(result: RealmSwift.Results&lt;VK_app.Photo&gt;, collectionView: __C.UICollectionView) -&gt; ()"
-                  moduleName = "VK_app"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macbook/Desktop/VK/VK_app/Services/Database/RealmService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82"
-                  offsetFromSymbolStart = "189">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -413,10 +381,118 @@
             filePath = "VK_app/Controller/FriendsViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "188"
-            endingLineNumber = "188"
+            startingLineNumber = "284"
+            endingLineNumber = "284"
             landmarkName = "refresh(_:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "85BB521E-FB65-4877-B8CA-A11DDD3C375C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VK_app/Controller/FriendsViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "FriendsViewController"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "85BB521E-FB65-4877-B8CA-A11DDD3C375C - 2bf792609a2a7709"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VK_app.FriendsViewController.letterPicker.getter : Swift.Optional&lt;VK_app.LetterPicker&gt;"
+                  moduleName = "VK_app"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macbook/Desktop/VK/VK_app/Controller/FriendsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "22"
+                  endingLineNumber = "22"
+                  offsetFromSymbolStart = "88">
+               </Location>
+               <Location
+                  uuid = "85BB521E-FB65-4877-B8CA-A11DDD3C375C - e317424570dc733d"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VK_app.FriendsViewController.letterPicker.setter : Swift.Optional&lt;VK_app.LetterPicker&gt;"
+                  moduleName = "VK_app"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macbook/Desktop/VK/VK_app/Controller/FriendsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "22"
+                  endingLineNumber = "22"
+                  offsetFromSymbolStart = "155">
+               </Location>
+               <Location
+                  uuid = "85BB521E-FB65-4877-B8CA-A11DDD3C375C - 93f4735a9dcc82d6"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VK_app.FriendsViewController.letterPicker.modify : Swift.Optional&lt;VK_app.LetterPicker&gt;"
+                  moduleName = "VK_app"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macbook/Desktop/VK/VK_app/Controller/FriendsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "59">
+               </Location>
+               <Location
+                  uuid = "85BB521E-FB65-4877-B8CA-A11DDD3C375C - b654b50e6132886e"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VK_app.FriendsViewController.letterPicker.modify : Swift.Optional&lt;VK_app.LetterPicker&gt; with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "VK_app"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macbook/Desktop/VK/VK_app/Controller/FriendsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "22"
+                  endingLineNumber = "22"
+                  offsetFromSymbolStart = "64">
+               </Location>
+               <Location
+                  uuid = "85BB521E-FB65-4877-B8CA-A11DDD3C375C - 56fcceb392a52c32"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VK_app.FriendsViewController.init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__C.NSBundle&gt;) -&gt; VK_app.FriendsViewController"
+                  moduleName = "VK_app"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macbook/Desktop/VK/VK_app/Controller/FriendsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "22"
+                  endingLineNumber = "22"
+                  offsetFromSymbolStart = "510">
+               </Location>
+               <Location
+                  uuid = "85BB521E-FB65-4877-B8CA-A11DDD3C375C - 1b203cab8b6e286d"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VK_app.FriendsViewController.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;VK_app.FriendsViewController&gt;"
+                  moduleName = "VK_app"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macbook/Desktop/VK/VK_app/Controller/FriendsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "22"
+                  endingLineNumber = "22"
+                  offsetFromSymbolStart = "451">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
