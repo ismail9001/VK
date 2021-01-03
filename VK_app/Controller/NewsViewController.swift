@@ -38,8 +38,16 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.authorPhoto.avatarPhoto.image = UIImage(named: newsCell.author.photoUrl)
         cell.authorName.text = newsCell.author.name
         cell.newsDate.text = formatter.string(from: newsCell.newsDate)
-        cell.newsImage.image = UIImage(named: newsCell.newsImage)
-        cell.newsText.text = newsCell.newsText
+        cell.postLabel.text = newsCell.newsLabel
+        cell.newsImage.isHidden = false
+        cell.newsText.isHidden = false
+        if newsCell.postType {
+            cell.newsText.text = newsCell.newsText
+            cell.newsImage.isHidden = true
+        } else {
+            cell.newsImage.image = UIImage(named: newsCell.newsImage)
+            cell.newsText.isHidden = true
+        }
         cell.photoLike.likeCount = newsCell.likeCount
         cell.photoLike.commentCount.text = String(newsCell.commentCount)
         cell.photoLike.lookUpCount.text = String(newsCell.lookUpCount)

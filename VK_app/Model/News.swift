@@ -9,6 +9,7 @@ import Foundation
 struct News {
     var id: Int
     var author: User
+    var newsLabel: String!
     var newsText: String!
     var newsDate: Date!
     var newsImage: String!
@@ -16,9 +17,21 @@ struct News {
     var lookUpCount: Int
     var shareCount: Int
     var commentCount: Int
+    var postType: Bool
     
     static var oneNews: News{
-        return News(id: Int.random(in: 1...Int.max), author: User.oneUser, newsText: Lorem.sentence, newsDate: Date.randomWithinDaysBeforeToday(7), newsImage: "groups/\(Int.random(in: 1...15))g", likeCount: Int.random(in: 3...123), lookUpCount: Int.random(in: 3...123), shareCount: Int.random(in: 3...123),commentCount: Int.random(in: 3...123))
+        let postType = Bool.random()
+        return News(id: Int.random(in: 1...Int.max),
+                    author: User.oneUser,
+                    newsLabel: Lorem.title,
+                    newsText: postType ? Lorem.tweet : nil,
+                    newsDate: Date.randomWithinDaysBeforeToday(7),
+                    newsImage: postType ? nil : "groups/\(Int.random(in: 1...15))g",
+                    likeCount: Int.random(in: 3...123),
+                    lookUpCount: Int.random(in: 3...123),
+                    shareCount: Int.random(in: 3...123),
+                    commentCount: Int.random(in: 3...123),
+                    postType: postType)
     }
     
     static var manyNews: [News] {

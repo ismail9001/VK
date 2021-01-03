@@ -32,6 +32,10 @@ class User: Object{
     }
     
     static var oneUser: User{
-        return User(json: "")
+        let user =  User(json: "")
+        user.id = Int.random(in: 1...Int.max)
+        user.name = Lorem.fullName
+        user.photoUrl = "\(Int.random(in: 1...15))"
+        return user
     }
 }
