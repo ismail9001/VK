@@ -104,7 +104,9 @@ class GroupsViewController: UITableViewController {
         let groupsArray = Array(groups)
         if groupsArray.count != 0 {
             self.groups = groupsArray
-            realmService.setObserveGroupToken(result: groups, tableView: self.tableView)
+            realmService.setObserveGroupToken(result: groups) {
+                self.tableView.reloadData()
+            }
         }
         self.saveGroups(groupsArray.count == 0 ? true : false)
     }

@@ -167,7 +167,9 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         let usersArray = Array(users)
         if usersArray.count != 0 {
             self.users = usersArray
-            realmService.setObserveToken(result: users, tableView: self.tableView)
+            realmService.setObserveToken(result: users) {
+                self.tableView.reloadData()
+            }
         }
         self.saveUserData(usersArray.count == 0 ? true : false)
     }

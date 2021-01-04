@@ -397,7 +397,9 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         let photosResult = realmService.getRealmPhotos(filterKey: userResult.id)
         self.photos = Array(photosResult)
         if photos.count != 0 {
-            realmService.setObservePhotosToken(result: photosResult, collectionView: self.collectionView)
+            realmService.setObservePhotosToken(result: photosResult) {
+                self.collectionView.reloadData()
+            }
         }
         self.savePhotos(photos.count == 0 ? true : false, userResult)
     }

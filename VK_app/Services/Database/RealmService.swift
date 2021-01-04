@@ -45,6 +45,7 @@ class RealmService {
             let objectsToDelete = realm.objects(User.self).filter("NOT id IN %@", ids)
             realm.delete(objectsToDelete)
             realm.add(users, update: .modified)
+            
             try realm.commitWrite()
         } catch {
             print(error)
@@ -104,45 +105,40 @@ class RealmService {
         }
     }
     
-    func setObserveToken(result: Results<User>, tableView: UITableView){
+    func setObserveToken(result: Results<User>, completion: @escaping () -> Void){
         userToken = result.observe{ [self] (changes: RealmCollectionChange) in
             switch changes {
             case .initial(_):
-                tableView.reloadData()
-            print(1)
+                completion()
             case .update( let results, deletions: let del, insertions: let ins, modifications: let mod):
                 print("deletions:", del, "insertions:", ins, "modifications:", mod)
                 recalculateDelegate?.recalculateTable(collection: Array(results))
-                //сделать делегат на контроллер по обновлению данных
-                //print(results)
-                //tableView.reloadData()
             case .error( let error):
                 fatalError("\(error)")
             }
         }
     }
     
-    func setObserveGroupToken(result: Results<Group>, tableView: UITableView){
+    func setObserveGroupToken(result: Results<Group>, completion: @escaping () -> Void){
         groupToken = result.observe{ (changes: RealmCollectionChange) in
             switch changes {
             case .initial(_):
-                tableView.reloadData()
+                completion()
             case .update( _, deletions: _, insertions: _, modifications: _):
-                print("reloaded")
-                tableView.reloadData()
+                completion()
             case .error( let error):
                 fatalError("\(error)")
             }
         }
     }
     
-    func setObservePhotosToken(result: Results<Photo>, collectionView: UICollectionView){
+    func setObservePhotosToken(result: Results<Photo>, completion: @escaping () -> Void){
         photoToken = result.observe{ (changes: RealmCollectionChange) in
             switch changes {
             case .initial(_):
-                collectionView.reloadData()
+                completion()
             case .update( _, deletions: _, insertions: _, modifications: _):
-                collectionView.reloadData()
+                completion()
             case .error( let error):
                 fatalError("\(error)")
             }
