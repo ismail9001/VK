@@ -20,7 +20,7 @@ class WebViewController: UIViewController {
     let loginService = AuthorizationService()
     let friendsService = FriendService()
     let realm = try! Realm(configuration: Config.realmConfig)
-    
+    //TODO: -- перевести в сервис
     override func viewDidLoad() {
         super.viewDidLoad()
         print(realm.configuration.fileURL ?? "")
@@ -34,7 +34,7 @@ class WebViewController: UIViewController {
                     URLQueryItem(name: "client_id", value: "7697149"),
                     URLQueryItem(name: "display", value: "mobile"),
                     URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
-                    URLQueryItem(name: "scope", value: "262150"),
+                    URLQueryItem(name: "scope", value: Config.scope),
                     URLQueryItem(name: "response_type", value: "token"),
                     URLQueryItem(name: "v", value: "5.126")//,
                     //URLQueryItem(name: "revoke", value: "1")

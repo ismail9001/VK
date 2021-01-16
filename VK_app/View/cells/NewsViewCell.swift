@@ -12,7 +12,6 @@ class NewsViewCell: UITableViewCell {
     @IBOutlet weak var authorName: UILabel!
     @IBOutlet weak var newsDate: UILabel!
     @IBOutlet weak var photoLike: NewsControl!
-    @IBOutlet weak var postLabel: UILabel!
     @IBOutlet weak var newsImage: UIImageView!
     @IBOutlet weak var newsText: UITextView!
     

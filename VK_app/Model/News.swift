@@ -5,37 +5,72 @@
 //  Created by macbook on 01.11.2020.
 //
 import Foundation
+import SwiftyJSON
 
-struct News {
+class News {
+    
     var id: Int
-    var author: User
-    var newsLabel: String!
-    var newsText: String!
+    var authorName: String = ""
+    var authorPhotoUrl: String = ""
     var newsDate: Date!
-    var newsImage: String!
     var likeCount: Int
     var lookUpCount: Int
     var shareCount: Int
     var commentCount: Int
-    var postType: Bool
-    
-    static var oneNews: News{
-        let postType = Bool.random()
-        return News(id: Int.random(in: 1...Int.max),
-                    author: User.oneUser,
-                    newsLabel: Lorem.title,
-                    newsText: postType ? Lorem.tweet : nil,
-                    newsDate: Date.randomWithinDaysBeforeToday(7),
-                    newsImage: postType ? nil : "groups/\(Int.random(in: 1...15))g",
-                    likeCount: Int.random(in: 3...123),
-                    lookUpCount: Int.random(in: 3...123),
-                    shareCount: Int.random(in: 3...123),
-                    commentCount: Int.random(in: 3...123),
-                    postType: postType)
+    enum postTypes: String{
+        case post
+        case photo
     }
+    var postType: postTypes
+    var source_id: Int
     
-    static var manyNews: [News] {
-        return (10...30).map{_ in News.oneNews}
+    init(id: Int, date: Double, likes: Int, lookUps: Int, shares: Int, comments: Int, source_id : Int, postType: String){
+        self.id = id
+        let date = NSDate(timeIntervalSince1970: date)
+        self.newsDate = date as Date
+        self.likeCount = likes
+        self.lookUpCount = lookUps
+        self.shareCount = shares
+        self.commentCount = comments
+        self.source_id = source_id
+        if postType == "post"{
+            self.postType = postTypes.post
+        } else {
+            self.postType = postTypes.photo
+        }
     }
 }
 
+class PostNews: News {
+    var newsText: String!
+    var newsImageUrl: String!
+    
+    init(json: JSON) {
+        self.newsText = json["text"].stringValue
+        
+        self.newsImageUrl = ""
+        if let photosArray = json["photos"]["items"].arrayValue.first?["sizes"] {
+            for (_, object) in photosArray {
+                if object["type"] == "x"
+                {self.newsImageUrl = object["url"].stringValue}
+            }
+        }
+        super.init(id: json["post_id"].intValue, date: json["date"].doubleValue, likes: json["likes"]["count"].intValue, lookUps: json["views"]["count"].intValue, shares: json["reposts"]["count"].intValue, comments: json["comments"]["count"].intValue, source_id: json["source_id"].intValue, postType: json["type"].stringValue)
+    }
+}
+
+class PhotoNews: News {
+    var newsImageUrl: String!
+    
+    init(json: JSON) {
+        
+        self.newsImageUrl = ""
+        if let photosArray = json["photos"]["items"].arrayValue.first?["sizes"] {
+            for (_, object) in photosArray {
+                if object["type"] == "x"
+                {self.newsImageUrl = object["url"].stringValue}
+            }
+        }
+        super.init(id: json["post_id"].intValue, date: json["date"].doubleValue, likes: json["likes"]["count"].intValue, lookUps: json["views"]["count"].intValue, shares: json["reposts"]["count"].intValue, comments: json["comments"]["count"].intValue, source_id: json["source_id"].intValue, postType: json["type"].stringValue)
+    }
+}

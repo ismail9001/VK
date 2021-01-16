@@ -52,30 +52,21 @@
                             <constraint firstItem="0If-y7-JTn" firstAttribute="centerY" secondItem="CTY-d6-iF0" secondAttribute="centerY" constant="-10" id="xue-V8-stO"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Post Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="437-sy-L8I" userLabel="News Label">
-                        <rect key="frame" x="5" y="85" width="301" height="20.5"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="20.5" id="JRt-Bx-CMk"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="36" placeholderIntrinsicHeight="infinite" translatesAutoresizingMaskIntoConstraints="NO" id="EnT-7o-ocj" customClass="NewsControl" customModule="VK_app" customModuleProvider="target">
-                        <rect key="frame" x="98" y="511" width="208" height="22"/>
+                        <rect key="frame" x="98" y="507.5" width="208" height="25.5"/>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="chI-hn-bsF">
-                        <rect key="frame" x="5" y="110.5" width="301" height="395.5"/>
+                        <rect key="frame" x="5" y="85" width="301" height="417.5"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="T9t-sk-nDR" userLabel="News Text">
-                                <rect key="frame" x="0.0" y="0.0" width="301" height="94.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="301" height="116.5"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.</string>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LcI-5d-klY">
-                                <rect key="frame" x="0.0" y="94.5" width="301" height="301"/>
+                                <rect key="frame" x="0.0" y="116.5" width="301" height="301"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="LcI-5d-klY" secondAttribute="height" multiplier="1:1" id="bpu-ZJ-7Cz"/>
                                 </constraints>
@@ -85,16 +76,12 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="EnT-7o-ocj" secondAttribute="trailing" constant="5" id="70c-df-dAT"/>
-                    <constraint firstAttribute="trailing" secondItem="437-sy-L8I" secondAttribute="trailing" constant="5" id="ETA-SQ-N7g"/>
                     <constraint firstItem="chI-hn-bsF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="EeQ-80-igd"/>
-                    <constraint firstItem="437-sy-L8I" firstAttribute="top" secondItem="CTY-d6-iF0" secondAttribute="bottom" constant="5" id="HW0-aW-25y"/>
                     <constraint firstAttribute="trailing" secondItem="CTY-d6-iF0" secondAttribute="trailing" id="Qb7-co-BM4"/>
-                    <constraint firstItem="437-sy-L8I" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="YCt-6R-c1o"/>
                     <constraint firstAttribute="trailing" secondItem="chI-hn-bsF" secondAttribute="trailing" constant="5" id="YKi-g7-QUC"/>
                     <constraint firstAttribute="bottom" secondItem="EnT-7o-ocj" secondAttribute="bottom" constant="5" id="aAj-ld-IMP"/>
                     <constraint firstItem="CTY-d6-iF0" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="cDc-av-Ghh"/>
-                    <constraint firstItem="chI-hn-bsF" firstAttribute="top" secondItem="437-sy-L8I" secondAttribute="bottom" constant="5" id="iwt-he-6cZ"/>
-                    <constraint firstItem="437-sy-L8I" firstAttribute="top" secondItem="J4k-yv-JLY" secondAttribute="bottom" constant="10" id="q1R-39-BjK"/>
+                    <constraint firstItem="chI-hn-bsF" firstAttribute="top" secondItem="CTY-d6-iF0" secondAttribute="bottom" constant="5" id="iwt-he-6cZ"/>
                     <constraint firstItem="EnT-7o-ocj" firstAttribute="top" secondItem="chI-hn-bsF" secondAttribute="bottom" constant="5" id="v49-3c-sv6"/>
                     <constraint firstItem="CTY-d6-iF0" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="vjG-PW-dNN"/>
                 </constraints>
@@ -107,7 +94,6 @@
                 <outlet property="newsImage" destination="LcI-5d-klY" id="dlI-ev-vYo"/>
                 <outlet property="newsText" destination="T9t-sk-nDR" id="NPv-fC-DRq"/>
                 <outlet property="photoLike" destination="EnT-7o-ocj" id="b71-om-nxJ"/>
-                <outlet property="postLabel" destination="437-sy-L8I" id="Jg6-kw-8ha"/>
             </connections>
             <point key="canvasLocation" x="-278.98550724637681" y="511.60714285714283"/>
         </tableViewCell>

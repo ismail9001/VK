@@ -27,7 +27,7 @@ class AuthorizationService {
             "client_id": client_id,
             "display": "mobile",
             "redirect_uri": "https://oauth.vk.com/blank.html",
-            "scope": "262150",
+            "scope": "270342",//"262150",
             "response_type": "token",
             "v": "5.126",
             "revoke": "1"
