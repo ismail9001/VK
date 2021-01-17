@@ -7,6 +7,7 @@
 import Foundation
 import SwiftyJSON
 
+
 class News {
     
     var id: Int
@@ -24,16 +25,16 @@ class News {
     var postType: postTypes
     var source_id: Int
     
-    init(id: Int, date: Double, likes: Int, lookUps: Int, shares: Int, comments: Int, source_id : Int, postType: String){
-        self.id = id
-        let date = NSDate(timeIntervalSince1970: date)
+    required init(json: JSON){
+        self.id = json["post_id"].intValue
+        let date = NSDate(timeIntervalSince1970: json["date"].doubleValue)
         self.newsDate = date as Date
-        self.likeCount = likes
-        self.lookUpCount = lookUps
-        self.shareCount = shares
-        self.commentCount = comments
-        self.source_id = source_id
-        if postType == "post"{
+        self.likeCount = json["likes"]["count"].intValue
+        self.lookUpCount = json["views"]["count"].intValue
+        self.shareCount = json["reposts"]["count"].intValue
+        self.commentCount = json["comments"]["count"].intValue
+        self.source_id = json["source_id"].intValue
+        if json["type"].stringValue == "post"{
             self.postType = postTypes.post
         } else {
             self.postType = postTypes.photo
@@ -45,9 +46,10 @@ class PostNews: News {
     var newsText: String!
     var newsImageUrl: String!
     
-    init(json: JSON) {
-        self.newsText = json["text"].stringValue
+    required init(json: JSON) {
         
+        super.init(json: json)
+        self.newsText = json["text"].stringValue
         self.newsImageUrl = ""
         if let photosArray = json["photos"]["items"].arrayValue.first?["sizes"] {
             for (_, object) in photosArray {
@@ -55,22 +57,26 @@ class PostNews: News {
                 {self.newsImageUrl = object["url"].stringValue}
             }
         }
-        super.init(id: json["post_id"].intValue, date: json["date"].doubleValue, likes: json["likes"]["count"].intValue, lookUps: json["views"]["count"].intValue, shares: json["reposts"]["count"].intValue, comments: json["comments"]["count"].intValue, source_id: json["source_id"].intValue, postType: json["type"].stringValue)
     }
 }
 
 class PhotoNews: News {
     var newsImageUrl: String!
     
-    init(json: JSON) {
+    required init (json: JSON) {
         
+        super.init(json: json)
         self.newsImageUrl = ""
-        if let photosArray = json["photos"]["items"].arrayValue.first?["sizes"] {
-            for (_, object) in photosArray {
-                if object["type"] == "x"
-                {self.newsImageUrl = object["url"].stringValue}
-            }
+        if let firstPhotoInNews = json["photos"]["items"].arrayValue.first {
+            super.likeCount = firstPhotoInNews["likes"]["count"].intValue
+            super.lookUpCount = firstPhotoInNews["views"]["count"].intValue
+            super.shareCount = firstPhotoInNews["reposts"]["count"].intValue
+            super.commentCount = firstPhotoInNews["comments"]["count"].intValue
+                for (_, object) in firstPhotoInNews["sizes"] {
+                    if object["type"] == "x"
+                    {self.newsImageUrl = object["url"].stringValue}
+                }
+            
         }
-        super.init(id: json["post_id"].intValue, date: json["date"].doubleValue, likes: json["likes"]["count"].intValue, lookUps: json["views"]["count"].intValue, shares: json["reposts"]["count"].intValue, comments: json["comments"]["count"].intValue, source_id: json["source_id"].intValue, postType: json["type"].stringValue)
     }
 }

@@ -17,7 +17,6 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         let nib = UINib.init(nibName: "NewsViewCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "NewsViewCell")
-        //self.navigationItem.title = "Your Title"
         newsService.getNewsList() { news in
             self.news = news
             self.tableView.reloadData()

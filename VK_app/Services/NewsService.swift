@@ -33,34 +33,32 @@ class NewsService {
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
-            postNewsParse(url: url, parameters: postParameters){ news in
+            newsParse(type: PostNews.self, url: url, parameters: postParameters){ news in
                 allNews += news
                 dispatchGroup.leave()
             }
         dispatchGroup.enter()
-            photoNewsParse(url: url, parameters: photoParameters){ news in
+        newsParse(type:PhotoNews.self, url: url, parameters: photoParameters){ news in
                 allNews += news
                 dispatchGroup.leave()
             }
         dispatchGroup.notify(queue: DispatchQueue.main) {
-            allNews = allNews.sorted(by: { $0.newsDate > $1.newsDate })
-            completion(allNews)
+            completion(allNews.sorted(by: { $0.newsDate > $1.newsDate }))
         }
-        //newsParse(url: <#T##String#>, parameters: <#T##Parameters#>, completion: <#T##([PostNews]) -> Void#>)
     }
     
-    func postNewsParse(url:String, parameters: Parameters, completion: @escaping ([PostNews]) -> Void){
+    func newsParse<T: News>(type: T.Type, url:String, parameters: Parameters, completion: @escaping ([T]) -> Void){
         AF.request(url, method: .get, parameters: parameters).responseJSON { response in
             guard let data = response.data else {return}
             do {
                 let json = try JSON(data: data)
                 let dispatchGroup = DispatchGroup()
-                var parsedNews:[PostNews] = []
+                var parsedNews:[T] = []
                 var parsedUsers:[User] = []
                 var parsedGroups:[Group] = []
                 
                 DispatchQueue.global().async(group: dispatchGroup) {
-                    parsedNews = json["response"]["items"].arrayValue.compactMap{ PostNews(json: $0) }
+                    parsedNews = json["response"]["items"].arrayValue.compactMap{ T(json: $0) }
                 }
                 
                 DispatchQueue.global().async(group: dispatchGroup) {
@@ -77,49 +75,7 @@ class NewsService {
                             eachPost.authorName = parsedUsers.first(where: {$0.id == eachPost.source_id})!.name
                             eachPost.authorPhotoUrl = parsedUsers.first(where: {$0.id == eachPost.source_id})!.photoUrl
                         } else {
-                            //При первом запуске приложения здесь падает
-                            eachPost.authorName = parsedGroups.first(where: {$0.id == eachPost.source_id * -1})!.title
-                            eachPost.authorPhotoUrl = parsedGroups.first(where: {$0.id == eachPost.source_id * -1})!.photoUrl
-                        }
-                    }
-                    completion(parsedNews)
-                }
-            } catch {
-                print (error)
-                completion([])
-            }
-        }
-    }
-    
-    func photoNewsParse(url:String, parameters: Parameters, completion: @escaping ([PhotoNews]) -> Void){
-        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
-            guard let data = response.data else {return}
-            do {
-                let json = try JSON(data: data)
-                let dispatchGroup = DispatchGroup()
-                var parsedNews:[PhotoNews] = []
-                var parsedUsers:[User] = []
-                var parsedGroups:[Group] = []
-                
-                DispatchQueue.global().async(group: dispatchGroup) {
-                    parsedNews = json["response"]["items"].arrayValue.compactMap{ PhotoNews(json: $0) }
-                }
-                
-                DispatchQueue.global().async(group: dispatchGroup) {
-                    parsedUsers = json["response"]["profiles"].arrayValue.compactMap{ User(json: $0) }
-                }
-                
-                DispatchQueue.global().async(group: dispatchGroup) {
-                    parsedGroups = json["response"]["groups"].arrayValue.compactMap{ Group(json: $0) }
-                }
-                
-                dispatchGroup.notify(queue: DispatchQueue.main){
-                    for eachPost in parsedNews {
-                        if eachPost.source_id > 0 {
-                            eachPost.authorName = parsedUsers.first(where: {$0.id == eachPost.source_id})!.name
-                            eachPost.authorPhotoUrl = parsedUsers.first(where: {$0.id == eachPost.source_id})!.photoUrl
-                        } else {
-                            //При первом запуске приложения здесь падает
+                            //При первом запуске приложения иногда здесь падает
                             eachPost.authorName = parsedGroups.first(where: {$0.id == eachPost.source_id * -1})!.title
                             eachPost.authorPhotoUrl = parsedGroups.first(where: {$0.id == eachPost.source_id * -1})!.photoUrl
                         }
