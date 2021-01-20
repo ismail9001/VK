@@ -36,7 +36,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     var oldUsers: [User] = []
     var unfilteredUsers: [User] = []
     var friendsService = FriendService()
-    let loginService = AuthorizationService()
+    //Firebase
+    //let loginService = AuthorizationService()
     let realmService = RealmService()
     lazy var refreshControl = UIRefreshControl()
     var bufferSection:[ViewSection]?
@@ -175,13 +176,10 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func saveUserData(_ emptyStorage: Bool) {
-        friendsService.getFriendsList() { [self] (friends) in
-            users = friends.sorted{ $0.name.lowercased() < $1.name.lowercased() }
-            realmService.saveRealmUsers(users: users)
+        users = friendsService.getFriendsList()
             if emptyStorage {
                 showUserData()
             }
-        }
     }
     
     /*func saveUserToFirebase() {

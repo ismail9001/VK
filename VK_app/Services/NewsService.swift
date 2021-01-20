@@ -33,15 +33,15 @@ class NewsService {
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
-            newsParse(type: PostNews.self, url: url, parameters: postParameters){ news in
-                allNews += news
-                dispatchGroup.leave()
-            }
+        newsParse(type: PostNews.self, url: url, parameters: postParameters){ news in
+            allNews += news
+            dispatchGroup.leave()
+        }
         dispatchGroup.enter()
         newsParse(type:PhotoNews.self, url: url, parameters: photoParameters){ news in
-                allNews += news
-                dispatchGroup.leave()
-            }
+            allNews += news
+            dispatchGroup.leave()
+        }
         dispatchGroup.notify(queue: DispatchQueue.main) {
             completion(allNews.sorted(by: { $0.newsDate > $1.newsDate }))
         }
@@ -52,40 +52,34 @@ class NewsService {
             guard let data = response.data else {return}
             do {
                 let json = try JSON(data: data)
-                let dispatchGroup = DispatchGroup()
                 var parsedNews:[T] = []
                 var parsedUsers:[User] = []
                 var parsedGroups:[Group] = []
-                
-                DispatchQueue.global().async(group: dispatchGroup) {
-                    parsedNews = json["response"]["items"].arrayValue.compactMap{ T(json: $0) }
+                parsedNews = json["response"]["items"].arrayValue.compactMap{ T(json: $0) }
+                parsedUsers = json["response"]["profiles"].arrayValue.compactMap{ User(json: $0) }
+                parsedGroups = json["response"]["groups"].arrayValue.compactMap{ Group(json: $0) }
+                for eachPost in parsedNews {
+                    let author = self.authorCalculate(newsFeed: eachPost, users: parsedUsers, groups: parsedGroups)
+                    eachPost.authorName = author.0
+                    eachPost.authorPhotoUrl = author.1
                 }
-                
-                DispatchQueue.global().async(group: dispatchGroup) {
-                    parsedUsers = json["response"]["profiles"].arrayValue.compactMap{ User(json: $0) }
-                }
-                
-                DispatchQueue.global().async(group: dispatchGroup) {
-                    parsedGroups = json["response"]["groups"].arrayValue.compactMap{ Group(json: $0) }
-                }
-                
-                dispatchGroup.notify(queue: DispatchQueue.main){
-                    for eachPost in parsedNews {
-                        if eachPost.source_id > 0 {
-                            eachPost.authorName = parsedUsers.first(where: {$0.id == eachPost.source_id})!.name
-                            eachPost.authorPhotoUrl = parsedUsers.first(where: {$0.id == eachPost.source_id})!.photoUrl
-                        } else {
-                            //При первом запуске приложения иногда здесь падает
-                            eachPost.authorName = parsedGroups.first(where: {$0.id == eachPost.source_id * -1})!.title
-                            eachPost.authorPhotoUrl = parsedGroups.first(where: {$0.id == eachPost.source_id * -1})!.photoUrl
-                        }
-                    }
-                    completion(parsedNews)
-                }
+                completion(parsedNews)
             } catch {
                 print (error)
                 completion([])
             }
         }
+    }
+    
+    func authorCalculate<T: News>(newsFeed: T, users: [User], groups: [Group]) -> (String, String) {
+        if newsFeed.source_id > 0 {
+            newsFeed.authorName = users.first(where: {$0.id == newsFeed.source_id})?.name ?? ""
+            newsFeed.authorPhotoUrl = users.first(where: {$0.id == newsFeed.source_id})?.photoUrl ?? ""
+        } else {
+            //При первом запуске приложения иногда здесь падает
+            newsFeed.authorName = groups.first(where: {$0.id == -newsFeed.source_id})?.title ?? ""
+            newsFeed.authorPhotoUrl = groups.first(where: {$0.id == -newsFeed.source_id})?.photoUrl ?? ""
+        }
+        return (newsFeed.authorName, newsFeed.authorPhotoUrl)
     }
 }

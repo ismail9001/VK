@@ -11,10 +11,8 @@ import SwiftyJSON
 
 class FriendService {
     
-    let baseUrl = Config.apiUrl
-    
-    func getFriendsList(completion: @escaping ([User]) -> Void){
-        
+    func getFriendsList() -> [User]{
+        let friendsOperationQueue = OperationQueue()
         let path = "/method/friends.get?"
         // параметры
         let parameters: Parameters = [
@@ -22,18 +20,15 @@ class FriendService {
             "access_token": Session.storedSession.token,
             "v": Config.apiVersion
         ]
-        
-        let url = baseUrl+path
-        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
-            guard let data = response.data else {return}
-            do {
-                let json = try JSON(data: data)
-                let users = json["response"]["items"].arrayValue.compactMap{ User(json: $0) }
-                completion(users)
-            } catch {
-                print (error)
-                completion([])
-            }
-        }
+        let url = Config.apiUrl + path
+        let request = AF.request(url, method: .get, parameters: parameters)
+        let getDataOperation = GetDataOperation(request: request)
+        let parseData = ParseDataOperation()
+        let saveFriends = SaveFriendsOperation()
+        parseData.addDependency(getDataOperation)
+        saveFriends.addDependency(parseData)
+        friendsOperationQueue.addOperations([getDataOperation, parseData], waitUntilFinished: true)
+        OperationQueue.main.addOperation(saveFriends)
+        return parseData.outputData
     }
 }

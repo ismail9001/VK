@@ -12,11 +12,15 @@
 		FA0D0DBE25B37C2D001086D9 /* IntExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0D0DBD25B37C2D001086D9 /* IntExtension.swift */; };
 		FA13682825951A1000DB0061 /* DiffCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA13682725951A1000DB0061 /* DiffCalculator.swift */; };
 		FA13682B25951DD100DB0061 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA13682A25951DD100DB0061 /* ArrayExtension.swift */; };
+		FA1CAD7725B438B800E3E957 /* GroupsSearchViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A9B2572C8EE00DC60CA /* GroupsSearchViewControllerExtension.swift */; };
+		FA1CAD7925B438BF00E3E957 /* GroupsSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73DF253B0B8F003FAAD4 /* GroupsSearchViewController.swift */; };
+		FA1CAD7B25B438C100E3E957 /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73D9253B0B29003FAAD4 /* GroupsViewController.swift */; };
+		FA1CAD7F25B43F0500E3E957 /* GetDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1CAD7E25B43F0500E3E957 /* GetDataOperation.swift */; };
+		FA1CAD8225B8B76C00E3E957 /* SaveFriendsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1CAD8125B8B76C00E3E957 /* SaveFriendsOperation.swift */; };
+		FA1CAD8525B8B7B100E3E957 /* ParseDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1CAD8425B8B7B100E3E957 /* ParseDataOperation.swift */; };
 		FA22714C2593BF0B0085FFE5 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA22714B2593BF0B0085FFE5 /* RealmService.swift */; };
 		FA2D73D7253B0B03003FAAD4 /* FriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73D6253B0B03003FAAD4 /* FriendsViewController.swift */; };
-		FA2D73DA253B0B29003FAAD4 /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73D9253B0B29003FAAD4 /* GroupsViewController.swift */; };
 		FA2D73DD253B0B55003FAAD4 /* FriendPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73DC253B0B55003FAAD4 /* FriendPhotosViewController.swift */; };
-		FA2D73E0253B0B8F003FAAD4 /* GroupsSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73DF253B0B8F003FAAD4 /* GroupsSearchViewController.swift */; };
 		FA2D73E3253B0C12003FAAD4 /* FriendsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73E2253B0C12003FAAD4 /* FriendsViewCell.swift */; };
 		FA2D73E9253B0F4B003FAAD4 /* GroupsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73E8253B0F4B003FAAD4 /* GroupsViewCell.swift */; };
 		FA2D73EE253B10FB003FAAD4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D73ED253B10FB003FAAD4 /* User.swift */; };
@@ -39,7 +43,6 @@
 		FA606A922572C7F900DC60CA /* FriendsViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A912572C7F900DC60CA /* FriendsViewControllerExtension.swift */; };
 		FA606A962572C86600DC60CA /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A952572C86600DC60CA /* UIViewControllerExtension.swift */; };
 		FA606A992572C8B100DC60CA /* UIPanGestureRecognizerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A982572C8B100DC60CA /* UIPanGestureRecognizerExtension.swift */; };
-		FA606A9C2572C8EF00DC60CA /* GroupsSearchViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A9B2572C8EE00DC60CA /* GroupsSearchViewControllerExtension.swift */; };
 		FA606A9F2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A9E2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift */; };
 		FA606AA22572CBB200DC60CA /* WebViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606AA12572CBB200DC60CA /* WebViewControllerExtension.swift */; };
 		FA9EDABF256AA32200AE5870 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9EDABE256AA32200AE5870 /* Session.swift */; };
@@ -74,9 +77,12 @@
 		FA0D0DBD25B37C2D001086D9 /* IntExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtension.swift; sourceTree = "<group>"; };
 		FA13682725951A1000DB0061 /* DiffCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculator.swift; sourceTree = "<group>"; };
 		FA13682A25951DD100DB0061 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
+		FA1CAD7E25B43F0500E3E957 /* GetDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDataOperation.swift; sourceTree = "<group>"; };
+		FA1CAD8125B8B76C00E3E957 /* SaveFriendsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveFriendsOperation.swift; sourceTree = "<group>"; };
+		FA1CAD8425B8B7B100E3E957 /* ParseDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseDataOperation.swift; sourceTree = "<group>"; };
 		FA22714B2593BF0B0085FFE5 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
 		FA2D73D6253B0B03003FAAD4 /* FriendsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewController.swift; sourceTree = "<group>"; };
-		FA2D73D9253B0B29003FAAD4 /* GroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; };
+		FA2D73D9253B0B29003FAAD4 /* GroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		FA2D73DC253B0B55003FAAD4 /* FriendPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendPhotosViewController.swift; sourceTree = "<group>"; };
 		FA2D73DF253B0B8F003FAAD4 /* GroupsSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsSearchViewController.swift; sourceTree = "<group>"; };
 		FA2D73E2253B0C12003FAAD4 /* FriendsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewCell.swift; sourceTree = "<group>"; };
@@ -150,6 +156,16 @@
 				B619EC660F2CC6D3BB8951B9 /* Pods-VK_app.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		FA1CAD7D25B43EC600E3E957 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				FA1CAD7E25B43F0500E3E957 /* GetDataOperation.swift */,
+				FA1CAD8125B8B76C00E3E957 /* SaveFriendsOperation.swift */,
+				FA1CAD8425B8B7B100E3E957 /* ParseDataOperation.swift */,
+			);
+			path = Queue;
 			sourceTree = "<group>";
 		};
 		FA22714A2593BEFB0085FFE5 /* Database */ = {
@@ -264,6 +280,7 @@
 		FA606A6F256DB45300DC60CA /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				FA1CAD7D25B43EC600E3E957 /* Queue */,
 				FA22714A2593BEFB0085FFE5 /* Database */,
 				FA606A70256DB47C00DC60CA /* AuthorizationService.swift */,
 				FA606A74256ECC3300DC60CA /* FriendsService.swift */,
@@ -448,7 +465,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA2D73E0253B0B8F003FAAD4 /* GroupsSearchViewController.swift in Sources */,
 				FACBD625254ED3AA00BAFCA8 /* News.swift in Sources */,
 				FA2D73DD253B0B55003FAAD4 /* FriendPhotosViewController.swift in Sources */,
 				FA2D73D7253B0B03003FAAD4 /* FriendsViewController.swift in Sources */,
@@ -458,16 +474,21 @@
 				FAFB2E3F25485C1700C68268 /* Avatar.swift in Sources */,
 				FA2D73F1253B1172003FAAD4 /* Group.swift in Sources */,
 				FA606A992572C8B100DC60CA /* UIPanGestureRecognizerExtension.swift in Sources */,
+				FA1CAD8525B8B7B100E3E957 /* ParseDataOperation.swift in Sources */,
 				FA5210662533319900D84397 /* LoginFormController.swift in Sources */,
 				FA2D73E9253B0F4B003FAAD4 /* GroupsViewCell.swift in Sources */,
 				FAF80381255C5B270053D6E1 /* CustomPushAnimator.swift in Sources */,
 				FA13682825951A1000DB0061 /* DiffCalculator.swift in Sources */,
 				FACBD628254ED60800BAFCA8 /* Random.swift in Sources */,
+				FA1CAD7725B438B800E3E957 /* GroupsSearchViewControllerExtension.swift in Sources */,
 				FA606A75256ECC3300DC60CA /* FriendsService.swift in Sources */,
 				FACBD5F4254C3BE400BAFCA8 /* LetterPicker.swift in Sources */,
+				FA1CAD7F25B43F0500E3E957 /* GetDataOperation.swift in Sources */,
 				FA5210512532E9E700D84397 /* AppDelegate.swift in Sources */,
 				FA2D741B253B35AA003FAAD4 /* FriendPhotosViewCell.swift in Sources */,
+				FA1CAD8225B8B76C00E3E957 /* SaveFriendsOperation.swift in Sources */,
 				FA606A962572C86600DC60CA /* UIViewControllerExtension.swift in Sources */,
+				FA1CAD7B25B438C100E3E957 /* GroupsViewController.swift in Sources */,
 				FACBD620254EB0F100BAFCA8 /* NewsControl.swift in Sources */,
 				FAF80384255C5C9E0053D6E1 /* CustomPopAnimator.swift in Sources */,
 				FA606AA22572CBB200DC60CA /* WebViewControllerExtension.swift in Sources */,
@@ -476,6 +497,7 @@
 				FA22714C2593BF0B0085FFE5 /* RealmService.swift in Sources */,
 				FA606A71256DB47C00DC60CA /* AuthorizationService.swift in Sources */,
 				FACBD5FD254D6A2A00BAFCA8 /* CustomHeaderView.swift in Sources */,
+				FA1CAD7925B438BF00E3E957 /* GroupsSearchViewController.swift in Sources */,
 				FAFB2E252540D12300C68268 /* Photo.swift in Sources */,
 				FA5210532532E9E700D84397 /* SceneDelegate.swift in Sources */,
 				FA606A7B256ED86900DC60CA /* Config.swift in Sources */,
@@ -484,9 +506,7 @@
 				FA2D7422253F2118003FAAD4 /* Lorem.swift in Sources */,
 				FA13682B25951DD100DB0061 /* ArrayExtension.swift in Sources */,
 				FACBD604254D7E7500BAFCA8 /* SearchBar.swift in Sources */,
-				FA606A9C2572C8EF00DC60CA /* GroupsSearchViewControllerExtension.swift in Sources */,
 				FAF80377255BB0F20053D6E1 /* Loader.swift in Sources */,
-				FA2D73DA253B0B29003FAAD4 /* GroupsViewController.swift in Sources */,
 				FA37F373257BB849008F572D /* UIImageExtension.swift in Sources */,
 				FAF80388255C5E160053D6E1 /* CustomNavigationController.swift in Sources */,
 				FACBD619254EA1F900BAFCA8 /* NewsViewCell.swift in Sources */,
