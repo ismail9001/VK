@@ -26,7 +26,7 @@ class FriendsPhotosService {
         ]
         
         let url = baseUrl+path
-        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
+        Alamofire.request(url, method: .get, parameters: parameters).responseJSON { response in
             guard let data = response.data else {return}
             do {
                 let json = try JSON(data: data)

@@ -21,7 +21,7 @@ class FriendService {
             "v": Config.apiVersion
         ]
         let url = Config.apiUrl + path
-        let request = AF.request(url, method: .get, parameters: parameters)
+        let request = Alamofire.request(url, method: .get, parameters: parameters)
         let getDataOperation = GetDataOperation(request: request)
         let parseData = ParseDataOperation()
         let saveFriends = SaveFriendsOperation()

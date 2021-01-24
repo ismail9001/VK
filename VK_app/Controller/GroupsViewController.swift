@@ -50,30 +50,35 @@ class GroupsViewController: UITableViewController {
             if let indexPath = groupSearchController.tableView.indexPathForSelectedRow {
                 // Получаем группу по индексу
                 let group = groupSearchController.groups[indexPath.row]
-                groupsService.joinInGroup(group.id) { [self]response in
-                    if response && !groups.contains(group) {
-                        //обновляем данные
-                        groups.append(group)
-                        groups = groups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
-                        realmService.addRealmGroup(group: group)
-                        //FireStorm
-                        /*let groupJSON: [String: Any] = {
-                            return [
-                                "id": group.id,
-                                "name": group.title
-                            ]
-                        }()
-                        let user_id = Config.user_id_firebase
-                        Config.db.collection("users").document("\(user_id)").collection("groups").document("\(group.id)") .setData(groupJSON) { error in
-                            if let error = error {
-                                print("Error adding user: \(error)")
-                            } else {
-                                print("User updated with ID:\(user_id)")
-                            }
-                        }*/
-                        
+                groupsService.joinInGroup(group.id)
+                    .get { [self]response in
+                        if response && !groups.contains(group) {
+                            //обновляем данные
+                            groups.append(group)
+                            groups = groups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
+                            //FireStorm
+                            /*let groupJSON: [String: Any] = {
+                             return [
+                             "id": group.id,
+                             "name": group.title
+                             ]
+                             }()
+                             let user_id = Config.user_id_firebase
+                             Config.db.collection("users").document("\(user_id)").collection("groups").document("\(group.id)") .setData(groupJSON) { error in
+                             if let error = error {
+                             print("Error adding user: \(error)")
+                             } else {
+                             print("User updated with ID:\(user_id)")
+                             }
+                             }*/
+                        }
                     }
-                }
+                    .done{[self] _ in
+                        self.realmService.saveRealmGroups(groups: groups)
+                    }
+                    .catch{[self] error in
+                        groups = []
+                    }
             }
         }
     }
@@ -82,13 +87,19 @@ class GroupsViewController: UITableViewController {
         // Если была нажата кнопка «Удалить»
         if editingStyle == .delete {
             let groupForDelete = groups[indexPath.row]
-            groupsService.leaveFromGroup (groupForDelete.id){ [self]response in
-                if response {
-                    // Удаляем группу из массива
-                    realmService.deleteRealmGroup(group: groupForDelete)
+            groupsService.leaveFromGroup (groupForDelete.id)
+                .get { [self]response in
+                    if response {
+                        // Удаляем группу из массива
+                        realmService.deleteRealmGroup(group: groupForDelete)
+                    }
+                }
+                .done{[self] _ in
                     groups.remove(at: indexPath.row)
                 }
-            }
+                .catch{[self] error in
+                    groups = []
+                }
         }
     }
     
@@ -97,10 +108,8 @@ class GroupsViewController: UITableViewController {
         showGroups()
     }
     
-    
     func showGroups() {
-        
-        let groups = realmService.getRealmGroups(sortingKey: "title")//realm.objects(Group.self).sorted(byKeyPath: "title", ascending: true)
+        let groups = realmService.getRealmGroups(sortingKey: "title")
         let groupsArray = Array(groups)
         if groupsArray.count != 0 {
             self.groups = groupsArray
@@ -112,13 +121,19 @@ class GroupsViewController: UITableViewController {
     }
     
     func saveGroups(_ emptyStorage: Bool) {
-        groupsService.getGroupsList() { [self] vkGroups in
-            groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
-            realmService.saveRealmGroups(groups: groups)
-            if emptyStorage {
-                showGroups()
+        groupsService.getGroupsList()
+            .get {[self] vkGroups in
+                print("groups getted")
+                groups = vkGroups
+                if emptyStorage {
+                    showGroups()
+                }
             }
-        }
+            .done{[self] _ in
+                self.realmService.saveRealmGroups(groups: groups)
+            }
+            .catch{[self] error in
+                groups = []
+            }
     }
-    
 }

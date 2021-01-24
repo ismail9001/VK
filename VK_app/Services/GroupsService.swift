@@ -8,12 +8,14 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import PromiseKit
 
 class GroupsService {
     
     let baseUrl = Config.apiUrl
-
-    func getGroupsList (completion: @escaping ([Group]) -> Void){
+    let queue = DispatchQueue.main
+    
+    func getGroupsList() -> Promise<[Group]>{
         
         let path = "/method/groups.get?"
         // параметры
@@ -23,20 +25,16 @@ class GroupsService {
             "v": Config.apiVersion
         ]
         let url = baseUrl+path
-        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
-            guard let data = response.data else {return}
-            do {
-                let json = try JSON(data: data)
+        return Alamofire.request(url, method: .get, parameters: parameters).responseJSON()
+            .map(on: queue) { json, response -> [Group] in
+                let json = JSON(json)
                 let groups = json["response"]["items"].arrayValue.compactMap{ Group(json: $0) }
-                completion(groups)
-            } catch {
-                print (error)
-                completion([])
+                print ("groups returned")
+                return(groups.sorted{ $0.title.lowercased() < $1.title.lowercased()})
             }
-        }
     }
     
-    func groupsSearch(_ search: String, completion: @escaping ([Group]) -> Void) {
+    func groupsSearch(_ search: String)-> Promise<[Group]> {
         
         let path = "/method/groups.search?"
         // параметры
@@ -46,20 +44,15 @@ class GroupsService {
             "v": Config.apiVersion
         ]
         let url = baseUrl+path
-        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
-            guard let data = response.data else {return}
-            do {
-                let json = try JSON(data: data)
+        return Alamofire.request(url, method: .get, parameters: parameters).responseJSON()
+            .map(on: queue) { json, response -> [Group] in
+                let json = JSON(json)
                 let groups = json["response"]["items"].arrayValue.compactMap{ Group(json: $0) }
-                completion(groups)
-            } catch {
-                print (error)
-                completion([])
+                return(groups.sorted{ $0.title.lowercased() < $1.title.lowercased()})
             }
-        }
     }
     
-    func joinInGroup(_ groupId: Int, completion: @escaping (Bool) -> Void)   {
+    func joinInGroup(_ groupId: Int) -> Promise<Bool>   {
         
         let path = "/method/groups.join?"
         // параметры
@@ -69,26 +62,14 @@ class GroupsService {
             "v": Config.apiVersion
         ]
         let url = baseUrl+path
-        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
-            print(response)
-            guard let data = response.data else {return}
-            do {
-                let json = try JSON(data: data)
-                print("json", json)
-                let response = json["response"]
-                if response == 1 {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            } catch {
-                print (error)
-                completion(false)
+        return Alamofire.request(url, method: .get, parameters: parameters).responseJSON()
+            .map(on:queue) { json, response -> Bool in
+                let json = JSON(json)
+                return(json["response"] == 1 ? true : false)
             }
-        }
     }
     
-    func leaveFromGroup(_ groupId: Int, completion: @escaping (Bool) -> Void)   {
+    func leaveFromGroup(_ groupId: Int) -> Promise<Bool>   {
         
         let path = "/method/groups.leave?"
         // параметры
@@ -98,20 +79,10 @@ class GroupsService {
             "v": Config.apiVersion
         ]
         let url = baseUrl+path
-        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
-            guard let data = response.data else {return}
-            do {
-                let json = try JSON(data: data)
-                let response = json["response"]
-                if response == 1 {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            } catch {
-                print (error)
-                completion(false)
+        return Alamofire.request(url, method: .get, parameters: parameters).responseJSON()
+            .map(on: queue) { json, response in
+                let json = JSON(json)
+                return(json["response"] == 1 ? true : false)
             }
-        }
     }
 }

@@ -36,7 +36,7 @@ class AuthorizationService {
     // составляем URL из базового адреса сервиса и конкретного пути к ресурсу
         let url = baseUrl+path
     // делаем запрос
-        AF.request(url, method: .get, parameters: parameters)
+        Alamofire.request(url, method: .get, parameters: parameters)
     }
     
     /*func getProfileInfo(){

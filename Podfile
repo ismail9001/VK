@@ -6,9 +6,9 @@ target 'VK_app' do
   use_frameworks!
 
   # Pods for VK_app
-pod 'Alamofire', '~> 5.2'
 pod 'SwiftyJSON', '~> 4.0'
 pod 'Kingfisher', '~> 5.0'
 pod 'RealmSwift'
+pod 'PromiseKit/Alamofire'
 
 end

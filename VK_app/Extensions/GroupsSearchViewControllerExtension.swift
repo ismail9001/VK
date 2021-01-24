@@ -15,9 +15,9 @@ extension GroupsSearchViewController: UISearchBarDelegate {
             groups = unfilteredGroups
             return
         }
-        
-        groupsService.groupsSearch(searchText) { [self] vkGroups in
-            groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
+        groupsService.groupsSearch(searchText)
+            .get { [self] vkGroups in
+            groups = vkGroups
         }
     }
     
