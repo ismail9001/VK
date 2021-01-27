@@ -7,6 +7,11 @@
 
 import UIKit
 
-final class FriendsListView: UIView {
+final class FriendsListView: UIView, UISearchBarDelegate {
     @IBOutlet weak var letterPicker: LetterPicker!
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
 }

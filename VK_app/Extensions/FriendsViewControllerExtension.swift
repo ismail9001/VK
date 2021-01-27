@@ -10,8 +10,9 @@ import UIKit
 extension FriendsViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if (searchText ==  "") {
+        if searchText ==  "" {
             friends = unfilteredUsers
+            tableView.reloadData()
             return
         }
         friends = unfilteredUsers.filter{ $0.name.lowercased().contains(searchText.lowercased()) }
