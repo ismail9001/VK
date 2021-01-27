@@ -43,6 +43,7 @@ class Avatar: UIView {
         image.contentMode = .scaleAspectFill
         image.translatesAutoresizingMaskIntoConstraints = false
         image.isUserInteractionEnabled = true
+        image.backgroundColor = .white
         return image
     }()
     var avatarShadow: UIView = {

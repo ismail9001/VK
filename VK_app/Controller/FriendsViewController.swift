@@ -51,14 +51,12 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         
         let headerSection = UINib.init(nibName: "CustomHeaderView", bundle: Bundle.main)
         tableView.register(headerSection, forHeaderFooterViewReuseIdentifier: "CustomHeaderView")
-        
         //Looks for single or multiple taps.
         self.hideKeyboardWhenTappedAround()
         searchBar.placeholder = "Find a friend"
         searchBar.delegate = self
         //делегат сравнения структуры
         realmService.recalculateDelegate = self
-        
         showUserData()
         addRefreshControl()
         
@@ -98,6 +96,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "CustomHeaderView") as! CustomHeaderView
         headerView.sectionLabel.text = letterPicker.letters[section]
+        headerView.sectionLabel.backgroundColor = .systemGray5
         return headerView
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -116,13 +115,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FriendsViewCell
         let rowCount = rowCounting(indexPath)
         let user = users[rowCount]
-        if let savedImage = UIImageView.getSavedImage(named: user.photoName) {
-            cell.friendPhoto.avatarPhoto.image = savedImage
-        }
-        else {
-            cell.friendPhoto.avatarPhoto.image = UIImage(named: "camera_200")
-            cell.friendPhoto.avatarPhoto.load(url: user.photoUrl)
-        }
+        cell.friendPhoto.avatarPhoto.getImageFromCache(imageName: user.photoName, imageUrl: user.photoUrl)
         cell.friendName.text = user.name
         return cell
     }

@@ -40,14 +40,7 @@ class GroupsSearchViewController: UITableViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
         let group = groups[indexPath.row]
-        
-        if let savedImage = UIImageView.getSavedImage(named: group.photoName) {
-            cell.groupPhoto.avatarPhoto.image = savedImage
-        } else {
-            cell.groupPhoto.avatarPhoto.image = UIImage(named: "camera_200")
-            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl)
-        }
-        
+        cell.groupPhoto.avatarPhoto.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl)
         cell.groupName.text = group.title
         return cell
     }

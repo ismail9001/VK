@@ -31,7 +31,7 @@ class FriendsPhotosService {
             do {
                 let json = try JSON(data: data)
                 let photos = json["response"]["items"].arrayValue.compactMap{ Photo(json: $0, user: user) }
-                completion(photos)
+                completion(photos.sorted{ $0.id < $1.id})
             } catch {
                 print (error)
                 completion([])

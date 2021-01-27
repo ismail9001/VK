@@ -10,7 +10,19 @@ import UIKit
 import Kingfisher
 
 extension UIImageView {
-    func load(url: String) {
+    
+    func getImageFromCache(imageName: String?, imageUrl: String) {
+        if let imageName = imageName, let savedImage = UIImageView.getSavedImage(named: imageName) {
+            self.image = savedImage
+        }
+        else {
+            print("нет сохр фото")
+            self.image = UIImage(named: "camera_200")
+            self.load(uiImage: self, url: imageUrl)
+        }
+    }
+    
+    private func load(uiImage: UIImageView, url: String) {
         var imageName = ""
         if let url1 = URL(string: url) {
             let withoutExt = url1.deletingPathExtension()
@@ -21,8 +33,8 @@ extension UIImageView {
             KingfisherManager.shared.retrieveImage(with: imageUrl) { result in
                 switch result {
                 case .success(let value):
-                    self?.image = value.image
-                    _ = self?.saveImage(image: value.image, imageName: imageName)
+                    uiImage.image = value.image
+                    _ = uiImage.saveImage(image: value.image, imageName: imageName)
                 case .failure(let error):
                     print(error)
                 }
@@ -30,7 +42,7 @@ extension UIImageView {
         }
     }
     
-    func saveImage(image: UIImage, imageName: String) -> Bool {
+    private func saveImage(image: UIImage, imageName: String) -> Bool {
         guard let data = image.jpegData(compressionQuality: 1) ?? image.pngData() else {
             return false
         }
@@ -46,7 +58,7 @@ extension UIImageView {
         }
     }
     
-    static func imageFromUrl (url: String) -> UIImage {
+    private static func imageFromUrl (url: String) -> UIImage {
         guard let defaultImage = UIImage(named: "camera_200") else { return UIImage()}
         guard let imageUrl = URL(string: url) else { return defaultImage}
         guard let data = try? Data(contentsOf: imageUrl) else { return defaultImage }
@@ -54,13 +66,13 @@ extension UIImageView {
         return image
     }
     
-    static func imageFromData (data: Data) -> UIImage {
+    private static func imageFromData (data: Data) -> UIImage {
         guard let defaultImage = UIImage(named: "camera_200") else { return UIImage()}
         guard let image = UIImage(data: data) else { return defaultImage}
         return image
     }
     
-    static func getSavedImage(named: String) -> UIImage? {
+     static func getSavedImage(named: String) -> UIImage? {
         guard let defaultImage = UIImage(named: "camera_200") else { return UIImage()}
         if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
             return UIImage(contentsOfFile: URL(fileURLWithPath: dir.absoluteString).appendingPathComponent(named).path)

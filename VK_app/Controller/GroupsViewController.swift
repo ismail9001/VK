@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import PromiseKit
 
 class GroupsViewController: UITableViewController {
     
@@ -32,12 +33,7 @@ class GroupsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
         let group = groups[indexPath.row]
         cell.groupName.text = group.title
-        if let savedImage = UIImageView.getSavedImage(named: group.photoName) {
-            cell.groupPhoto.avatarPhoto.image = savedImage
-        } else {
-            cell.groupPhoto.avatarPhoto.image = UIImage(named: "camera_200")
-            cell.groupPhoto.avatarPhoto.load(url: group.photoUrl)
-        }
+        cell.groupPhoto.avatarPhoto.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl)
         return cell
     }
     
@@ -106,6 +102,7 @@ class GroupsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         showGroups()
+        
     }
     
     func showGroups() {
@@ -121,19 +118,15 @@ class GroupsViewController: UITableViewController {
     }
     
     func saveGroups(_ emptyStorage: Bool) {
-        groupsService.getGroupsList()
-            .get {[self] vkGroups in
-                print("groups getted")
-                groups = vkGroups
-                if emptyStorage {
-                    showGroups()
-                }
+        groupsService.getGroupsList(){[self]vkGroups in
+            groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
+            realmService.saveRealmGroups(groups: groups)
+            if emptyStorage {
+                showGroups()
             }
-            .done{[self] _ in
-                self.realmService.saveRealmGroups(groups: groups)
-            }
-            .catch{[self] error in
-                groups = []
-            }
+            let (promise, resolver) = Promise<[Group]>.pending()
+            resolver.fulfill(groups)
+            return promise
+        }
     }
 }

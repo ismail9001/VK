@@ -16,6 +16,7 @@ class NewsControl: LikeHeart {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "text.bubble"), for: .normal)
         button.tintColor = .gray
+        button.backgroundColor = .white
         //button.addTarget(self, action: #selector(likeTap(_:)), for: .touchUpInside)
         return button
     }()
@@ -25,6 +26,7 @@ class NewsControl: LikeHeart {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .gray
         label.text = "0"
+        label.backgroundColor = .white
         return label
     }()
     
@@ -33,6 +35,7 @@ class NewsControl: LikeHeart {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "arrowshape.turn.up.right"), for: .normal)
         button.tintColor = .gray
+        button.backgroundColor = .white
         //button.addTarget(self, action: #selector(likeTap(_:)), for: .touchUpInside)
         return button
     }()
@@ -42,6 +45,7 @@ class NewsControl: LikeHeart {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .gray
         label.text = "0"
+        label.backgroundColor = .white
         return label
     }()
     
@@ -50,6 +54,7 @@ class NewsControl: LikeHeart {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "eye"), for: .normal)
         button.tintColor = .gray
+        button.backgroundColor = .white
         //button.addTarget(self, action: #selector(likeTap(_:)), for: .touchUpInside)
         return button
     }()
@@ -59,6 +64,7 @@ class NewsControl: LikeHeart {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .gray
         label.text = "0"
+        label.backgroundColor = .white
         return label
     }()
     

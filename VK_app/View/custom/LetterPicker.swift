@@ -57,6 +57,7 @@ class LetterPicker: UIView {
     private func setupButtons() {
         for letter in letters {
             let button = UIButton(type: .system)
+            button.backgroundColor = .clear
             button.setTitle(letter.uppercased(), for: .normal)
             button.addTarget(self, action: #selector(letterTapped), for: .touchDown)
             buttons.append(button)

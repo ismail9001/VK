@@ -95,12 +95,7 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! FriendPhotosViewCell
-        if let savedImage = UIImageView.getSavedImage(named: photos[indexPath.row].photoName) {
-            cell.friendPhoto.image = savedImage
-        } else {
-            cell.friendPhoto.image = UIImage(named: "camera_200")
-            cell.friendPhoto.load(url: photos[indexPath.row].photoUrl)
-        }
+        cell.friendPhoto.getImageFromCache(imageName: photos[indexPath.row].photoName, imageUrl: photos[indexPath.row].photoUrl)
         cell.photoLike.liked = photos[indexPath.row].liked
         cell.photoLike.likeCount = photos[indexPath.row].likes
         cell.delegate = self
@@ -359,9 +354,9 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     func cellLikeUpdating(_ sender: UIView) {
         let cell = sender
         guard let indexPath = self.collectionView.indexPath(for: cell as! UICollectionViewCell) else { return }
-        photos[indexPath.row].likes = photos[indexPath.row].liked ? photos[indexPath.row].likes - 1 : photos[indexPath.row].likes + 1
-        photos[indexPath.row].liked.toggle()
-        delegate?.updateUser(photos: photos, id: user?.id ?? 0)
+        //photos[indexPath.row].likes = photos[indexPath.row].liked ? photos[indexPath.row].likes - 1 : photos[indexPath.row].likes + 1
+        //photos[indexPath.row].liked.toggle()
+        //delegate?.updateUser(photos: photos, id: user?.id ?? 0)
     }
     //расчет изображений слайдера
     func nearElements (index: Int) -> [Int]{

@@ -13,6 +13,17 @@ class FriendService {
     
     func getFriendsList() -> [User]{
         let friendsOperationQueue = OperationQueue()
+        let getDataOperation = GetDataOperation(request: requestCreating())
+        let parseData = ParseDataOperation()
+        let saveFriends = SaveFriendsOperation()
+        parseData.addDependency(getDataOperation)
+        saveFriends.addDependency(parseData)
+        friendsOperationQueue.addOperations([getDataOperation, parseData], waitUntilFinished: true)
+        OperationQueue.main.addOperation(saveFriends)
+        return parseData.outputData
+    }
+    
+    func requestCreating() -> DataRequest{
         let path = "/method/friends.get?"
         // параметры
         let parameters: Parameters = [
@@ -21,14 +32,6 @@ class FriendService {
             "v": Config.apiVersion
         ]
         let url = Config.apiUrl + path
-        let request = Alamofire.request(url, method: .get, parameters: parameters)
-        let getDataOperation = GetDataOperation(request: request)
-        let parseData = ParseDataOperation()
-        let saveFriends = SaveFriendsOperation()
-        parseData.addDependency(getDataOperation)
-        saveFriends.addDependency(parseData)
-        friendsOperationQueue.addOperations([getDataOperation, parseData], waitUntilFinished: true)
-        OperationQueue.main.addOperation(saveFriends)
-        return parseData.outputData
+        return(Alamofire.request(url, method: .get, parameters: parameters))
     }
 }

@@ -4,6 +4,9 @@
 //
 //  Created by macbook on 22.10.2020.
 //
+//TODO need to refactor
+
+
 import UIKit
 
 protocol LikeUpdatingDelegate: class {
@@ -29,7 +32,7 @@ class LikeHeart: UIControl {
     var likeCount: Int = 0 {
         didSet {
             UIView.transition(with: likeCountLabel, duration: 0.25, options: [.curveEaseInOut, .transitionFlipFromLeft], animations: {
-                self.likeCountLabel.text = "\(self.likeCount)"
+                self.likeCountLabel.text = "\(self.likeCount.thousands())"
             }, completion: nil)
         }
     }
@@ -40,6 +43,7 @@ class LikeHeart: UIControl {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .gray
         label.text = "0"
+        label.backgroundColor = .white
         return label
     }()
     var likeButton: UIButton = {
@@ -47,6 +51,7 @@ class LikeHeart: UIControl {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "heart"), for: .normal)
         button.tintColor = .gray
+        button.backgroundColor = .white
         button.addTarget(self, action: #selector(likeTap(_:)), for: .touchUpInside)
         return button
     }()
