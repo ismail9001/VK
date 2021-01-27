@@ -10,19 +10,20 @@ import UIKit
 extension FriendsViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         if (searchText ==  "") {
-            users = unfilteredUsers
+            friends = unfilteredUsers
             return
         }
-        users = unfilteredUsers.filter{ $0.name.lowercased().contains(searchText.lowercased()) }
-        let allLetters = users.map { String($0.name.uppercased().prefix(1))}
-        letterPicker.letters = Array(Set(allLetters)).sorted()
+        friends = unfilteredUsers.filter{ $0.name.lowercased().contains(searchText.lowercased()) }
+        let allLetters = friends.map { String($0.name.uppercased().prefix(1))}
+        contentView.letterPicker.letters = Array(Set(allLetters)).sorted()
+        tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
-        users = unfilteredUsers
+        friends = unfilteredUsers
+        tableView.reloadData()
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar)

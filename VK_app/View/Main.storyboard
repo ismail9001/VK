@@ -230,7 +230,7 @@
         <scene sceneID="PTy-e7-eY8">
             <objects>
                 <viewController id="Dnb-xz-7dx" customClass="FriendsViewController" customModule="VK_app" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="qmI-cr-wvu">
+                    <view key="view" contentMode="scaleToFill" id="qmI-cr-wvu" customClass="FriendsListView" customModule="VK_app" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -318,10 +318,12 @@
                             <constraint firstItem="b7Z-Zu-SIt" firstAttribute="leading" secondItem="2LZ-HP-Gya" secondAttribute="leading" id="wkX-6R-Ejs"/>
                             <constraint firstAttribute="trailing" secondItem="b7Z-Zu-SIt" secondAttribute="trailing" id="zBF-cp-8bi"/>
                         </constraints>
+                        <connections>
+                            <outlet property="letterPicker" destination="htL-Hc-R5D" id="7VA-dv-TlS"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Friends" id="il9-jJ-3KH"/>
                     <connections>
-                        <outlet property="letterPicker" destination="htL-Hc-R5D" id="Ua1-sO-wLl"/>
                         <outlet property="searchBar" destination="y0I-14-PjQ" id="a6s-qW-nPi"/>
                         <outlet property="tableView" destination="b7Z-Zu-SIt" id="PmJ-Pe-caq"/>
                     </connections>
@@ -446,17 +448,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="sav-EC-2yh">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <textInputTraits key="textInputTraits"/>
-                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="NFM-st-zhG" userLabel="Cell" customClass="GroupsViewCell" customModule="VK_app" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="72" width="414" height="92"/>
+                                <rect key="frame" x="0.0" y="28" width="414" height="91"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NFM-st-zhG" id="mrr-GN-tRa">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="92"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="91"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7LY-5K-bcH" userLabel="Group photo" customClass="Avatar" customModule="VK_app" customModuleProvider="target">
@@ -507,9 +504,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Search" id="Alc-4x-ypn"/>
-                    <connections>
-                        <outlet property="searchBar" destination="sav-EC-2yh" id="ehK-vt-YNX"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TUf-da-ezX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="JKm-5J-zEj" userLabel="Exit" sceneMemberID="exit"/>

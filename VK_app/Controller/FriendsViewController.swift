@@ -18,21 +18,16 @@ protocol LetterPickerDelegate: class {
 class FriendsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UserUpdatingDelegate, LetterPickerDelegate, RecalculateTableDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var letterPicker: LetterPicker!
     @IBOutlet weak var searchBar: UISearchBar!
-    var users: [User] = [] {
+    var friends: [User] = [] {
         willSet{
             //сохраняем старую структуру данных таблицы
             recalcOldSections()
         }
-        didSet{
-            unfilteredUsers = users
-        }
     }
-    
+    lazy var contentView = self.view as! FriendsListView
     var newSections = [ViewSection]()
     var oldSections = [ViewSection]()
-    
     var oldUsers: [User] = []
     var unfilteredUsers: [User] = []
     var friendsService = FriendService()
@@ -46,8 +41,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     //TODO: -- refactor viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        letterPicker.delegate = self
-        letterPicker.letters = uniqueLettersCount(users: users)
+        contentView.letterPicker.delegate = self
+        contentView.letterPicker.letters = uniqueLettersCount(users: friends)
         
         let headerSection = UINib.init(nibName: "CustomHeaderView", bundle: Bundle.main)
         tableView.register(headerSection, forHeaderFooterViewReuseIdentifier: "CustomHeaderView")
@@ -78,15 +73,15 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     //подсчет уникальных первых букв в именах
     func uniqueLettersCount (users:[User]) -> [String]{
         let allLetters = users.map { String($0.name.uppercased().prefix(1))}
-        letterPicker.letters = Array(Set(allLetters)).sorted()
-        return letterPicker.letters
+        contentView.letterPicker.letters = Array(Set(allLetters)).sorted()
+        return contentView.letterPicker.letters
     }
     
     // MARK: - Table view data source
     
     func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return uniqueLettersCount(users: self.users).count
+        return uniqueLettersCount(users: self.friends).count
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -95,15 +90,15 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "CustomHeaderView") as! CustomHeaderView
-        headerView.sectionLabel.text = letterPicker.letters[section]
+        headerView.sectionLabel.text = contentView.letterPicker.letters[section]
         headerView.sectionLabel.backgroundColor = .systemGray5
         return headerView
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var countOfRows = 0
-        for user in users {
+        for user in friends {
             if let firstLetter = user.name.first {
-                if (String(firstLetter) == letterPicker.letters[section]) {
+                if (String(firstLetter) == contentView.letterPicker.letters[section]) {
                     countOfRows += 1
                 }
             }
@@ -114,7 +109,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FriendsViewCell
         let rowCount = rowCounting(indexPath)
-        let user = users[rowCount]
+        let user = friends[rowCount]
         cell.friendPhoto.avatarPhoto.getImageFromCache(imageName: user.photoName, imageUrl: user.photoUrl)
         cell.friendName.text = user.name
         return cell
@@ -127,14 +122,14 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
               let indexPath = tableView.indexPathForSelectedRow
         else { return }
         let rowCount = rowCounting(indexPath)
-        controller.user = users[rowCount]
+        controller.user = friends[rowCount]
         controller.delegate = self
     }
     
     // MARK: - LetterPickerDelegate
     
     func letterPicked(_ letter: String) {
-        guard let index = letterPicker.letters.firstIndex(where: {$0.lowercased().prefix(1) == letter.lowercased()}) else { return }
+        guard let index = contentView.letterPicker.letters.firstIndex(where: {$0.lowercased().prefix(1) == letter.lowercased()}) else { return }
         let indexPath = IndexPath(row: 0, section: index)
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }
@@ -142,10 +137,10 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     // MARK: - UserUpdateDelegate
     
     func updateUser(photos: [Photo], id: Int) {
-        if let row = users.firstIndex(where: {$0.id == id}) {
-            users[row].photos.removeAll()
+        if let row = friends.firstIndex(where: {$0.id == id}) {
+            friends[row].photos.removeAll()
             photos.forEach{ photo in
-                users[row].photos.append(photo)
+                friends[row].photos.append(photo)
             }
         }
         if let row = unfilteredUsers.firstIndex(where: {$0.id == id}) {
@@ -160,7 +155,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         let users =  realmService.getRealmUsers(sortingKey: "name")
         let usersArray = Array(users)
         if usersArray.count != 0 {
-            self.users = usersArray
+            self.friends = usersArray
+            self.unfilteredUsers = self.friends
             realmService.setObserveToken(result: users) {
                 self.tableView.reloadData()
             }
@@ -169,7 +165,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func saveUserData(_ emptyStorage: Bool) {
-        users = friendsService.getFriendsList()
+        friends = friendsService.getFriendsList()
             if emptyStorage {
                 showUserData()
             }
@@ -246,11 +242,11 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func recalcOldSections() {
         //массив структуры учтаревших ячеек
         oldSections.removeAll()
-        let lettersArray = self.uniqueLettersCount(users: users)
+        let lettersArray = self.uniqueLettersCount(users: friends)
         for letter in lettersArray {
             var section = ViewSection(sectionTitle: letter, cells: [], index: lettersArray.firstIndex(of: letter)!)
             var count = 0
-            for user in users {
+            for user in friends {
                 if user.name.first?.lowercased() == letter.lowercased() {
                     section.cells.append(ViewCell(id: user.id, index: count) )
                     count += 1
@@ -274,7 +270,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         //Для теста обновления данных
         DispatchQueue.global().async {
             DispatchQueue.main.async {
-                self.saveUserData(self.users.count == 0 ? true : false)
+                self.saveUserData(self.friends.count == 0 ? true : false)
             }
         }
         refreshControl.endRefreshing()
