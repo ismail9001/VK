@@ -15,10 +15,8 @@ protocol LetterPickerDelegate: class {
     func letterPicked(_ letter: String)
 }
 
-class FriendsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UserUpdatingDelegate, LetterPickerDelegate, RecalculateTableDelegate {
+class FriendsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UserUpdatingDelegate, RecalculateTableDelegate {
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBar: UISearchBar!
     var friends: [User] = [] {
         willSet{
             //сохраняем старую структуру данных таблицы
@@ -41,20 +39,14 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     //TODO: -- refactor viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        contentView.letterPicker.delegate = self
         contentView.letterPicker.letters = uniqueLettersCount(users: friends)
-        
-        let headerSection = UINib.init(nibName: "CustomHeaderView", bundle: Bundle.main)
-        tableView.register(headerSection, forHeaderFooterViewReuseIdentifier: "CustomHeaderView")
         //Looks for single or multiple taps.
         self.hideKeyboardWhenTappedAround()
-        searchBar.placeholder = "Find a friend"
-        searchBar.delegate = self
+        contentView.searchBar.delegate = self
         //делегат сравнения структуры
         realmService.recalculateDelegate = self
         showUserData()
         addRefreshControl()
-        
         //saveUserToFirebase()
     }
     
@@ -64,7 +56,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         var i = 0
         var rowCount = 0
         while i < indexPath.section {
-            rowCount += tableView.numberOfRows(inSection: i)
+            rowCount += contentView.tableView.numberOfRows(inSection: i)
             i += 1
         }
         rowCount += indexPath.row
@@ -119,19 +111,11 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let controller = segue.destination as? FriendPhotosViewController,
-              let indexPath = tableView.indexPathForSelectedRow
+              let indexPath = contentView.tableView.indexPathForSelectedRow
         else { return }
         let rowCount = rowCounting(indexPath)
         controller.user = friends[rowCount]
         controller.delegate = self
-    }
-    
-    // MARK: - LetterPickerDelegate
-    
-    func letterPicked(_ letter: String) {
-        guard let index = contentView.letterPicker.letters.firstIndex(where: {$0.lowercased().prefix(1) == letter.lowercased()}) else { return }
-        let indexPath = IndexPath(row: 0, section: index)
-        tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }
     
     // MARK: - UserUpdateDelegate
@@ -150,7 +134,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
-    //TODO:-- сделать обновления построчно, а не всю таблицу
+
     func showUserData() {
         let users =  realmService.getRealmUsers(sortingKey: "name")
         let usersArray = Array(users)
@@ -158,7 +142,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
             self.friends = usersArray
             self.unfilteredUsers = self.friends
             realmService.setObserveToken(result: users) {
-                self.tableView.reloadData()
+                self.contentView.tableView.reloadData()
             }
         }
         self.saveUserData(usersArray.count == 0 ? true : false)
@@ -178,8 +162,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func addRefreshControl() {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
-        tableView.addSubview(refreshControl)
-        tableView.sendSubviewToBack(refreshControl)
+        contentView.tableView.addSubview(refreshControl)
+        contentView.tableView.sendSubviewToBack(refreshControl)
     }
     
     func recalculateTable(collection: [User]) {
@@ -257,13 +241,13 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableUpdate(changes: SectionChanges) {
-        self.tableView.beginUpdates()
-        self.tableView.deleteSections(changes.deletes, with: .fade)
-        self.tableView.insertSections(changes.inserts, with: .fade)
-        self.tableView.reloadRows(at: changes.updates.reloads, with: .fade)
-        self.tableView.insertRows(at: changes.updates.inserts, with: .fade)
-        self.tableView.deleteRows(at: changes.updates.deletes, with: .fade)
-        self.tableView.endUpdates()
+        self.contentView.tableView.beginUpdates()
+        self.contentView.tableView.deleteSections(changes.deletes, with: .fade)
+        self.contentView.tableView.insertSections(changes.inserts, with: .fade)
+        self.contentView.tableView.reloadRows(at: changes.updates.reloads, with: .fade)
+        self.contentView.tableView.insertRows(at: changes.updates.inserts, with: .fade)
+        self.contentView.tableView.deleteRows(at: changes.updates.deletes, with: .fade)
+        self.contentView.tableView.endUpdates()
     }
     
     @objc func refresh(_ sender: AnyObject) {

@@ -74,3 +74,7 @@ struct ReloadableCellData {
         }
     }
 }
+
+class RecalculateTable {
+    
+}

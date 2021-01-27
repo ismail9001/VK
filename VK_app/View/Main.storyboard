@@ -320,13 +320,11 @@
                         </constraints>
                         <connections>
                             <outlet property="letterPicker" destination="htL-Hc-R5D" id="7VA-dv-TlS"/>
+                            <outlet property="searchBar" destination="y0I-14-PjQ" id="y6g-9t-iyF"/>
+                            <outlet property="tableView" destination="b7Z-Zu-SIt" id="juJ-sf-ftX"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Friends" id="il9-jJ-3KH"/>
-                    <connections>
-                        <outlet property="searchBar" destination="y0I-14-PjQ" id="a6s-qW-nPi"/>
-                        <outlet property="tableView" destination="b7Z-Zu-SIt" id="PmJ-Pe-caq"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AXm-rN-7OK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

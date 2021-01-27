@@ -12,19 +12,19 @@ extension FriendsViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText ==  "" {
             friends = unfilteredUsers
-            tableView.reloadData()
+            contentView.tableView.reloadData()
             return
         }
         friends = unfilteredUsers.filter{ $0.name.lowercased().contains(searchText.lowercased()) }
         let allLetters = friends.map { String($0.name.uppercased().prefix(1))}
         contentView.letterPicker.letters = Array(Set(allLetters)).sorted()
-        tableView.reloadData()
+        contentView.tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         friends = unfilteredUsers
-        tableView.reloadData()
+        contentView.tableView.reloadData()
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
