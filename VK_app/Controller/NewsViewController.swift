@@ -14,6 +14,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     var news:[News] = []
     var newsService = NewsService()
     let formatter = DateFormatter()
+    formatter.dateStyle = .short
     var imageService = ImageService()
     
     //MARK: - Life Cycle
@@ -41,7 +42,6 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsViewCell", for: indexPath) as! NewsViewCell
         let newsCell = news[indexPath.row]
-        formatter.dateStyle = .short
         imageService.getImageFromCache(imageName: nil, imageUrl: newsCell.authorPhotoUrl, uiImageView: cell.authorPhoto.avatarPhoto)
         cell.authorName.text = newsCell.authorName
         cell.newsDate.text = formatter.string(from: newsCell.newsDate)
