@@ -42,8 +42,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsViewCell", for: indexPath) as! NewsViewCell
         let newsCell = news[indexPath.row]
         formatter.dateStyle = .short
-        imageService.getImageFromCache(imageName: nil, imageUrl: newsCell.authorPhotoUrl)
-        cell.authorPhoto.avatarPhoto.image = imageService.image
+        imageService.getImageFromCache(imageName: nil, imageUrl: newsCell.authorPhotoUrl, uiImageView: cell.authorPhoto.avatarPhoto)
         cell.authorName.text = newsCell.authorName
         cell.newsDate.text = formatter.string(from: newsCell.newsDate)
         cell.newsImage.isHidden = false
@@ -51,8 +50,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch newsCell.postType {
         case .photo:
             let photoNews = newsCell as! PhotoNews
-            imageService.getImageFromCache(imageName: nil, imageUrl: photoNews.newsImageUrl)
-            cell.newsImage.image = imageService.image
+            imageService.getImageFromCache(imageName: nil, imageUrl: photoNews.newsImageUrl, uiImageView: cell.newsImage)
             cell.newsText.isHidden = true
         case .post:
             let postNews = newsCell as! PostNews

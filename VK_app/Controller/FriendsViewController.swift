@@ -35,7 +35,6 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     let realmService = RealmService()
     lazy var refreshControl = UIRefreshControl()
     var bufferSection:[ViewSection]?
-    var firstLoad = true
     
     //TODO: -- refactor viewDidLoad
     override func viewDidLoad() {
@@ -46,7 +45,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         contentView.searchBar.delegate = self
         //делегат сравнения структуры
         realmService.recalculateDelegate = self
-        showUserData()
+        //showUserData()
+        saveUserData(true)
         addRefreshControl()
         //saveUserToFirebase()
     }
@@ -101,10 +101,9 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FriendsViewCell
-        let rowCount = rowCounting(indexPath)
-        let user = friends[rowCount]
-        imageService.getImageFromCache(imageName: user.photoName, imageUrl: user.photoUrl)
-        cell.friendPhoto.avatarPhoto.image = imageService.image
+        let friendIndex = rowCounting(indexPath)
+        let user = friends[friendIndex]
+        imageService.getImageFromCache(imageName: user.photoName, imageUrl: user.photoUrl, uiImageView: cell.friendPhoto.avatarPhoto)
         cell.friendName.text = user.name
         return cell
     }
@@ -147,7 +146,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.contentView.tableView.reloadData()
             }
         }
-        self.saveUserData(usersArray.count == 0 ? true : false)
+        //self.saveUserData(usersArray.count == 0 ? true : false)
     }
     
     func saveUserData(_ emptyStorage: Bool) {

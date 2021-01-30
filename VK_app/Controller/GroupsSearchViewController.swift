@@ -41,8 +41,7 @@ class GroupsSearchViewController: UITableViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
         let group = groups[indexPath.row]
-        imageService.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl)
-        cell.groupPhoto.avatarPhoto.image = imageService.image
+        imageService.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl, uiImageView: cell.groupPhoto.avatarPhoto)
         cell.groupName.text = group.title
         return cell
     }
@@ -51,6 +50,6 @@ class GroupsSearchViewController: UITableViewController {
 extension NSLayoutConstraint {
     override public var description: String {
         let id = identifier ?? ""
-        return "id: \(id), constant: \(constant)" //you may print whatever you want here
+        return "id: \(id), constant: \(constant)"
     }
 }

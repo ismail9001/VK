@@ -34,8 +34,7 @@ class GroupsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
         let group = groups[indexPath.row]
         cell.groupName.text = group.title
-        imageService.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl)
-        cell.groupPhoto.avatarPhoto.image = imageService.image
+        imageService.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl, uiImageView: cell.groupPhoto.avatarPhoto)
         return cell
     }
     

@@ -11,14 +11,17 @@ import Kingfisher
 
 class ImageService: UIImageView {
     
-    func getImageFromCache(imageName: String?, imageUrl: String) {
-        if let imageName = imageName, let savedImage = self.getSavedImage(named: imageName) {
-            self.image = savedImage
-        }
-        else {
-            print("нет сохр фото")
-            self.image = UIImage(named: "camera_200")
-            self.load(uiImage: self, url: imageUrl)
+    var imageCash:[String: UIImage] = [:]
+    
+    func getImageFromCache(imageName: String?, imageUrl: String, uiImageView: UIImageView) {
+        if let imageName = imageName, let image = imageCash[imageName] {
+            uiImageView.image = image
+        } else if let imageName = imageName, let savedImage = self.getSavedImage(named: imageName) {
+            uiImageView.image = savedImage
+            imageCash[imageName] = savedImage
+        } else {
+            uiImageView.image = UIImage(named: "camera_200")
+            self.load(uiImageView: uiImageView, url: imageUrl)
         }
     }
     
@@ -30,7 +33,7 @@ class ImageService: UIImageView {
        return defaultImage
    }
     
-    private func load(uiImage: UIImageView, url: String) {
+    private func load(uiImageView: UIImageView, url: String) {
         var imageName = ""
         if let url1 = URL(string: url) {
             let withoutExt = url1.deletingPathExtension()
@@ -41,8 +44,8 @@ class ImageService: UIImageView {
             KingfisherManager.shared.retrieveImage(with: imageUrl) { result in
                 switch result {
                 case .success(let value):
-                    uiImage.image = value.image
-                    _ = self?.saveImage(image: value.image, imageName: imageName)
+                    uiImageView.image = value.image
+                    self?.saveImage(image: value.image, imageName: imageName)
                 case .failure(let error):
                     print(error)
                 }
@@ -50,19 +53,18 @@ class ImageService: UIImageView {
         }
     }
     
-    private func saveImage(image: UIImage, imageName: String) -> Bool {
+    private func saveImage(image: UIImage, imageName: String) {
         guard let data = image.jpegData(compressionQuality: 1) ?? image.pngData() else {
-            return false
+            return
         }
         guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
-            return false
+            return
         }
         do {
             try data.write(to: directory.appendingPathComponent("\(imageName).jpg")!)
-            return true
+            imageCash[imageName] = image
         } catch {
             print(error.localizedDescription)
-            return false
         }
     }
 }

@@ -31,7 +31,7 @@ class WebViewController: UIViewController {
                 urlComponents.host = "oauth.vk.com"
                 urlComponents.path = "/authorize"
                 urlComponents.queryItems = [
-                    URLQueryItem(name: "client_id", value: "7697149"),
+                    URLQueryItem(name: "client_id", value: "7676047"),
                     URLQueryItem(name: "display", value: "mobile"),
                     URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
                     URLQueryItem(name: "scope", value: Config.scope),
@@ -43,6 +43,7 @@ class WebViewController: UIViewController {
                 let request = URLRequest(url: urlComponents.url!)
         //webview.load(loginService.getVKToken())
         //webview.load(AF.request(url, method: .get, parameters: parameters))
+        print(request, request.self)
         webview.load(request)
     }
 }

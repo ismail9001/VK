@@ -96,8 +96,7 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! FriendPhotosViewCell
-        imageService.getImageFromCache(imageName: photos[indexPath.row].photoName, imageUrl: photos[indexPath.row].photoUrl)
-        cell.friendPhoto.image = imageService.image
+        imageService.getImageFromCache(imageName: photos[indexPath.row].photoName, imageUrl: photos[indexPath.row].photoUrl, uiImageView: cell.friendPhoto)
         cell.photoLike.liked = photos[indexPath.row].liked
         cell.photoLike.likeCount = photos[indexPath.row].likes
         cell.delegate = self
