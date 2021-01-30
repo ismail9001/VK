@@ -16,7 +16,6 @@ protocol LetterPickerDelegate: class {
 }
 
 class FriendsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UserUpdatingDelegate, RecalculateTableDelegate {
-    
     var friends: [User] = [] {
         willSet{
             //сохраняем старую структуру данных таблицы

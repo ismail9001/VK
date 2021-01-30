@@ -7,8 +7,8 @@
 
 import UIKit
 
-class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellProtocol {
-    
+class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,LikeUpdatingCellProtocol {
+    @IBOutlet weak var collectionView: UICollectionView!
     let cellIndent: CGFloat = 20
     var photos : [Photo] = []
     var user : User?
@@ -85,16 +85,16 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     
     // MARK: UICollectionViewDataSource
     
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos.count
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! FriendPhotosViewCell
         imageService.getImageFromCache(imageName: photos[indexPath.row].photoName, imageUrl: photos[indexPath.row].photoUrl, uiImageView: cell.friendPhoto)
         cell.photoLike.liked = photos[indexPath.row].liked
@@ -103,7 +103,7 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         return cell
     }
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! FriendPhotosViewCell
         self.imageTapped(cell, indexPath)
     }
@@ -301,11 +301,11 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     
     //MARK: - Animation
     
-    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         cellAnimationCalculate(cell)
     }
     
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let arr = self.collectionView.indexPathsForVisibleItems
         for indexPath in arr{
             guard let cell = self.collectionView.cellForItem(at: indexPath) else {return}

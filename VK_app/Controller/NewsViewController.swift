@@ -14,7 +14,6 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     var news:[News] = []
     var newsService = NewsService()
     let formatter = DateFormatter()
-    formatter.dateStyle = .short
     var imageService = ImageService()
     
     //MARK: - Life Cycle
@@ -23,6 +22,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         let nib = UINib.init(nibName: "NewsViewCell", bundle: nil)
         contentView.tableView.register(nib, forCellReuseIdentifier: "NewsViewCell")
+        formatter.dateStyle = .short
         newsService.getNewsList() { news in
             self.news = news
             self.contentView.tableView.reloadData()
