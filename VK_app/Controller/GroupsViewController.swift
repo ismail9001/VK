@@ -15,6 +15,7 @@ class GroupsViewController: UITableViewController {
     var user:User = User()
     let groupsService = GroupsService()
     let realmService = RealmService()
+    var imageService = ImageService()
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -33,7 +34,8 @@ class GroupsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
         let group = groups[indexPath.row]
         cell.groupName.text = group.title
-        cell.groupPhoto.avatarPhoto.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl)
+        imageService.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl)
+        cell.groupPhoto.avatarPhoto.image = imageService.image
         return cell
     }
     

@@ -29,6 +29,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     var oldUsers: [User] = []
     var unfilteredUsers: [User] = []
     var friendsService = FriendService()
+    var imageService = ImageService()
     //Firebase
     //let loginService = AuthorizationService()
     let realmService = RealmService()
@@ -102,7 +103,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FriendsViewCell
         let rowCount = rowCounting(indexPath)
         let user = friends[rowCount]
-        cell.friendPhoto.avatarPhoto.getImageFromCache(imageName: user.photoName, imageUrl: user.photoUrl)
+        imageService.getImageFromCache(imageName: user.photoName, imageUrl: user.photoUrl)
+        cell.friendPhoto.avatarPhoto.image = imageService.image
         cell.friendName.text = user.name
         return cell
     }

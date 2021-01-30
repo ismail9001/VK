@@ -15,6 +15,7 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     weak var delegate : UserUpdatingDelegate?
     let screenSize: CGRect = UIScreen.main.bounds
     let realmService = RealmService()
+    var imageService = ImageService()
     
     var sliderCenterImage: UIImageView = {
         let image = UIImageView()
@@ -95,7 +96,8 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! FriendPhotosViewCell
-        cell.friendPhoto.getImageFromCache(imageName: photos[indexPath.row].photoName, imageUrl: photos[indexPath.row].photoUrl)
+        imageService.getImageFromCache(imageName: photos[indexPath.row].photoName, imageUrl: photos[indexPath.row].photoUrl)
+        cell.friendPhoto.image = imageService.image
         cell.photoLike.liked = photos[indexPath.row].liked
         cell.photoLike.likeCount = photos[indexPath.row].likes
         cell.delegate = self
@@ -162,8 +164,8 @@ class FriendPhotosViewController: UICollectionViewController, LikeUpdatingCellPr
         
         let translation = gesture.translation(in: self.view)
         let positions = nearElements(index: sliderCenterView.tag)
-        sliderRightImage.image = UIImageView.getSavedImage(named: photos[positions[2]].photoName)
-        sliderLeftImage.image = UIImageView.getSavedImage(named: photos[positions[0]].photoName)
+        sliderRightImage.image = imageService.getSavedImage(named: photos[positions[2]].photoName)
+        sliderLeftImage.image = imageService.getSavedImage(named: photos[positions[0]].photoName)
         switch gesture.state {
         case .began:
             animator = UIViewPropertyAnimator(duration: 1, curve: .linear)

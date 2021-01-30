@@ -16,6 +16,7 @@ class GroupsSearchViewController: UITableViewController {
     }
     var unfilteredGroups: [Group] = []
     let groupsService = GroupsService()
+    var imageService = ImageService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +41,8 @@ class GroupsSearchViewController: UITableViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
         let group = groups[indexPath.row]
-        cell.groupPhoto.avatarPhoto.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl)
+        imageService.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl)
+        cell.groupPhoto.avatarPhoto.image = imageService.image
         cell.groupName.text = group.title
         return cell
     }

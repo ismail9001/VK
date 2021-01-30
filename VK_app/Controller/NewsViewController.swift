@@ -14,6 +14,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     var news:[News] = []
     var newsService = NewsService()
     let formatter = DateFormatter()
+    var imageService = ImageService()
     
     //MARK: - Life Cycle
     
@@ -41,7 +42,8 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsViewCell", for: indexPath) as! NewsViewCell
         let newsCell = news[indexPath.row]
         formatter.dateStyle = .short
-        cell.authorPhoto.avatarPhoto.getImageFromCache(imageName: nil, imageUrl: newsCell.authorPhotoUrl)
+        imageService.getImageFromCache(imageName: nil, imageUrl: newsCell.authorPhotoUrl)
+        cell.authorPhoto.avatarPhoto.image = imageService.image
         cell.authorName.text = newsCell.authorName
         cell.newsDate.text = formatter.string(from: newsCell.newsDate)
         cell.newsImage.isHidden = false
@@ -49,7 +51,8 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch newsCell.postType {
         case .photo:
             let photoNews = newsCell as! PhotoNews
-            cell.newsImage.getImageFromCache(imageName: nil, imageUrl: photoNews.newsImageUrl)
+            imageService.getImageFromCache(imageName: nil, imageUrl: photoNews.newsImageUrl)
+            cell.newsImage.image = imageService.image
             cell.newsText.isHidden = true
         case .post:
             let postNews = newsCell as! PostNews
