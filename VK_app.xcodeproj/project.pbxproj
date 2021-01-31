@@ -48,7 +48,7 @@
 		FA75808A25C1A73C0075F6AE /* GetDataPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA75808925C1A73C0075F6AE /* GetDataPromise.swift */; };
 		FA75808D25C1AE7F0075F6AE /* SaveDataPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA75808C25C1AE7F0075F6AE /* SaveDataPromise.swift */; };
 		FA75809025C1D0520075F6AE /* NewsfeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA75808F25C1D0520075F6AE /* NewsfeedView.swift */; };
-		FA7580C025C1E5D30075F6AE /* GroupSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7580BF25C1E5D30075F6AE /* GroupSearchView.swift */; };
+		FA7580C025C1E5D30075F6AE /* FriendPhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7580BF25C1E5D30075F6AE /* FriendPhotosView.swift */; };
 		FA7580C325C1F1DF0075F6AE /* FriendsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7580C225C1F1DF0075F6AE /* FriendsListView.swift */; };
 		FA7580C825C544EE0075F6AE /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7580C725C544EE0075F6AE /* ImageService.swift */; };
 		FA9EDABF256AA32200AE5870 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9EDABE256AA32200AE5870 /* Session.swift */; };
@@ -122,7 +122,7 @@
 		FA75808925C1A73C0075F6AE /* GetDataPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDataPromise.swift; sourceTree = "<group>"; };
 		FA75808C25C1AE7F0075F6AE /* SaveDataPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDataPromise.swift; sourceTree = "<group>"; };
 		FA75808F25C1D0520075F6AE /* NewsfeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsfeedView.swift; sourceTree = "<group>"; };
-		FA7580BF25C1E5D30075F6AE /* GroupSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSearchView.swift; sourceTree = "<group>"; };
+		FA7580BF25C1E5D30075F6AE /* FriendPhotosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendPhotosView.swift; sourceTree = "<group>"; };
 		FA7580C225C1F1DF0075F6AE /* FriendsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListView.swift; sourceTree = "<group>"; };
 		FA7580C725C544EE0075F6AE /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		FA9EDABE256AA32200AE5870 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -245,13 +245,12 @@
 			isa = PBXGroup;
 			children = (
 				FA2D73D4253AD5EF003FAAD4 /* App */,
+				FA2D73EB253B10A9003FAAD4 /* Model */,
+				FA521069253331AB00D84397 /* View */,
 				FA521068253331A200D84397 /* Controller */,
-				FA7580C625C5449B0075F6AE /* Helpers */,
 				FA606A902572C77D00DC60CA /* Extensions */,
 				FA52106E253334FD00D84397 /* Images */,
-				FA2D73EB253B10A9003FAAD4 /* Model */,
 				FA606A6F256DB45300DC60CA /* Services */,
-				FA521069253331AB00D84397 /* View */,
 				FA52105E2532E9EB00D84397 /* Info.plist */,
 				FACAEE21258F2ED4006AFD03 /* GoogleService-Info.plist */,
 			);
@@ -280,7 +279,7 @@
 				FA52105B2532E9EB00D84397 /* LaunchScreen.storyboard */,
 				FAF8037A255C3C3C0053D6E1 /* Main.storyboard */,
 				FA75808F25C1D0520075F6AE /* NewsfeedView.swift */,
-				FA7580BF25C1E5D30075F6AE /* GroupSearchView.swift */,
+				FA7580BF25C1E5D30075F6AE /* FriendPhotosView.swift */,
 				FA7580C225C1F1DF0075F6AE /* FriendsListView.swift */,
 			);
 			path = View;
@@ -310,6 +309,7 @@
 				FA1CAD7D25B43EC600E3E957 /* Queue */,
 				FA22714A2593BEFB0085FFE5 /* Database */,
 				FA606A70256DB47C00DC60CA /* AuthorizationService.swift */,
+				FA7580C725C544EE0075F6AE /* ImageService.swift */,
 				FA606A74256ECC3300DC60CA /* FriendsService.swift */,
 				FA606A7E256EDB2400DC60CA /* FriendsPhotosService.swift */,
 				FA606A82256EDDA200DC60CA /* GroupsService.swift */,
@@ -332,14 +332,6 @@
 				FA0D0DBD25B37C2D001086D9 /* IntExtension.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		FA7580C625C5449B0075F6AE /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				FA7580C725C544EE0075F6AE /* ImageService.swift */,
-			);
-			path = Helpers;
 			sourceTree = "<group>";
 		};
 		FAF80390255D579C0053D6E1 /* transition */ = {
@@ -554,7 +546,7 @@
 				FA606A62256D8A6C00DC60CA /* WebViewController.swift in Sources */,
 				FA0D0DB725AED5CB001086D9 /* NewsService.swift in Sources */,
 				FAFB2E2D2542160300C68268 /* LikeHeart.swift in Sources */,
-				FA7580C025C1E5D30075F6AE /* GroupSearchView.swift in Sources */,
+				FA7580C025C1E5D30075F6AE /* FriendPhotosView.swift in Sources */,
 				FA2D73EE253B10FB003FAAD4 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

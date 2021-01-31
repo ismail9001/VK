@@ -512,7 +512,7 @@
         <scene sceneID="0Vf-aA-PLz">
             <objects>
                 <viewController id="q5c-ls-YbL" customClass="FriendPhotosViewController" customModule="VK_app" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Zgu-hN-qAS">
+                    <view key="view" contentMode="scaleToFill" id="Zgu-hN-qAS" customClass="FriendsPhotosView" customModule="VK_app" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -570,11 +570,11 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="eVb-Ym-goL"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <connections>
+                            <outlet property="collectionView" destination="19i-mv-n16" id="fNa-ha-lGm"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="GLc-ZW-SSX"/>
-                    <connections>
-                        <outlet property="collectionView" destination="19i-mv-n16" id="qSN-QU-tRr"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8wr-Hn-CAp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
