@@ -12,22 +12,33 @@ import SwiftyJSON
 class NewsService {
     
     let baseUrl = Config.apiUrl
+    var newsFrom:[String:String] = [:]
     
-    func getNewsList(completion: @escaping ([News]) -> Void){
+    func getNewsList(timeFrom: Double?, completion: @escaping ([News]) -> Void){
         
         let path = "/method/newsfeed.get?"
         // параметры
-        let postParameters: Parameters = [
+        var postParameters: Parameters = [
             "filters": "post",
             "access_token": Session.storedSession.token,
+            "count": 10,
             "v": Config.apiVersion
         ]
-        
-        let photoParameters: Parameters = [
+    
+        var photoParameters: Parameters = [
             "filters": "wall_photo",
             "access_token": Session.storedSession.token,
+            "count": 10,
             "v": Config.apiVersion
         ]
+        if let startTime = timeFrom {
+            postParameters["start_time"] = Int(startTime)
+            photoParameters["start_time"] = Int(startTime)
+        }
+        if !newsFrom.isEmpty {
+            postParameters["start_from"] = newsFrom["\(PostNews.self)"]
+            photoParameters["start_from"] = newsFrom["\(PhotoNews.self)"]
+        }
         let url = baseUrl+path
         var allNews:[News] = []
         let dispatchGroup = DispatchGroup()
@@ -37,11 +48,11 @@ class NewsService {
             allNews += news
             dispatchGroup.leave()
         }
-        dispatchGroup.enter()
+        /*dispatchGroup.enter()
         newsParse(type:PhotoNews.self, url: url, parameters: photoParameters){ news in
             allNews += news
             dispatchGroup.leave()
-        }
+        }*/
         dispatchGroup.notify(queue: DispatchQueue.main) {
             completion(allNews.sorted(by: { $0.newsDate > $1.newsDate }))
         }
@@ -58,6 +69,7 @@ class NewsService {
                 parsedNews = json["response"]["items"].arrayValue.compactMap{ T(json: $0) }
                 parsedUsers = json["response"]["profiles"].arrayValue.compactMap{ User(json: $0) }
                 parsedGroups = json["response"]["groups"].arrayValue.compactMap{ Group(json: $0) }
+                self.newsFrom["\(T.self)"] = json["response"]["next_from"].stringValue
                 for eachPost in parsedNews {
                     let author = self.authorCalculate(newsFeed: eachPost, users: parsedUsers, groups: parsedGroups)
                     eachPost.authorName = author.0

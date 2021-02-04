@@ -62,7 +62,9 @@ class PostNews: News {
 
 class PhotoNews: News {
     var newsImageUrl: String!
-    
+    var width: Int?
+    var height: Int?
+    var aspectRatio: CGFloat? { return CGFloat(height!)/CGFloat(width!) }
     required init (json: JSON) {
         
         super.init(json: json)
@@ -72,10 +74,12 @@ class PhotoNews: News {
             super.lookUpCount = firstPhotoInNews["views"]["count"].intValue
             super.shareCount = firstPhotoInNews["reposts"]["count"].intValue
             super.commentCount = firstPhotoInNews["comments"]["count"].intValue
-                for (_, object) in firstPhotoInNews["sizes"] {
-                    if object["type"] == "x"
-                    {self.newsImageUrl = object["url"].stringValue}
-                }
+            for (_, photo) in firstPhotoInNews["sizes"] {
+                if photo["type"] == "x"{
+                    self.width = photo["width"].intValue
+                    self.height = photo["height"].intValue
+                    self.newsImageUrl = photo["url"].stringValue}
+            }
             
         }
     }

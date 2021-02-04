@@ -54,28 +54,39 @@
                             <constraint firstItem="0If-y7-JTn" firstAttribute="centerY" secondItem="CTY-d6-iF0" secondAttribute="centerY" constant="-10" id="xue-V8-stO"/>
                         </constraints>
                     </view>
-                    <view contentMode="scaleToFill" placeholderIntrinsicWidth="36" placeholderIntrinsicHeight="infinite" translatesAutoresizingMaskIntoConstraints="NO" id="EnT-7o-ocj" customClass="NewsControl" customModule="VK_app" customModuleProvider="target">
-                        <rect key="frame" x="270" y="507.5" width="36" height="25.5"/>
-                    </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="chI-hn-bsF">
-                        <rect key="frame" x="5" y="85" width="301" height="417.5"/>
+                        <rect key="frame" x="5" y="85" width="301" height="351.5"/>
                         <subviews>
-                            <textView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T9t-sk-nDR" userLabel="News Text">
-                                <rect key="frame" x="0.0" y="0.0" width="301" height="116.5"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.</string>
-                                <color key="textColor" systemColor="labelColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gJq-XC-TR1">
+                                <rect key="frame" x="0.0" y="0.0" width="301" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ii-Rf-lHz">
+                                <rect key="frame" x="0.0" y="20.5" width="301" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="showMore_Button_Clicked:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="WBB-61-xNM"/>
+                                </connections>
+                            </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LcI-5d-klY">
-                                <rect key="frame" x="0.0" y="116.5" width="301" height="301"/>
+                                <rect key="frame" x="0.0" y="50.5" width="301" height="301"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="LcI-5d-klY" secondAttribute="height" multiplier="1:1" id="bpu-ZJ-7Cz"/>
+                                    <constraint firstAttribute="height" constant="301" id="rxI-TD-F6T"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="bpu-ZJ-7Cz"/>
+                                    </mask>
+                                </variation>
                             </imageView>
                         </subviews>
                     </stackView>
+                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="749" placeholderIntrinsicWidth="36" placeholderIntrinsicHeight="infinite" translatesAutoresizingMaskIntoConstraints="NO" id="EnT-7o-ocj" customClass="NewsControl" customModule="VK_app" customModuleProvider="target">
+                        <rect key="frame" x="270" y="441.5" width="36" height="91.5"/>
+                    </view>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="EnT-7o-ocj" secondAttribute="trailing" constant="5" id="70c-df-dAT"/>
@@ -93,10 +104,12 @@
             <connections>
                 <outlet property="authorName" destination="0If-y7-JTn" id="T7a-xS-6HE"/>
                 <outlet property="authorPhoto" destination="J4k-yv-JLY" id="Esa-RP-0bV"/>
+                <outlet property="imageView_HeightConstraint" destination="rxI-TD-F6T" id="3D9-zS-5b9"/>
                 <outlet property="newsDate" destination="iyR-EK-tBK" id="YDM-AV-gXw"/>
                 <outlet property="newsImage" destination="LcI-5d-klY" id="dlI-ev-vYo"/>
-                <outlet property="newsText" destination="T9t-sk-nDR" id="NPv-fC-DRq"/>
+                <outlet property="newsText" destination="gJq-XC-TR1" id="j2t-0w-2NM"/>
                 <outlet property="photoLike" destination="EnT-7o-ocj" id="b71-om-nxJ"/>
+                <outlet property="showMoreButton" destination="0ii-Rf-lHz" id="lNn-oa-i98"/>
             </connections>
             <point key="canvasLocation" x="-278.98550724637681" y="511.60714285714283"/>
         </tableViewCell>
@@ -107,9 +120,6 @@
         </designable>
     </designables>
     <resources>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
