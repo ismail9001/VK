@@ -42,8 +42,12 @@
 		FA606A922572C7F900DC60CA /* FriendsViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A912572C7F900DC60CA /* FriendsViewControllerExtension.swift */; };
 		FA606A962572C86600DC60CA /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A952572C86600DC60CA /* UIViewControllerExtension.swift */; };
 		FA606A992572C8B100DC60CA /* UIPanGestureRecognizerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A982572C8B100DC60CA /* UIPanGestureRecognizerExtension.swift */; };
-		FA606A9F2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A9E2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift */; };
+		FA606A9F2572C94100DC60CA /* FriendImagesExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606A9E2572C94100DC60CA /* FriendImagesExtension.swift */; };
 		FA606AA22572CBB200DC60CA /* WebViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA606AA12572CBB200DC60CA /* WebViewControllerExtension.swift */; };
+		FA6D229225D0623400C16444 /* FriendAlbumsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6D229125D0623400C16444 /* FriendAlbumsController.swift */; };
+		FA6D229625D065A300C16444 /* FriendsAlbumViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6D229525D065A300C16444 /* FriendsAlbumViewCell.swift */; };
+		FA6D229925D068A100C16444 /* FriendsAlbumService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6D229825D068A100C16444 /* FriendsAlbumService.swift */; };
+		FA6D229C25D06B3C00C16444 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6D229B25D06B3C00C16444 /* Album.swift */; };
 		FA75808325C19FF50075F6AE /* ParseDataPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA75808225C19FF50075F6AE /* ParseDataPromise.swift */; };
 		FA75808A25C1A73C0075F6AE /* GetDataPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA75808925C1A73C0075F6AE /* GetDataPromise.swift */; };
 		FA75808D25C1AE7F0075F6AE /* SaveDataPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA75808C25C1AE7F0075F6AE /* SaveDataPromise.swift */; };
@@ -116,8 +120,12 @@
 		FA606A952572C86600DC60CA /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		FA606A982572C8B100DC60CA /* UIPanGestureRecognizerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIPanGestureRecognizerExtension.swift; sourceTree = "<group>"; };
 		FA606A9B2572C8EE00DC60CA /* GroupsSearchViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsSearchViewControllerExtension.swift; sourceTree = "<group>"; };
-		FA606A9E2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendPhotosViewControllerExtension.swift; sourceTree = "<group>"; };
+		FA606A9E2572C94100DC60CA /* FriendImagesExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendImagesExtension.swift; sourceTree = "<group>"; };
 		FA606AA12572CBB200DC60CA /* WebViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewControllerExtension.swift; sourceTree = "<group>"; };
+		FA6D229125D0623400C16444 /* FriendAlbumsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendAlbumsController.swift; sourceTree = "<group>"; };
+		FA6D229525D065A300C16444 /* FriendsAlbumViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsAlbumViewCell.swift; sourceTree = "<group>"; };
+		FA6D229825D068A100C16444 /* FriendsAlbumService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsAlbumService.swift; sourceTree = "<group>"; };
+		FA6D229B25D06B3C00C16444 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		FA75808225C19FF50075F6AE /* ParseDataPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseDataPromise.swift; sourceTree = "<group>"; };
 		FA75808925C1A73C0075F6AE /* GetDataPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDataPromise.swift; sourceTree = "<group>"; };
 		FA75808C25C1AE7F0075F6AE /* SaveDataPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDataPromise.swift; sourceTree = "<group>"; };
@@ -219,6 +227,7 @@
 				FACBD627254ED60800BAFCA8 /* Random.swift */,
 				FA9EDABE256AA32200AE5870 /* Session.swift */,
 				FA606A7A256ED86900DC60CA /* Config.swift */,
+				FA6D229B25D06B3C00C16444 /* Album.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -267,6 +276,7 @@
 				FA2D73DF253B0B8F003FAAD4 /* GroupsSearchViewController.swift */,
 				FACBD61C254EA6EF00BAFCA8 /* NewsViewController.swift */,
 				FA606A61256D8A6C00DC60CA /* WebViewController.swift */,
+				FA6D229125D0623400C16444 /* FriendAlbumsController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -315,6 +325,7 @@
 				FA606A82256EDDA200DC60CA /* GroupsService.swift */,
 				FA13682725951A1000DB0061 /* DiffCalculator.swift */,
 				FA0D0DB625AED5CB001086D9 /* NewsService.swift */,
+				FA6D229825D068A100C16444 /* FriendsAlbumService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -326,7 +337,7 @@
 				FA606A952572C86600DC60CA /* UIViewControllerExtension.swift */,
 				FA606A982572C8B100DC60CA /* UIPanGestureRecognizerExtension.swift */,
 				FA606A9B2572C8EE00DC60CA /* GroupsSearchViewControllerExtension.swift */,
-				FA606A9E2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift */,
+				FA606A9E2572C94100DC60CA /* FriendImagesExtension.swift */,
 				FA606AA12572CBB200DC60CA /* WebViewControllerExtension.swift */,
 				FA13682A25951DD100DB0061 /* ArrayExtension.swift */,
 				FA0D0DBD25B37C2D001086D9 /* IntExtension.swift */,
@@ -369,6 +380,7 @@
 				FA2D741A253B35AA003FAAD4 /* FriendPhotosViewCell.swift */,
 				FACBD617254EA1F900BAFCA8 /* NewsViewCell.swift */,
 				FACBD618254EA1F900BAFCA8 /* NewsViewCell.xib */,
+				FA6D229525D065A300C16444 /* FriendsAlbumViewCell.swift */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -500,6 +512,7 @@
 				FA606A922572C7F900DC60CA /* FriendsViewControllerExtension.swift in Sources */,
 				FAFB2E3F25485C1700C68268 /* Avatar.swift in Sources */,
 				FA2D73F1253B1172003FAAD4 /* Group.swift in Sources */,
+				FA6D229225D0623400C16444 /* FriendAlbumsController.swift in Sources */,
 				FA606A992572C8B100DC60CA /* UIPanGestureRecognizerExtension.swift in Sources */,
 				FA1CAD8525B8B7B100E3E957 /* ParseDataOperation.swift in Sources */,
 				FA7580C325C1F1DF0075F6AE /* FriendsListView.swift in Sources */,
@@ -512,6 +525,7 @@
 				FA1CAD7725B438B800E3E957 /* GroupsSearchViewControllerExtension.swift in Sources */,
 				FA606A75256ECC3300DC60CA /* FriendsService.swift in Sources */,
 				FACBD5F4254C3BE400BAFCA8 /* LetterPicker.swift in Sources */,
+				FA6D229625D065A300C16444 /* FriendsAlbumViewCell.swift in Sources */,
 				FA1CAD7F25B43F0500E3E957 /* GetDataOperation.swift in Sources */,
 				FA5210512532E9E700D84397 /* AppDelegate.swift in Sources */,
 				FA2D741B253B35AA003FAAD4 /* FriendPhotosViewCell.swift in Sources */,
@@ -524,12 +538,13 @@
 				FA606AA22572CBB200DC60CA /* WebViewControllerExtension.swift in Sources */,
 				FAF80393255D588E0053D6E1 /* CustomInterActiveTransition.swift in Sources */,
 				FA75808325C19FF50075F6AE /* ParseDataPromise.swift in Sources */,
-				FA606A9F2572C94100DC60CA /* FriendPhotosViewControllerExtension.swift in Sources */,
+				FA606A9F2572C94100DC60CA /* FriendImagesExtension.swift in Sources */,
 				FA22714C2593BF0B0085FFE5 /* RealmService.swift in Sources */,
 				FA606A71256DB47C00DC60CA /* AuthorizationService.swift in Sources */,
 				FACBD5FD254D6A2A00BAFCA8 /* CustomHeaderView.swift in Sources */,
 				FA1CAD7925B438BF00E3E957 /* GroupsSearchViewController.swift in Sources */,
 				FAFB2E252540D12300C68268 /* Photo.swift in Sources */,
+				FA6D229C25D06B3C00C16444 /* Album.swift in Sources */,
 				FA5210532532E9E700D84397 /* SceneDelegate.swift in Sources */,
 				FA606A7B256ED86900DC60CA /* Config.swift in Sources */,
 				FA2D73E3253B0C12003FAAD4 /* FriendsViewCell.swift in Sources */,
@@ -538,6 +553,7 @@
 				FA13682B25951DD100DB0061 /* ArrayExtension.swift in Sources */,
 				FA7580C825C544EE0075F6AE /* ImageService.swift in Sources */,
 				FACBD604254D7E7500BAFCA8 /* SearchBar.swift in Sources */,
+				FA6D229925D068A100C16444 /* FriendsAlbumService.swift in Sources */,
 				FAF80377255BB0F20053D6E1 /* Loader.swift in Sources */,
 				FAF80388255C5E160053D6E1 /* CustomNavigationController.swift in Sources */,
 				FACBD619254EA1F900BAFCA8 /* NewsViewCell.swift in Sources */,

@@ -12,7 +12,7 @@ final class FriendsPhotosView: UIView {
     // MARK: -Outlets
     
     @IBOutlet weak var collectionView: UICollectionView!
-
+    
     var sliderCenterImage: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFit

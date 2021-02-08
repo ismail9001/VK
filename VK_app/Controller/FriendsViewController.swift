@@ -110,12 +110,12 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let controller = segue.destination as? FriendPhotosViewController,
+        guard let controller = segue.destination as? FriendAlbumController,
               let indexPath = contentView.tableView.indexPathForSelectedRow
         else { return }
         let rowCount = rowCounting(indexPath)
         controller.user = friends[rowCount]
-        controller.delegate = self
+        //controller.delegate = self
     }
     
     // MARK: - UserUpdateDelegate

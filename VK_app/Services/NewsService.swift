@@ -48,11 +48,11 @@ class NewsService {
             allNews += news
             dispatchGroup.leave()
         }
-        /*dispatchGroup.enter()
+        dispatchGroup.enter()
         newsParse(type:PhotoNews.self, url: url, parameters: photoParameters){ news in
             allNews += news
             dispatchGroup.leave()
-        }*/
+        }
         dispatchGroup.notify(queue: DispatchQueue.main) {
             completion(allNews.sorted(by: { $0.newsDate > $1.newsDate }))
         }

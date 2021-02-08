@@ -4,9 +4,8 @@
 //
 //  Created by macbook on 01.11.2020.
 //
-import Foundation
-import SwiftyJSON
 
+import SwiftyJSON
 
 class News {
     

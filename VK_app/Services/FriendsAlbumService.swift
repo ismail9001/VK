@@ -1,25 +1,25 @@
 //
-//  FriendPhotosService.swift
+//  FriendsAlbumService.swift
 //  VK_app
 //
-//  Created by macbook on 25.11.2020.
+//  Created by macbook on 07.02.2021.
 //
 
 import Alamofire
 import SwiftyJSON
 
-class FriendsPhotosService {
+class FriendsAlbumService {
     
     let baseUrl = Config.apiUrl
 
-    func getFriendsPhotosList(user: User, albumId: Int, completion: @escaping ([Photo]) -> Void){
+    func getFriendsAlbumsList (user: User, completion: @escaping ([Album]) -> Void){
         
-        let path = "/method/photos.get?"
+        let path = "/method/photos.getAlbums?"
         // параметры
         let parameters: Parameters = [
-            "extended": 1,
+            "need_covers": true,
+            "need_system": true,
             "owner_id": user.id,
-            "album_id": albumId,
             "photo_sizes": 1,
             "access_token": Session.storedSession.token,
             "v": Config.apiVersion
@@ -30,8 +30,8 @@ class FriendsPhotosService {
             guard let data = response.data else {return}
             do {
                 let json = try JSON(data: data)
-                let photos = json["response"]["items"].arrayValue.compactMap{ Photo(json: $0, user: user) }
-                completion(photos.sorted{ $0.id < $1.id})
+                let albums = json["response"]["items"].arrayValue.compactMap{ Album(json: $0) }
+                completion(albums.sorted{ $0.id < $1.id})
             } catch {
                 print (error)
                 completion([])

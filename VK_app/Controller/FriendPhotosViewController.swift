@@ -10,6 +10,7 @@ import UIKit
 class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,LikeUpdatingCellProtocol {
     lazy var contentView = self.view as! FriendsPhotosView
     let cellIndent: CGFloat = 20
+    var albumId = 0
     var photos : [Photo] = []
     var user : User?
     weak var delegate : UserUpdatingDelegate?
@@ -76,7 +77,8 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     func savePhotos(_ emptyStorage: Bool,_ userProperty: User) {
-        friendsPhotosService.getFriendsPhotosList(user: userProperty) { [self] (photosForUpdate) in
+        print(albumId, "albumId")
+        friendsPhotosService.getFriendsPhotosList(user: userProperty, albumId: self.albumId) { [self] (photosForUpdate) in
             realmService.saveRealmPhotos(photos: photosForUpdate)
             self.photos = photosForUpdate
             if emptyStorage {
