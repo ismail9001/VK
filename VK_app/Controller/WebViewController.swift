@@ -18,7 +18,7 @@ class WebViewController: UIViewController {
             }
         }
     let loginService = AuthorizationService()
-    let friendsService = FriendService()
+    let friendsService = FriendsService()
     let realm = try! Realm(configuration: Config.realmConfig)
     //TODO: -- перевести в сервис
     override func viewDidLoad() {

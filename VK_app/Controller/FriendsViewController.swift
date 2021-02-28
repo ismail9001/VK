@@ -15,7 +15,8 @@ protocol LetterPickerDelegate: class {
     func letterPicked(_ letter: String)
 }
 
-class FriendsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UserUpdatingDelegate, RecalculateTableDelegate {
+class FriendsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UserUpdatingDelegate, RecalculateTableDelegate, UpdateFriendsViewProtocol {
+    
     var friends: [User] = [] {
         willSet{
             //сохраняем старую структуру данных таблицы
@@ -27,8 +28,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     var oldSections = [ViewSection]()
     var oldUsers: [User] = []
     var unfilteredUsers: [User] = []
-    var friendsService = FriendService()
     var imageService = ImageService()
+    let friendsAdapter = FriendsAdapter()
     //Firebase
     //let loginService = AuthorizationService()
     let realmService = RealmService()
@@ -44,10 +45,9 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         contentView.searchBar.delegate = self
         //делегат сравнения структуры
         realmService.recalculateDelegate = self
-        //showUserData()
-        saveUserData(true)
+        friendsAdapter.updateDelegate = self
+        friendsAdapter.showFriends()
         addRefreshControl()
-        //saveUserToFirebase()
     }
     
     // MARK: - Functions
@@ -115,7 +115,6 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         else { return }
         let rowCount = rowCounting(indexPath)
         controller.user = friends[rowCount]
-        //controller.delegate = self
     }
     
     // MARK: - UserUpdateDelegate
@@ -134,30 +133,6 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
-
-    func showUserData() {
-        let users =  realmService.getRealmUsers(sortingKey: "name")
-        let usersArray = Array(users)
-        if usersArray.count != 0 {
-            self.friends = usersArray
-            self.unfilteredUsers = self.friends
-            realmService.setObserveToken(result: users) {
-                self.contentView.tableView.reloadData()
-            }
-        }
-        //self.saveUserData(usersArray.count == 0 ? true : false)
-    }
-    
-    func saveUserData(_ emptyStorage: Bool) {
-        friends = friendsService.getFriendsList()
-            if emptyStorage {
-                showUserData()
-            }
-    }
-    
-    /*func saveUserToFirebase() {
-     loginService.getProfileInfo()
-     }*/
     
     func addRefreshControl() {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
@@ -250,11 +225,17 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         self.contentView.tableView.endUpdates()
     }
     
+    func updateView(friends: [User]) {
+        self.friends = friends
+        self.unfilteredUsers = self.friends
+        self.contentView.tableView.reloadData()
+    }
+    
     @objc func refresh(_ sender: AnyObject) {
         //Для теста обновления данных
         DispatchQueue.global().async {
             DispatchQueue.main.async {
-                self.saveUserData(self.friends.count == 0 ? true : false)
+                self.friendsAdapter.showFriends()
             }
         }
         refreshControl.endRefreshing()

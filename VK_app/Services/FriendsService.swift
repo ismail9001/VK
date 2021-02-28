@@ -10,7 +10,7 @@ import Alamofire
 import SwiftyJSON
 
 
-class FriendService {
+class FriendsService {
     
     func getFriendsList() -> [User]{
         let friendsOperationQueue = OperationQueue()

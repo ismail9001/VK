@@ -14,7 +14,6 @@ protocol UpdateGroupsViewProtocol: class {
 
 class GroupsAdapter {
     
-    private let friendsPhotosService = FriendsPhotosService()
     private let realmService = RealmService()
     private let groupsService = GroupsService()
     private var groups:[Group] = []

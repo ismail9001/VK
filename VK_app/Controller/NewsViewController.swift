@@ -14,7 +14,6 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     lazy var refreshControl = UIRefreshControl()
     var news:[News] = []
     var newsService = NewsService()
-    let newsAdapter = NewsAdapter()
     let formatter = DateFormatter()
     var imageService = ImageService()
     var newsFromTime: Double?

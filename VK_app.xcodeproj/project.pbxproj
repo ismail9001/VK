@@ -10,6 +10,7 @@
 		9242F76A08155A0F43D5836B /* Pods_VK_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 094019A7F90A2E8ECADB05A3 /* Pods_VK_app.framework */; };
 		FA0CB97725EB7C3400148F73 /* FriendPhotosAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0CB97625EB7C3400148F73 /* FriendPhotosAdapter.swift */; };
 		FA0CB99F25EB97BB00148F73 /* GroupsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0CB99E25EB97BB00148F73 /* GroupsAdapter.swift */; };
+		FA0CB9A625EBBBAC00148F73 /* FriendsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0CB9A525EBBBAC00148F73 /* FriendsAdapter.swift */; };
 		FA0D0DB725AED5CB001086D9 /* NewsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0D0DB625AED5CB001086D9 /* NewsService.swift */; };
 		FA0D0DBE25B37C2D001086D9 /* IntExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0D0DBD25B37C2D001086D9 /* IntExtension.swift */; };
 		FA13682825951A1000DB0061 /* DiffCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA13682725951A1000DB0061 /* DiffCalculator.swift */; };
@@ -87,6 +88,7 @@
 		375B29060F615EDAE7C6F872 /* Pods-VK_app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK_app.release.xcconfig"; path = "Target Support Files/Pods-VK_app/Pods-VK_app.release.xcconfig"; sourceTree = "<group>"; };
 		FA0CB97625EB7C3400148F73 /* FriendPhotosAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendPhotosAdapter.swift; sourceTree = "<group>"; };
 		FA0CB99E25EB97BB00148F73 /* GroupsAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsAdapter.swift; sourceTree = "<group>"; };
+		FA0CB9A525EBBBAC00148F73 /* FriendsAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsAdapter.swift; sourceTree = "<group>"; };
 		FA0D0DB625AED5CB001086D9 /* NewsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsService.swift; sourceTree = "<group>"; };
 		FA0D0DBD25B37C2D001086D9 /* IntExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtension.swift; sourceTree = "<group>"; };
 		FA13682725951A1000DB0061 /* DiffCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculator.swift; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 			children = (
 				FA0CB97625EB7C3400148F73 /* FriendPhotosAdapter.swift */,
 				FA0CB99E25EB97BB00148F73 /* GroupsAdapter.swift */,
+				FA0CB9A525EBBBAC00148F73 /* FriendsAdapter.swift */,
 			);
 			path = Adapter;
 			sourceTree = "<group>";
@@ -576,6 +579,7 @@
 				FA606A83256EDDA200DC60CA /* GroupsService.swift in Sources */,
 				FACBD61D254EA6EF00BAFCA8 /* NewsViewController.swift in Sources */,
 				FA606A62256D8A6C00DC60CA /* WebViewController.swift in Sources */,
+				FA0CB9A625EBBBAC00148F73 /* FriendsAdapter.swift in Sources */,
 				FA0D0DB725AED5CB001086D9 /* NewsService.swift in Sources */,
 				FAFB2E2D2542160300C68268 /* LikeHeart.swift in Sources */,
 				FA7580C025C1E5D30075F6AE /* FriendPhotosView.swift in Sources */,
