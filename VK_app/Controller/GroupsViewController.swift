@@ -7,15 +7,14 @@
 
 import UIKit
 import RealmSwift
-import PromiseKit
 
-class GroupsViewController: UITableViewController {
+class GroupsViewController: UITableViewController, UpdateGroupsViewProtocol {
+    
     
     var groups:[Group] = []
     var user:User = User()
-    let groupsService = GroupsService()
-    let realmService = RealmService()
     var imageService = ImageService()
+    let groupsAdapter = GroupsAdapter()
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -47,35 +46,7 @@ class GroupsViewController: UITableViewController {
             if let indexPath = groupSearchController.tableView.indexPathForSelectedRow {
                 // Получаем группу по индексу
                 let group = groupSearchController.groups[indexPath.row]
-                groupsService.joinInGroup(group.id)
-                    .get { [self]response in
-                        if response && !groups.contains(group) {
-                            //обновляем данные
-                            groups.append(group)
-                            groups = groups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
-                            //FireStorm
-                            /*let groupJSON: [String: Any] = {
-                             return [
-                             "id": group.id,
-                             "name": group.title
-                             ]
-                             }()
-                             let user_id = Config.user_id_firebase
-                             Config.db.collection("users").document("\(user_id)").collection("groups").document("\(group.id)") .setData(groupJSON) { error in
-                             if let error = error {
-                             print("Error adding user: \(error)")
-                             } else {
-                             print("User updated with ID:\(user_id)")
-                             }
-                             }*/
-                        }
-                    }
-                    .done{[self] _ in
-                        self.realmService.saveRealmGroups(groups: groups)
-                    }
-                    .catch{[self] error in
-                        groups = []
-                    }
+                groupsAdapter.joinInGroup(groups: groups, joinIn: group)
             }
         }
     }
@@ -84,50 +55,31 @@ class GroupsViewController: UITableViewController {
         // Если была нажата кнопка «Удалить»
         if editingStyle == .delete {
             let groupForDelete = groups[indexPath.row]
-            groupsService.leaveFromGroup (groupForDelete.id)
-                .get { [self]response in
-                    if response {
-                        // Удаляем группу из массива
-                        realmService.deleteRealmGroup(group: groupForDelete)
-                    }
-                }
-                .done{[self] _ in
-                    groups.remove(at: indexPath.row)
-                }
-                .catch{[self] error in
-                    groups = []
-                }
+            groupsAdapter.exitFromGroup(userGroups: groups, groupForDelete: groupForDelete, groupIndex: indexPath.row)
+            /*groupsService.leaveFromGroup (groupForDelete.id)
+             .get { [self]response in
+             if response {
+             // Удаляем группу из массива
+             realmService.deleteRealmGroup(group: groupForDelete)
+             }
+             }
+             .done{[self] _ in
+             groups.remove(at: indexPath.row)
+             }
+             .catch{[self] error in
+             groups = []
+             }*/
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        showGroups()
-        
+        groupsAdapter.updateDelegate = self
+        groupsAdapter.showGroups()
     }
     
-    func showGroups() {
-        let groups = realmService.getRealmGroups(sortingKey: "title")
-        let groupsArray = Array(groups)
-        if groupsArray.count != 0 {
-            self.groups = groupsArray
-            realmService.setObserveGroupToken(result: groups) {
-                self.tableView.reloadData()
-            }
-        }
-        self.saveGroups(groupsArray.count == 0 ? true : false)
-    }
-    
-    func saveGroups(_ emptyStorage: Bool) {
-        groupsService.getGroupsList(){[self]vkGroups in
-            groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
-            realmService.saveRealmGroups(groups: groups)
-            if emptyStorage {
-                showGroups()
-            }
-            let (promise, resolver) = Promise<[Group]>.pending()
-            resolver.fulfill(groups)
-            return promise
-        }
+    func updateView(groups: [Group]) {
+        self.groups = groups
+        self.tableView.reloadData()
     }
 }

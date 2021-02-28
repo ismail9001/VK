@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 
-protocol UpdateViewDelegate: class {
+protocol UpdateViewProtocol: class {
     func updateView(photos: [Photo])
 }
 
@@ -17,11 +17,12 @@ final class FriendPhotosAdapter {
     
     private let friendsPhotosService = FriendsPhotosService()
     private let realmService = RealmService()
-    private let albumId = 0
+    private var albumId = 0
     private var photos:[Photo] = []
-    weak var updateDelegate : UpdateViewDelegate?
+    weak var updateDelegate : UpdateViewProtocol?
     
-    func getPhotos(user: User) {
+    func getPhotos(user: User, albumId: Int) {
+        self.albumId = albumId
         let photosResult = realmService.getRealmPhotos(filterKey: user.id)
         photos = Array(photosResult)
         if photos.count != 0 {
@@ -37,7 +38,7 @@ final class FriendPhotosAdapter {
             realmService.saveRealmPhotos(photos: photosForUpdate)
             photos = photosForUpdate
             if emptyStorage {
-                self.getPhotos(user: userProperty)
+                self.getPhotos(user: userProperty, albumId: self.albumId)
             }
         }
     }

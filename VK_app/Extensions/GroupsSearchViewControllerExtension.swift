@@ -15,10 +15,11 @@ extension GroupsSearchViewController: UISearchBarDelegate {
             groups = unfilteredGroups
             return
         }
-        groupsService.groupsSearch(searchText)
-            .get { [self] vkGroups in
-            groups = vkGroups
-        }
+        //groupsService.groupsSearch(searchText)
+        //    .get { [self] vkGroups in
+        //    groups = vkGroups
+        //}
+        groupsAdapter.groupsSearch(searchText)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

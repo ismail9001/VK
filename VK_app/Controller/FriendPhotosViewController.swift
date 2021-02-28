@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, LikeUpdatingCellProtocol { //, UpdateViewDelegate {
+class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, LikeUpdatingCellProtocol, UpdateViewProtocol {
     
     lazy var contentView = self.view as! FriendsPhotosView
     let cellIndent: CGFloat = 20
@@ -15,10 +15,8 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
     var photos : [Photo] = []
     var user : User?
     weak var delegate : UserUpdatingDelegate?
-    //let realmService = RealmService()
     let imageService = ImageService()
-    //let friendsPhotosService = FriendsPhotosService()
-    //let friendsPhotosAdapter = FriendPhotosAdapter()
+    let friendsPhotosAdapter = FriendPhotosAdapter()
     
     //MARK: - DidLoad
     
@@ -26,8 +24,8 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
         super.viewDidLoad()
         guard let userProperty = user else { return }
         self.title = userProperty.name
-        //friendsPhotosAdapter.updateDelegate = self
-        //friendsPhotosAdapter.getPhotos
+        friendsPhotosAdapter.updateDelegate = self
+        friendsPhotosAdapter.getPhotos(user: userProperty, albumId: albumId)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -69,28 +67,6 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     //MARK: - Functions
-    
-    /*func showPhotos() {
-        guard let userResult = user else { return }
-        let photosResult = realmService.getRealmPhotos(filterKey: userResult.id)
-        self.photos = Array(photosResult)
-        if photos.count != 0 {
-            realmService.setObservePhotosToken(result: photosResult) {
-                self.contentView.collectionView.reloadData()
-            }
-        }
-        self.savePhotos(photos.count == 0 ? true : false, userResult)
-    }
-    
-    func savePhotos(_ emptyStorage: Bool,_ userProperty: User) {
-        friendsPhotosService.getFriendsPhotosList(user: userProperty, albumId: self.albumId) { [self] (photosForUpdate) in
-            realmService.saveRealmPhotos(photos: photosForUpdate)
-            self.photos = photosForUpdate
-            if emptyStorage {
-                showPhotos()
-            }
-        }
-    }*/
     
     func updateView(photos: [Photo]) {
         self.photos = photos

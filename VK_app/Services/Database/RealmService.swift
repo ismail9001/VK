@@ -111,7 +111,7 @@ class RealmService {
             case .initial(_):
                 completion()
             case .update( let results, deletions: let del, insertions: let ins, modifications: let mod):
-                print("deletions:", del, "insertions:", ins, "modifications:", mod)
+                //print("deletions:", del, "insertions:", ins, "modifications:", mod)
                 recalculateDelegate?.recalculateTable(collection: Array(results))
             case .error( let error):
                 fatalError("\(error)")
@@ -125,6 +125,7 @@ class RealmService {
             case .initial(_):
                 completion()
             case .update( _, deletions: _, insertions: _, modifications: _):
+                
                 completion()
             case .error( let error):
                 fatalError("\(error)")

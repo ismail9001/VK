@@ -7,7 +7,8 @@
 
 import UIKit
 
-class GroupsSearchViewController: UITableViewController {
+class GroupsSearchViewController: UITableViewController, UpdateGroupsViewProtocol {
+    
     @IBOutlet weak var searchBar: UISearchBar!
     var groups: [Group] = [] {
         didSet {
@@ -15,13 +16,14 @@ class GroupsSearchViewController: UITableViewController {
         }
     }
     var unfilteredGroups: [Group] = []
-    let groupsService = GroupsService()
-    var imageService = ImageService()
+    let imageService = ImageService()
+    let groupsAdapter = GroupsAdapter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.placeholder = "Find a group"
         searchBar.delegate = self
+        groupsAdapter.updateDelegate = self
         self.hideKeyboardWhenTappedAround()
     }
     
@@ -44,6 +46,10 @@ class GroupsSearchViewController: UITableViewController {
         imageService.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl, uiImageView: cell.groupPhoto.avatarPhoto)
         cell.groupName.text = group.title
         return cell
+    }
+    
+    func updateView(groups: [Group]) {
+        self.groups = groups
     }
 }
 //for constrait debug

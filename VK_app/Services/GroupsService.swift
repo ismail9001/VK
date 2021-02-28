@@ -15,23 +15,6 @@ class GroupsService {
     let baseUrl = Config.apiUrl
     let queue = DispatchQueue.main
     
-    /*func getGroupsList() -> Promise<[Group]>{
-        
-        let path = "/method/groups.get?"
-        // параметры
-        let parameters: Parameters = [
-            "extended": 1,
-            "access_token": Session.storedSession.token,
-            "v": Config.apiVersion
-        ]
-        let url = baseUrl+path
-        return Alamofire.request(url, method: .get, parameters: parameters).responseJSON()
-            .map(on: queue) { json, response -> [Group] in
-                let json = JSON(json)
-                let groups = json["response"]["items"].arrayValue.compactMap{ Group(json: $0) }
-                return(groups.sorted{ $0.title.lowercased() < $1.title.lowercased()})
-            }
-    }*/
     func getGroupsList (completion: @escaping ([Group]) -> Promise<[Group]>){
         let getDataPromise = GetDataPromiss()
         let request = requestCreating()
