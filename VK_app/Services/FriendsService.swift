@@ -24,7 +24,7 @@ class FriendService {
         return parseData.outputData
     }
     
-    func requestCreating() -> DataRequest{
+    private func requestCreating() -> DataRequest{
         let path = "/method/friends.get?"
         // параметры
         let parameters: Parameters = [

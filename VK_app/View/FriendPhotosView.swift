@@ -64,19 +64,23 @@ final class FriendsPhotosView: UIView {
     var animator: UIViewPropertyAnimator!
     var imageService = ImageService()
     var photosCount = 0
+    var photos:[Photo] = []
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        sliderLeftView.removeFromSuperview()
-        sliderRightView.removeFromSuperview()
     }
     
     //MARK: - Slider
     
-    func imageTapped( _ cell: FriendPhotosViewCell, _ indexPath: IndexPath, _ rightImage: UIImage, _ leftImage: UIImage, _ photosCount: Int){
-        
+    func imageTapped( _ cell: FriendPhotosViewCell, _ indexPath: IndexPath, _ photos: [Photo]){
         guard let rectOfCellInTableView = collectionView.layoutAttributesForItem(at: indexPath) else { return }
-        let rectOfCellInSuperview = collectionView.convert(rectOfCellInTableView.frame, to: collectionView.superview)
+        self.photos = photos
+        let positions = nearElements(index: indexPath.row)
+        
+        guard let rightImage = imageService.getSavedImage(named: photos[positions[2]].photoName),
+              let leftImage = imageService.getSavedImage(named: photos[positions[0]].photoName) else { return }
+        
+        let rectOfCellInSuperview = collectionView.convert(rectOfCellInTableView.frame, to: collectionView)
         sliderCenterImage.image = cell.friendPhoto.image
         sliderCenterView.tag = indexPath.row
         sliderCenterView.frame = CGRect(x: rectOfCellInSuperview.minX, y: rectOfCellInSuperview.minY, width: rectOfCellInSuperview.width, height: rectOfCellInSuperview.height)
@@ -85,7 +89,7 @@ final class FriendsPhotosView: UIView {
         sliderCenterImage.frame = imageRectPos(rectOfCellInTableView, rectOfCellInSuperview)
         sliderCenterView.alpha = cell.alpha
         cell.alpha = 0
-        self.photosCount = photosCount
+        self.photosCount = photos.count
         
         // TODO: -переделать на swipe вниз
         
@@ -109,9 +113,8 @@ final class FriendsPhotosView: UIView {
                                     UIView.addKeyframe(withRelativeStartTime: 0,
                                                        relativeDuration: 0.4 ,
                                                        animations: { [self] in
-                                                        
-                                                        sliderCenterView.frame = screenSize
-                                                        sliderCenterImage.frame = screenSize
+                                                        sliderCenterView.frame = screenSize//collectionView.superview?.bounds ?? collectionView.bounds
+                                                        sliderCenterImage.frame = collectionView.bounds
                                                         sliderCenterView.backgroundColor = .black
                                                        })
                                 })
@@ -123,6 +126,9 @@ final class FriendsPhotosView: UIView {
     
     @objc func panSlider(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self)
+        let positions = nearElements(index: sliderCenterView.tag)
+        sliderRightImage.image = imageService.getSavedImage(named: photos[positions[2]].photoName)
+        sliderLeftImage.image = imageService.getSavedImage(named: photos[positions[0]].photoName)
         switch gesture.state {
         case .began:
             animator = UIViewPropertyAnimator(duration: 1, curve: .linear)
@@ -159,7 +165,7 @@ final class FriendsPhotosView: UIView {
             if animator.fractionComplete > 0.5 {
                 let indexPath = IndexPath(row: sliderCenterView.tag, section: 0)
                 let cell = collectionView.cellForItem(at: indexPath) as! FriendPhotosViewCell
-                cellAnimationCalculate(cell)
+                cellAlphaCalculate(cell)
                 animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
                 if gesture.horizontalDirection(sliderCenterView) == .Left{
                     sliderCenterView.tag = sliderCenterView.tag == photosCount - 1 ? 0 : sliderCenterView.tag + 1
@@ -167,7 +173,9 @@ final class FriendsPhotosView: UIView {
                 if gesture.horizontalDirection(sliderCenterView) == .Right{
                     sliderCenterView.tag = sliderCenterView.tag == 0 ? photosCount - 1 : sliderCenterView.tag - 1
                 }
+                //SCROLL HERE
                 collectionView.scrollToItem(at: IndexPath(row: sliderCenterView.tag, section: 0), at: .centeredVertically, animated: true)
+                
             }
             else {
                 animator.stopAnimation(true)
@@ -225,9 +233,9 @@ final class FriendsPhotosView: UIView {
         guard let centerView = sender.view else { return }
         let indexPath = IndexPath(row: centerView.tag, section: 0)
         guard let rectOfCellInTableView = collectionView.layoutAttributesForItem(at: indexPath) else { return }
-        let rectOfCellInSuperview = collectionView.convert(rectOfCellInTableView.frame, to: collectionView.superview)
+        let rectOfCellInSuperview = collectionView.convert(rectOfCellInTableView.frame, to: collectionView)
         let cell = collectionView.cellForItem(at: indexPath) as! FriendPhotosViewCell
-        cellAnimationCalculate(cell)
+        cellAlphaCalculate(cell)
         UIView.animateKeyframes(withDuration: 0.4,
                                 delay: 0,
                                 options: [],
@@ -269,22 +277,16 @@ final class FriendsPhotosView: UIView {
         return CGRect(x: x, y: y, width: width, height: height)
     }
     
-    //обновляем свойства центрального экрана слайдера
-    func updateImageSlider(_ image: UIImage) {
-        sliderCenterImage.image = image
-        sliderCenterView.frame.origin.x = 0
-    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let arr = collectionView.indexPathsForVisibleItems
         for indexPath in arr{
             guard let cell = self.collectionView.cellForItem(at: indexPath) else {return}
-            cellAnimationCalculate(cell)
+            cellAlphaCalculate(cell)
         }
     }
     
     //расчет альфа канала в зависимости от положения ячейки на экране
-    func cellAnimationCalculate (_ cell: UICollectionViewCell) {
+    func cellAlphaCalculate (_ cell: UICollectionViewCell) {
         let pos = self.collectionView.convert(cell.frame, to: self)
         var alpha: CGFloat = 0
         if (pos.origin.y < cell.frame.height) {
@@ -300,9 +302,31 @@ final class FriendsPhotosView: UIView {
         }
     }
     
+    //расчет изображений слайдера
+    func nearElements (index: Int) -> [Int]{
+        let array = photos
+        if array.count == 1 {return [0, 0, 0]}
+        if array.count == 2 {
+            if index == 0 {
+                return [1, index, 1]
+            }
+            return [0, index, 0]
+        }
+        if (array.count >= 3) {
+            if index == 0 {
+                return [array.count - 1, index, 1]
+            } else if (index == array.count - 1) {
+                return [array.count - 2, index, 0]
+            } else {
+                return [index - 1, index, index + 1]
+            }
+        }
+        return []
+    }
+    
     //MARK: - Animation
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        cellAnimationCalculate(cell)
+        cellAlphaCalculate(cell)
     }
 }

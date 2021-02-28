@@ -16,7 +16,7 @@ class Album {
     var size: Int = 0
     
     init(json: JSON){
-        self.id = json["post_id"].intValue
+        self.id = json["id"].intValue
         self.title = json["title"].stringValue
         self.description = json["description"].stringValue
         self.albumPhotoURL = json["album"].stringValue

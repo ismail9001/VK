@@ -7,16 +7,18 @@
 
 import UIKit
 
-class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,LikeUpdatingCellProtocol {
+class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, LikeUpdatingCellProtocol { //, UpdateViewDelegate {
+    
     lazy var contentView = self.view as! FriendsPhotosView
     let cellIndent: CGFloat = 20
     var albumId = 0
     var photos : [Photo] = []
     var user : User?
     weak var delegate : UserUpdatingDelegate?
-    let realmService = RealmService()
+    //let realmService = RealmService()
     let imageService = ImageService()
-    let friendsPhotosService = FriendsPhotosService()
+    //let friendsPhotosService = FriendsPhotosService()
+    //let friendsPhotosAdapter = FriendPhotosAdapter()
     
     //MARK: - DidLoad
     
@@ -24,18 +26,26 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
         super.viewDidLoad()
         guard let userProperty = user else { return }
         self.title = userProperty.name
-        showPhotos()
+        //friendsPhotosAdapter.updateDelegate = self
+        //friendsPhotosAdapter.getPhotos
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(true)
+        contentView.sliderLeftView.removeFromSuperview()
+        contentView.sliderRightView.removeFromSuperview()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        photos = []
+        contentView.collectionView.reloadData()
     }
     
     // MARK: UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
+        let numberOfSections = photos.isEmpty ? 0 : 1
+        return numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -53,19 +63,15 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! FriendPhotosViewCell
-        let positions = nearElements(index: cell.friendPhoto.tag)
-        guard let rightImage = imageService.getSavedImage(named: photos[positions[2]].photoName),
-              let leftImage = imageService.getSavedImage(named: photos[positions[0]].photoName) else { return }
-        contentView.imageTapped(cell, indexPath, rightImage, leftImage, photos.count)
+        contentView.imageTapped(cell, indexPath, photos)
         self.navigationController?.isNavigationBarHidden = false
         self.tabBarController?.tabBar.isHidden = false
     }
     
     //MARK: - Functions
     
-    func showPhotos() {
+    /*func showPhotos() {
         guard let userResult = user else { return }
-        
         let photosResult = realmService.getRealmPhotos(filterKey: userResult.id)
         self.photos = Array(photosResult)
         if photos.count != 0 {
@@ -77,7 +83,6 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     func savePhotos(_ emptyStorage: Bool,_ userProperty: User) {
-        print(albumId, "albumId")
         friendsPhotosService.getFriendsPhotosList(user: userProperty, albumId: self.albumId) { [self] (photosForUpdate) in
             realmService.saveRealmPhotos(photos: photosForUpdate)
             self.photos = photosForUpdate
@@ -85,6 +90,11 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
                 showPhotos()
             }
         }
+    }*/
+    
+    func updateView(photos: [Photo]) {
+        self.photos = photos
+        self.contentView.collectionView.reloadData()
     }
     
     //расчет поведения лайка
@@ -95,27 +105,5 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
         //photos[indexPath.row].likes = photos[indexPath.row].liked ? photos[indexPath.row].likes - 1 : photos[indexPath.row].likes + 1
         //photos[indexPath.row].liked.toggle()
         //delegate?.updateUser(photos: photos, id: user?.id ?? 0)
-    }
-    
-    //расчет изображений слайдера
-    func nearElements (index: Int) -> [Int]{
-        let array = photos
-        if array.count == 1 {return [0, 0, 0]}
-        if array.count == 2 {
-            if index == 0 {
-                return [1, index, 1]
-            }
-            return [0, index, 0]
-        }
-        if (array.count >= 3) {
-            if index == 0 {
-                return [array.count - 1, index, 1]
-            } else if (index == array.count - 1) {
-                return [array.count - 2, index, 0]
-            } else {
-                return [index - 1, index, index + 1]
-            }
-        }
-        return []
     }
 }

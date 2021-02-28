@@ -126,7 +126,6 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc func refresh(_ sender: AnyObject) {
         DispatchQueue.global().async {
-        
             DispatchQueue.main.async {
                 self.getNews()
             }

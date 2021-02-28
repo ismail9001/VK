@@ -16,8 +16,6 @@ class FriendAlbumController: UIViewController, UICollectionViewDataSource, UICol
     var albums : [Album] = []
     var user : User?
     var albumId = 0
-    //weak var delegate : UserUpdatingDelegate?
-    //let realmService = RealmService()
     let imageService = ImageService()
     let albumService = FriendsAlbumService()
     
@@ -56,20 +54,14 @@ class FriendAlbumController: UIViewController, UICollectionViewDataSource, UICol
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        albumId = albums[indexPath.row].id
-        print("celselectedl", indexPath)
-    }
-    
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let controller = segue.destination as? FriendPhotosViewController,
-              let indexPath = collectionView.indexPathsForSelectedItems
+              let indexPaths = collectionView.indexPathsForSelectedItems
         else { return }
-        print(indexPath, "hhh")
         controller.user = user
-        controller.albumId = albums[indexPath[0].row].id
+        controller.albumId = albums[indexPaths[0].row].id
     }
     
     //MARK: - Functions

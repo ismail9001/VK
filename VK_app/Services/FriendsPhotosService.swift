@@ -11,7 +11,7 @@ import SwiftyJSON
 class FriendsPhotosService {
     
     let baseUrl = Config.apiUrl
-
+    
     func getFriendsPhotosList(user: User, albumId: Int, completion: @escaping ([Photo]) -> Void){
         
         let path = "/method/photos.get?"
