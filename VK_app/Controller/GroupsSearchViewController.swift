@@ -12,12 +12,13 @@ class GroupsSearchViewController: UITableViewController, UpdateGroupsViewProtoco
     @IBOutlet weak var searchBar: UISearchBar!
     var groups: [Group] = [] {
         didSet {
-            self.tableView.reloadData()
         }
     }
     var unfilteredGroups: [Group] = []
     let imageService = ImageService()
     let groupsAdapter = GroupsAdapter()
+    private let viewModelFactory = GroupViewModelFactory()
+    private var viewModels: [GroupViewModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,20 +37,22 @@ class GroupsSearchViewController: UITableViewController, UpdateGroupsViewProtoco
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return groups.count
+        return viewModels.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
-        let group = groups[indexPath.row]
+        let group = viewModels[indexPath.row]
         imageService.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl, uiImageView: cell.groupPhoto.avatarPhoto)
-        cell.groupName.text = group.title
+        cell.groupName.text = group.groupTitle
         return cell
     }
     
     func updateView(groups: [Group]) {
         self.groups = groups
+        viewModels = self.viewModelFactory.constructViewModels(from: groups)
+        tableView.reloadData()
     }
 }
 //for constrait debug

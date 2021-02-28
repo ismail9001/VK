@@ -14,10 +14,11 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     lazy var refreshControl = UIRefreshControl()
     var news:[News] = []
     var newsService = NewsService()
-    let formatter = DateFormatter()
     var imageService = ImageService()
     var newsFromTime: Double?
     var isLoading = false
+    private let viewModelFactory = NewsViewModelFactory()
+    private var viewModels: [NewsViewModel] = []
     
     //MARK: - Life Cycle
     
@@ -25,8 +26,8 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         let nib = UINib.init(nibName: "NewsViewCell", bundle: nil)
         contentView.tableView.register(nib, forCellReuseIdentifier: "NewsViewCell")
-        formatter.dateStyle = .short
         contentView.tableView.prefetchDataSource = self
+        viewModels = self.viewModelFactory.constructViewModels(from: news)
         addRefreshControl()
         getNews()
     }
@@ -38,47 +39,45 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return news.count
+        return viewModels.count
     }
     //TODO: Вынести во View
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsViewCell", for: indexPath) as! NewsViewCell
-        let newsCell = news[indexPath.row]
-        imageService.getImageFromCache(imageName: nil, imageUrl: newsCell.authorPhotoUrl, uiImageView: cell.authorPhoto.avatarPhoto)
-        cell.authorName.text = newsCell.authorName
-        cell.newsDate.text = formatter.string(from: newsCell.newsDate)
+        let newsModel = viewModels[indexPath.row]
+        imageService.getImageFromCache(imageName: nil, imageUrl: newsModel.authorPhotoUrl, uiImageView: cell.authorPhoto.avatarPhoto)
+        cell.authorName.text = newsModel.authorName
+        cell.newsDate.text = newsModel.newsDate
         cell.showMoreButton.isHidden = true
         cell.newsImage.isHidden = false
         cell.newsText.isHidden = false
-        switch newsCell.postType {
+        switch newsModel.postType {
         case .photo:
-            let photoNews = newsCell as! PhotoNews
-            imageService.getImageFromCache(imageName: nil, imageUrl: photoNews.newsImageUrl, uiImageView: cell.newsImage)
+            imageService.getImageFromCache(imageName: nil, imageUrl: newsModel.newsImageUrl, uiImageView: cell.newsImage)
             cell.newsText.isHidden = true
             let tableWidth = self.contentView.tableView.bounds.width
-            let cellHeight = tableWidth * photoNews.aspectRatio!
+            let cellHeight = tableWidth * newsModel.aspectRatio!
             cell.imageView_HeightConstraint.constant = cellHeight
             cell.layoutIfNeeded()
         case .post:
             cell.delegate = self
-            let postNews = newsCell as! PostNews
-            cell.newsText.text = postNews.newsText
+            cell.newsText.text = newsModel.newsText
             cell.newsImage.isHidden = true
             if cell.newsText.text?.count ?? 0 > 200 {
                 cell.showMoreButton.isHidden = false
             }
         }
-        cell.photoLike.likeCountLabel.text = newsCell.likeCount.thousands()
-        cell.photoLike.commentCount.text = newsCell.commentCount.thousands()
-        cell.photoLike.lookUpCount.text = newsCell.lookUpCount.thousands()
-        cell.photoLike.shareCount.text = newsCell.shareCount.thousands()
+        cell.photoLike.likeCountLabel.text = newsModel.likeCount
+        cell.photoLike.commentCount.text = newsModel.commentCount
+        cell.photoLike.lookUpCount.text = newsModel.lookUpCount
+        cell.photoLike.shareCount.text = newsModel.shareCount
         return cell
     }
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         guard let maxRow = indexPaths.map({ $0.row }).max() else { return }
         
-        if maxRow > news.count - 7,
+        if maxRow > viewModels.count - 7,
            !isLoading {
             isLoading = true
             newsService.getNewsList(timeFrom: nil) { news in
@@ -87,6 +86,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
                     indexPaths.append(IndexPath(row: index, section: 0))
                 }
                 self.news += news
+                self.viewModels = self.viewModelFactory.constructViewModels(from: self.news)
                 self.updateTable(indexPaths)
                 self.isLoading = false
             }
@@ -102,6 +102,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
                 indexPaths.append(IndexPath(row: index, section: 0))
             }
             self.news = news + self.news
+            self.viewModels = self.viewModelFactory.constructViewModels(from: self.news)
             self.updateTable(indexPaths)
         }
         self.newsFromTime = NSDate().timeIntervalSince1970 + 1

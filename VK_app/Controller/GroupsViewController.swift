@@ -15,6 +15,15 @@ class GroupsViewController: UITableViewController, UpdateGroupsViewProtocol {
     var user:User = User()
     var imageService = ImageService()
     let groupsAdapter = GroupsAdapter()
+    private let viewModelFactory = GroupViewModelFactory()
+    private var viewModels: [GroupViewModel] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        groupsAdapter.updateDelegate = self
+        groupsAdapter.showGroups()
+    }
+    
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -24,15 +33,15 @@ class GroupsViewController: UITableViewController, UpdateGroupsViewProtocol {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return groups.count
+        return viewModels.count
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! GroupsViewCell
-        let group = groups[indexPath.row]
-        cell.groupName.text = group.title
+        let group = viewModels[indexPath.row]
+        cell.groupName.text = group.groupTitle
         imageService.getImageFromCache(imageName: group.photoName, imageUrl: group.photoUrl, uiImageView: cell.groupPhoto.avatarPhoto)
         return cell
     }
@@ -56,30 +65,12 @@ class GroupsViewController: UITableViewController, UpdateGroupsViewProtocol {
         if editingStyle == .delete {
             let groupForDelete = groups[indexPath.row]
             groupsAdapter.exitFromGroup(userGroups: groups, groupForDelete: groupForDelete, groupIndex: indexPath.row)
-            /*groupsService.leaveFromGroup (groupForDelete.id)
-             .get { [self]response in
-             if response {
-             // Удаляем группу из массива
-             realmService.deleteRealmGroup(group: groupForDelete)
-             }
-             }
-             .done{[self] _ in
-             groups.remove(at: indexPath.row)
-             }
-             .catch{[self] error in
-             groups = []
-             }*/
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        groupsAdapter.updateDelegate = self
-        groupsAdapter.showGroups()
     }
     
     func updateView(groups: [Group]) {
         self.groups = groups
-        self.tableView.reloadData()
+        viewModels = self.viewModelFactory.constructViewModels(from: groups)
+        tableView.reloadData()
     }
 }

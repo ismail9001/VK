@@ -36,11 +36,13 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     lazy var refreshControl = UIRefreshControl()
     var bufferSection:[ViewSection]?
     
+    private let viewModelFactory = FriendViewModelFactory()
+    private var viewModels: [FriendViewModel] = []
+    
     //TODO: -- refactor viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        contentView.letterPicker.letters = uniqueLettersCount(users: friends)
-        //Looks for single or multiple taps.
+        contentView.letterPicker.letters = uniqueLettersCount(users: viewModels)
         self.hideKeyboardWhenTappedAround()
         contentView.searchBar.delegate = self
         //делегат сравнения структуры
@@ -63,8 +65,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
         return rowCount
     }
     //подсчет уникальных первых букв в именах
-    func uniqueLettersCount (users:[User]) -> [String]{
-        let allLetters = users.map { String($0.name.uppercased().prefix(1))}
+    func uniqueLettersCount (users:[FriendViewModel]) -> [String]{
+        let allLetters = users.map { String($0.userName.uppercased().prefix(1))}
         contentView.letterPicker.letters = Array(Set(allLetters)).sorted()
         return contentView.letterPicker.letters
     }
@@ -73,7 +75,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return uniqueLettersCount(users: self.friends).count
+        return uniqueLettersCount(users: self.viewModels).count
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -88,8 +90,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var countOfRows = 0
-        for user in friends {
-            if let firstLetter = user.name.first {
+        for user in viewModels {
+            if let firstLetter = user.userName.first {
                 if (String(firstLetter) == contentView.letterPicker.letters[section]) {
                     countOfRows += 1
                 }
@@ -101,9 +103,9 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FriendsViewCell
         let friendIndex = rowCounting(indexPath)
-        let user = friends[friendIndex]
+        let user = viewModels[friendIndex]
         imageService.getImageFromCache(imageName: user.photoName, imageUrl: user.photoUrl, uiImageView: cell.friendPhoto.avatarPhoto)
-        cell.friendName.text = user.name
+        cell.friendName.text = user.userName
         return cell
     }
     
@@ -144,7 +146,8 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func recalculateTable(collection: [User]) {
         //новый массив данных для ячеек
         newSections.removeAll()
-        let lettersArray = self.uniqueLettersCount(users: collection)
+        viewModels = self.viewModelFactory.constructViewModels(from: friends)
+        let lettersArray = self.uniqueLettersCount(users: viewModels)
         for letter in lettersArray {
             var section = ViewSection(sectionTitle: letter, cells: [], index: lettersArray.firstIndex(of: letter)!)
             var count = 0
@@ -201,7 +204,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func recalcOldSections() {
         //массив структуры учтаревших ячеек
         oldSections.removeAll()
-        let lettersArray = self.uniqueLettersCount(users: friends)
+        let lettersArray = self.uniqueLettersCount(users: viewModels)
         for letter in lettersArray {
             var section = ViewSection(sectionTitle: letter, cells: [], index: lettersArray.firstIndex(of: letter)!)
             var count = 0
@@ -228,6 +231,7 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func updateView(friends: [User]) {
         self.friends = friends
         self.unfilteredUsers = self.friends
+        self.viewModels = self.viewModelFactory.constructViewModels(from: friends)
         self.contentView.tableView.reloadData()
     }
     

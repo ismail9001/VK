@@ -61,9 +61,9 @@ class PostNews: News {
 
 class PhotoNews: News {
     var newsImageUrl: String!
-    var width: Int?
-    var height: Int?
-    var aspectRatio: CGFloat? { return CGFloat(height!)/CGFloat(width!) }
+    var width: Int!
+    var height: Int!
+    var aspectRatio: CGFloat? { return CGFloat(height)/CGFloat(width) }
     required init (json: JSON) {
         
         super.init(json: json)

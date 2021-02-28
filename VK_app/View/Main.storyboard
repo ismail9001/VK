@@ -153,6 +153,12 @@
                             <mask key="subviews">
                                 <exclude reference="2Zw-if-Ucj"/>
                             </mask>
+                            <mask key="constraints">
+                                <exclude reference="464-cb-I6k"/>
+                                <exclude reference="Yjw-Jj-zsd"/>
+                                <exclude reference="qxA-uG-YB1"/>
+                                <exclude reference="gNd-Ry-74z"/>
+                            </mask>
                         </variation>
                     </view>
                     <connections>
@@ -742,7 +748,7 @@
         </designable>
     </designables>
     <inferredMetricsTieBreakers>
-        <segue reference="czs-Ne-Wwh"/>
+        <segue reference="vVy-tX-eer"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="1" width="128" height="128"/>
