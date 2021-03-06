@@ -15,7 +15,11 @@ protocol UpdateGroupsViewProtocol: class {
 class GroupsAdapter {
     
     private let realmService = RealmService()
-    private let groupsService = GroupsService()
+    private let groupsProxyService: GroupsRequestLoggingProxy = {
+        let groupsService = GroupsService()
+        let proxyService = GroupsRequestLoggingProxy(groupsService: groupsService)
+        return proxyService
+    }()
     private var groups:[Group] = []
     weak var updateDelegate : UpdateGroupsViewProtocol?
     
@@ -30,20 +34,23 @@ class GroupsAdapter {
     }
     
     func groupsSearch(_ searchText: String) {
-        groupsService.groupsSearch(searchText)
-            .get { [self] vkGroups in
-                updateDelegate?.updateView(groups: vkGroups)
-        }
+        groupsProxyService.groupsSearch(searchText)
+            .get { [weak self] vkGroups in
+                self?.updateDelegate?.updateView(groups: vkGroups)
+            }
+            .catch{[weak self] error in
+                self?.groups = []
+            }
     }
     
     func joinInGroup(groups: [Group],joinIn group: Group) {
         self.groups = groups
-        groupsService.joinInGroup(group.id)
-            .get { [self]response in
-                if response && !self.groups.contains(group) {
+        groupsProxyService.joinInGroup(group.id)
+            .get { [weak self]response in
+                if response && !(self?.groups.contains(group) ?? true) {
                     //обновляем данные
-                    self.groups.append(group)
-                    self.groups = self.groups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
+                    self?.groups.append(group)
+                    self?.groups = self?.groups.sorted{ $0.title.lowercased() < $1.title.lowercased()} ?? []
                     //FireStorm
                     /*let groupJSON: [String: Any] = {
                      return [
@@ -61,35 +68,35 @@ class GroupsAdapter {
                      }*/
                 }
             }
-            .done{[self] _ in
-                self.realmService.saveRealmGroups(groups: self.groups)
-                updateDelegate?.updateView(groups: self.groups)
+            .done{[weak self] _ in
+                self?.realmService.saveRealmGroups(groups: self?.groups ?? [])
+                self?.updateDelegate?.updateView(groups: self?.groups ?? [])
             }
-            .catch{[self] error in
-                self.groups = []
+            .catch{[weak self] error in
+                self?.groups = []
             }
     }
     
     func exitFromGroup(userGroups: [Group], groupForDelete: Group, groupIndex: Int) {
         self.groups = userGroups
-        groupsService.leaveFromGroup (groupForDelete.id)
-            .get { [self]response in
+        groupsProxyService.leaveFromGroup (groupForDelete.id)
+            .get { [weak self]response in
                 if response {
                     // Удаляем группу из массива
-                    self.groups.remove(at: groupIndex)
-                    realmService.deleteRealmGroup(group: groupForDelete)
+                    self?.groups.remove(at: groupIndex)
+                    self?.realmService.deleteRealmGroup(group: groupForDelete)
                 }
             }
-            .done{[self] _ in
-                updateDelegate?.updateView(groups: self.groups)
+            .done{[weak self] _ in
+                self?.updateDelegate?.updateView(groups: self?.groups ?? [])
             }
-            .catch{[self] error in
-                groups = []
+            .catch{[weak self] error in
+                self?.groups = []
             }
     }
     
     private func saveGroupsInRealm(_ emptyStorage: Bool) {
-        groupsService.getGroupsList(){[self]vkGroups in
+        groupsProxyService.getGroupsList(){[self]vkGroups in
             groups = vkGroups.sorted{ $0.title.lowercased() < $1.title.lowercased()}
             realmService.saveRealmGroups(groups: groups)
             if emptyStorage {

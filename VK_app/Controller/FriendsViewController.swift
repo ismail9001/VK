@@ -22,6 +22,9 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
             //сохраняем старую структуру данных таблицы
             recalcOldSections()
         }
+        didSet{
+            viewModels = viewModelFactory.constructViewModels(from: friends)
+        }
     }
     lazy var contentView = self.view as! FriendsListView
     var newSections = [ViewSection]()
@@ -146,7 +149,6 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func recalculateTable(collection: [User]) {
         //новый массив данных для ячеек
         newSections.removeAll()
-        viewModels = self.viewModelFactory.constructViewModels(from: friends)
         let lettersArray = self.uniqueLettersCount(users: viewModels)
         for letter in lettersArray {
             var section = ViewSection(sectionTitle: letter, cells: [], index: lettersArray.firstIndex(of: letter)!)
@@ -231,7 +233,6 @@ class FriendsViewController: UIViewController, UITableViewDataSource, UITableVie
     func updateView(friends: [User]) {
         self.friends = friends
         self.unfilteredUsers = self.friends
-        self.viewModels = self.viewModelFactory.constructViewModels(from: friends)
         self.contentView.tableView.reloadData()
     }
     

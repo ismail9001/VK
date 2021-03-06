@@ -10,7 +10,15 @@ import Alamofire
 import SwiftyJSON
 import PromiseKit
 
-class GroupsService {
+protocol GroupsServiceInterface {
+
+    func getGroupsList (completion: @escaping ([Group]) -> Promise<[Group]>) -> Void
+    func groupsSearch(_ search: String)-> Promise<[Group]>
+    func joinInGroup(_ groupId: Int) -> Promise<Bool>
+    func leaveFromGroup(_ groupId: Int) -> Promise<Bool>
+}
+
+class GroupsService: GroupsServiceInterface {
     
     let baseUrl = Config.apiUrl
     let queue = DispatchQueue.main
@@ -44,7 +52,7 @@ class GroupsService {
     }
     
     func groupsSearch(_ search: String)-> Promise<[Group]> {
-        
+        print("searching")
         let path = "/method/groups.search?"
         // параметры
         let parameters: Parameters = [

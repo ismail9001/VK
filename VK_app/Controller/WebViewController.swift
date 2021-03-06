@@ -23,7 +23,7 @@ class WebViewController: UIViewController {
     //TODO: -- перевести в сервис
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(realm.configuration.fileURL ?? "")
+        //print(realm.configuration.fileURL ?? "")
         loginService.getVKToken()
         
         var urlComponents = URLComponents()
@@ -43,7 +43,6 @@ class WebViewController: UIViewController {
                 let request = URLRequest(url: urlComponents.url!)
         //webview.load(loginService.getVKToken())
         //webview.load(AF.request(url, method: .get, parameters: parameters))
-        print(request, request.self)
         webview.load(request)
     }
 }

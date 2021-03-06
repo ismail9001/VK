@@ -8,7 +8,11 @@
 import Alamofire
 import SwiftyJSON
 
-class FriendsPhotosService {
+protocol FriendsPhotosServiceInterface {
+    func getFriendsPhotosList(user: User, albumId: Int, completion: @escaping ([Photo]) -> Void)
+}
+
+class FriendsPhotosService: FriendsPhotosServiceInterface {
     
     let baseUrl = Config.apiUrl
     

@@ -110,7 +110,8 @@ class RealmService {
             switch changes {
             case .initial(_):
                 completion()
-            case .update( let results, deletions: let del, insertions: let ins, modifications: let mod):
+            case .update( let results, deletions: _, insertions: _, modifications: _):
+                //case .update( let results, deletions: let del, insertions: let ins, modifications: let mod):
                 //print("deletions:", del, "insertions:", ins, "modifications:", mod)
                 recalculateDelegate?.recalculateTable(collection: Array(results))
             case .error( let error):

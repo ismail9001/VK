@@ -15,7 +15,11 @@ protocol UpdateViewProtocol: class {
 
 final class FriendPhotosAdapter {
     
-    private let friendsPhotosService = FriendsPhotosService()
+    private let friendsPhotosProxyService: FriendsPhotosLoggingProxy = {
+        let friendsPhotosService = FriendsPhotosService()
+        let proxyService = FriendsPhotosLoggingProxy(friendsPhotosService: friendsPhotosService)
+        return proxyService
+    }()
     private let realmService = RealmService()
     private var albumId = 0
     private var photos:[Photo] = []
@@ -34,11 +38,11 @@ final class FriendPhotosAdapter {
     }
     
     private func savePhotos(_ emptyStorage: Bool,_ userProperty: User) {
-        friendsPhotosService.getFriendsPhotosList(user: userProperty, albumId: albumId) { [self] (photosForUpdate) in
-            realmService.saveRealmPhotos(photos: photosForUpdate)
-            photos = photosForUpdate
+        friendsPhotosProxyService.getFriendsPhotosList(user: userProperty, albumId: albumId) { [weak self] (photosForUpdate) in
+            self?.realmService.saveRealmPhotos(photos: photosForUpdate)
+            self?.photos = photosForUpdate
             if emptyStorage {
-                self.getPhotos(user: userProperty, albumId: self.albumId)
+                self?.getPhotos(user: userProperty, albumId: self?.albumId ?? 0)
             }
         }
     }

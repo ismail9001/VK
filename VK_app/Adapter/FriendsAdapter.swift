@@ -12,8 +12,11 @@ protocol UpdateFriendsViewProtocol: class {
 }
 
 class FriendsAdapter {
-    
-    private let friendsService = FriendsService()
+    private let friendsProxyService: FriendsRequestLoggingProxy = {
+        let friendService = FriendsService()
+        let proxyService = FriendsRequestLoggingProxy(friendService: friendService)
+        return proxyService
+    }()
     private let realmService = RealmService()
     private let groupsService = GroupsService()
     private var friends:[User] = []
@@ -32,7 +35,7 @@ class FriendsAdapter {
     }
     
     private func saveUserData(_ emptyStorage: Bool) {
-        friends = friendsService.getFriendsList()
+        friends = friendsProxyService.getFriendsList()
         if emptyStorage {
             showFriends()
         } else {

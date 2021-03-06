@@ -9,8 +9,12 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
+protocol FriendsServiceInterface {
 
-class FriendsService {
+    func getFriendsList() -> [User]
+}
+
+class FriendsService: FriendsServiceInterface {
     
     func getFriendsList() -> [User]{
         let friendsOperationQueue = OperationQueue()

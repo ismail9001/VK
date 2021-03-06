@@ -78,6 +78,7 @@ class FriendPhotosViewController: UIViewController, UICollectionViewDataSource, 
     func cellLikeUpdating(_ sender: UIView) {
         let cell = sender
         guard let indexPath = contentView.collectionView.indexPath(for: cell as! UICollectionViewCell) else { return }
+        print(indexPath)
         //photos[indexPath.row].likes = photos[indexPath.row].liked ? photos[indexPath.row].likes - 1 : photos[indexPath.row].likes + 1
         //photos[indexPath.row].liked.toggle()
         //delegate?.updateUser(photos: photos, id: user?.id ?? 0)
